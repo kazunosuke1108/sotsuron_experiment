@@ -258,7 +258,7 @@ USER ${USER}
 # RUN sudo chmod -R 777 /of_v0.11.2_linux64gcc6_release
 
 RUN chmod 777 ~/.bashrc
-RUN echo "export PS1='\[\e[1;31;40m\]KAZU HR\[\e[0m\] \u:\w\$ '">> ~/.bashrc
+RUN echo "export PS1='\[\e[1;31;40m\]SOTSURON EXP\[\e[0m\] \u:\w\$ '">> ~/.bashrc
 RUN echo "source /ros_setting.sh">> ~/.bashrc
 
 ARG workspace

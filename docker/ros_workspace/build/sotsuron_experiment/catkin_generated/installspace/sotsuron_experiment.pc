@@ -1,0 +1,8 @@
+prefix=/home/hayashide/catkin_ws/install
+
+Name: sotsuron_experiment
+Description: Description of sotsuron_experiment
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
