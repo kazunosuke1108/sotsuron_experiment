@@ -1,4 +1,4 @@
-prefix=/home/hayashide/catkin_ws/install
+prefix=/home/ytpc2022h/catkin_ws/install
 
 Name: sotsuron_experiment
 Description: Description of sotsuron_experiment

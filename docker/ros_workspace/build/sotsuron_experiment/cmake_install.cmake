@@ -1,8 +1,8 @@
-# Install script for directory: /home/hayashide/catkin_ws/src/sotsuron_experiment
+# Install script for directory: /home/ytpc2022h/catkin_ws/src/sotsuron_experiment
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/hayashide/catkin_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ytpc2022h/catkin_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/hayashide/catkin_ws/build/sotsuron_experiment/catkin_generated/installspace/sotsuron_experiment.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ytpc2022h/catkin_ws/build/sotsuron_experiment/catkin_generated/installspace/sotsuron_experiment.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/sotsuron_experiment/cmake" TYPE FILE FILES
-    "/home/hayashide/catkin_ws/build/sotsuron_experiment/catkin_generated/installspace/sotsuron_experimentConfig.cmake"
-    "/home/hayashide/catkin_ws/build/sotsuron_experiment/catkin_generated/installspace/sotsuron_experimentConfig-version.cmake"
+    "/home/ytpc2022h/catkin_ws/build/sotsuron_experiment/catkin_generated/installspace/sotsuron_experimentConfig.cmake"
+    "/home/ytpc2022h/catkin_ws/build/sotsuron_experiment/catkin_generated/installspace/sotsuron_experimentConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/sotsuron_experiment" TYPE FILE FILES "/home/hayashide/catkin_ws/src/sotsuron_experiment/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/sotsuron_experiment" TYPE FILE FILES "/home/ytpc2022h/catkin_ws/src/sotsuron_experiment/package.xml")
 endif()
 

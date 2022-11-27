@@ -1,2 +1,2 @@
 sotsuron_experiment
--DCMAKE_BUILD_TYPE=Release -DCATKIN_DEVEL_PREFIX=/home/hayashide/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/hayashide/catkin_ws/install -G Unix Makefiles
+-DCMAKE_BUILD_TYPE=Release -DCATKIN_DEVEL_PREFIX=/home/ytpc2022h/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ytpc2022h/catkin_ws/install -G Unix Makefiles

@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/hayashide/catkin_ws/src
-# Build directory: /home/hayashide/catkin_ws/build
+# Source directory: /home/ytpc2022h/catkin_ws/src
+# Build directory: /home/ytpc2022h/catkin_ws/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
