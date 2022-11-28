@@ -17,7 +17,7 @@ else
     echo "========================="
     
     # ./global_ros_setting.sh
-
+    
     docker run -it \
     --privileged \
     --runtime=nvidia \
@@ -28,13 +28,13 @@ else
     -v "/home/${USER}/.Xauthority:/home/${USER}/.Xauthority" \
     --env="QT_X11_NO_MITSHM=1" \
     --rm \
-    -v "/$(pwd)/global_ros_setting.sh:/ros_setting.sh" \
-    -v "/$(pwd)/ros_workspace:/home/${USER}/catkin_ws/" \
+    -v "/${PWD}/global_ros_setting.sh:/ros_setting.sh" \
+    -v "/${PWD}/ros_workspace:/home/${USER}/catkin_ws/" \
     -v "${PWD}/config/terminator_config:/home/${USER}/.config/terminator/config" \
-    -v "/$(pwd)/../../sotsuron_simulator:/home/${USER}/catkin_ws/src/sotsuron_simulator" \
-    -v "/$(pwd)/../sotsuron_experiment:/home/${USER}/catkin_ws/src/sotsuron_experiment" \
+    -v "/${PWD}/../../sotsuron_simulator:/home/${USER}/catkin_ws/src/sotsuron_simulator" \
+    -v "/${PWD}/../sotsuron_experiment:/home/${USER}/catkin_ws/src/sotsuron_experiment" \
     -v "/usr/local/MATLAB:/home/${USER}/catkin_ws/src/MATLAB" \
-    -v "/home/ytpc2022h/MATLAB_installer:/home/${USER}/catkin_ws/src/MATLAB_installer" \
+    -v "${HOME}/MATLAB_installer:/home/${USER}/catkin_ws/src/MATLAB_installer" \
     -v /etc/group:/etc/group:ro \
     -v /etc/passwd:/etc/passwd:ro \
     -v /etc/localtime:/etc/localtime:ro \
