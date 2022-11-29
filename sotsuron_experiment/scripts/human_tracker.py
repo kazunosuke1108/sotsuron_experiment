@@ -35,7 +35,7 @@ def pub_sub():
     sub_list.append(dpt_sub)
     info_sub=message_filters.Subscriber(topicName_camInfo,CameraInfo)
     sub_list.append(info_sub)
-    mf=message_filters.ApproximateTimeSynchronizer(sub_list,100,0.5)
+    mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,0.5)
     
     # publisher
 
@@ -72,7 +72,7 @@ def get_position(rgb_array,dpt_array,obj_people,proj_mtx):
         ymax_dpt=row.ymax*y_rgb2dpt
         confidence=row.confidence
         bd_box=np.array(dpt_array[int(ymin_dpt):int(ymax_dpt),int(xmin_dpt):int(xmax_dpt)])
-        dpt=np.median(bd_box)
+        dpt=np.nanmedian(bd_box)
         bd_center_y=int((ymin_dpt+ymax_dpt)/2)
         bd_center_x=int((xmin_dpt+xmax_dpt)/2)
         center_3d=dpt*np.dot(np.linalg.pinv(proj_mtx),np.array([bd_center_x,bd_center_y,1]).T)
@@ -88,6 +88,7 @@ def get_position(rgb_array,dpt_array,obj_people,proj_mtx):
             'dpt':dpt
             }
         rect_list.append(one_person)
+        print(one_person)
     return rect_list
 
 def writeLog(rect_list,now):
@@ -114,18 +115,33 @@ def ImageCallback(rgb_data,dpt_data,info_data):
         # unpack arrays
         now=time.time()
         rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
-        rgb_array=np.nan_to_num(rgb_array)
+        rgb_array=np.nan_to_num(rgb_array, copy=False)
         rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
-        dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
-        dpt_array=np.nan_to_num(dpt_array)
+
+        dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
+        # dpt_array=np.nan_to_num(dpt_array,nan=np.nanmean(dpt_array))
+        dpt_array=np.array(dpt_array,dtype=np.float32)
+        dpt_array=np.where(dpt_array>20,0,dpt_array)
+        dpt_array=np.where(dpt_array<0,0,dpt_array)
+        print(np.nanmedian(dpt_array))
+        print(dpt_array.min())
+        print(dpt_array.max())
+        print(dpt_array.shape)
         proj_mtx=np.array(info_data.P).reshape(3,4)
         # object recognition
         results=model(rgb_array)
         objects=results.pandas().xyxy[0]
         obj_people=objects[objects['name']=='person']
         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
+        # dpt_array_show=(dpt_array-np.min(dpt_array))/(np.max(dpt_array)-np.min(dpt_array))*255
+        # dpt_array_show=np.uint8(dpt_array_show)
+        # dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
+        dpt_array=np.nan_to_num(dpt_array)
+        cv2.imwrite("test_rgb.jpg",dpt_array*255/dpt_array.max())
+        # cv2.imshow("depth",dpt_array_show)
         writeLog(rect_list,now)
         
+
 
 
 
@@ -135,10 +151,15 @@ def ImageCallback(rgb_data,dpt_data,info_data):
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             pprint(exc_type, fname, exc_tb.tb_lineno)
 
+
 # variable definition
-topicName_rgb="/camera3/camera/color/image_raw"
-topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
-topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
+# topicName_rgb="/camera3/camera/color/image_raw"
+topicName_rgb="/zed/zed_node/rgb/image_rect_color"
+# topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
+topicName_dpt="/zed/zed_node/depth/depth_registered"
+# topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
+topicName_camInfo="/zed/zed_node/rgb/camera_info"
+
 
 
 # subscribe
