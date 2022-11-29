@@ -33,6 +33,7 @@ else
     -v "${PWD}/config/terminator_config:/home/${USER}/.config/terminator/config" \
     -v "/${PWD}/../../sotsuron_simulator:/home/${USER}/catkin_ws/src/sotsuron_simulator" \
     -v "/${PWD}/../sotsuron_experiment:/home/${USER}/catkin_ws/src/sotsuron_experiment" \
+    -v "/${PWD}/../third_party:/home/${USER}/catkin_ws/src/third_party" \
     -v "/usr/local/MATLAB:/home/${USER}/catkin_ws/src/MATLAB" \
     -v "${HOME}/MATLAB_installer:/home/${USER}/catkin_ws/src/MATLAB_installer" \
     -v /etc/group:/etc/group:ro \

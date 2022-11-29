@@ -213,7 +213,39 @@ RUN git clone https://github.com/facebookresearch/detectron2.git && \
 # RUN pip install --extra-index-url https://google-coral.github.io/py-repo/ pycoral~=2.0 && \
 #     pip install libedgetpu1-max
 
+#######################################################################
+##                install environment for zed 2i                     ##
+#######################################################################
+# # RUN wget https://download.stereolabs.com/zedsdk/3.8/cu117/ubuntu20 -o zed_sdk.run
+# RUN apt install zstd
+# COPY ZED_SDK_Ubuntu20_cuda11.7_v3.8.2.zstd.run /
+# RUN chmod 777 ZED_SDK_Ubuntu20_cuda11.7_v3.8.2.zstd.run
+# RUN ./ZED_SDK_Ubuntu20_cuda11.7_v3.8.2.zstd.run  -- silent
+# RUN sudo rm ZED_SDK_Ubuntu20_cuda11.7_v3.8.2.zstd.run
 
+# ARG UBUNTU_RELEASE_YEAR
+# ARG CUDA_MAJOR
+# ARG CUDA_MINOR
+
+# # Setup the ZED SDK
+# RUN apt-get update -y || true
+# RUN apt-get upgrade -y && apt-get autoremove -y && \
+#     apt-get install --no-install-recommends lsb-release wget less udev sudo -y && \
+#     wget -q -O ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run https://download.stereolabs.com/zedsdk/${ZED_SDK_MAJOR}.${ZED_SDK_MINOR}/cu${CUDA_MAJOR}${CUDA_MINOR%.*}/ubuntu${UBUNTU_RELEASE_YEAR} && \
+#     chmod 777 ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run
+# RUN ./ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run -- silent runtime_only && \
+#     rm ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run && \
+#     rm -rf /var/lib/apt/lists/*
+
+# # ZED Python API
+# RUN apt-get update -y || true
+# RUN apt-get install --no-install-recommends python3 python3-pip libpng-dev libgomp1 -y && \ 
+#     # https://stackoverflow.com/a/63457606/7036639
+#     python3 -m pip install --upgrade pip && \  
+#     wget download.stereolabs.com/zedsdk/pyzed -O /usr/local/zed/get_python_api.py && \
+#     python3 /usr/local/zed/get_python_api.py && \
+#     python3 -m pip install numpy opencv-python *.whl && \
+#     rm *.whl ; rm -rf /var/lib/apt/lists/*
 
 
 #######################################################################
