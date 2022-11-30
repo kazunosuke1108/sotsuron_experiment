@@ -104,9 +104,6 @@ def writeLog(rect_list,now):
             one_person.insert(len(one_person),0)
         dpt_history.append(one_person)
         np.savetxt("results.csv",dpt_history,delimiter=",")
-    # jsn=open("results.json","w")
-    # json.dump(dpt_history,jsn)
-    # jsn.close()
 
     
 
@@ -119,26 +116,23 @@ def ImageCallback(rgb_data,dpt_data,info_data):
         rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
 
         dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
-        # dpt_array=np.nan_to_num(dpt_array,nan=np.nanmean(dpt_array))
         dpt_array=np.array(dpt_array,dtype=np.float32)
         dpt_array=np.where(dpt_array>20,0,dpt_array)
         dpt_array=np.where(dpt_array<0,0,dpt_array)
-        print(np.nanmedian(dpt_array))
-        print(dpt_array.min())
-        print(dpt_array.max())
-        print(dpt_array.shape)
+
         proj_mtx=np.array(info_data.P).reshape(3,4)
+        
         # object recognition
         results=model(rgb_array)
         objects=results.pandas().xyxy[0]
         obj_people=objects[objects['name']=='person']
         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
-        # dpt_array_show=(dpt_array-np.min(dpt_array))/(np.max(dpt_array)-np.min(dpt_array))*255
-        # dpt_array_show=np.uint8(dpt_array_show)
-        # dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
-        dpt_array=np.nan_to_num(dpt_array)
-        cv2.imwrite("test_rgb.jpg",dpt_array*255/dpt_array.max())
-        # cv2.imshow("depth",dpt_array_show)
+
+        # draw & save
+        dpt_array_show=np.nan_to_num(dpt_array,copy=False)
+        dpt_array_show=dpt_array_show*255/dpt_array.max()
+        dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
+        cv2.imwrite("monitor/dpt.jpg",dpt_array_show)
         writeLog(rect_list,now)
         
 
