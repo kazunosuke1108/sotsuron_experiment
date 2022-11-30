@@ -25,8 +25,14 @@ model = torch.hub.load("/usr/local/lib/python3.8/dist-packages/yolov5", 'custom'
 # dpt history
 dpt_history=[]
 
+# csv
+csv_path="monitor/results.csv"
+
+# json
+jsn_path="monitor/velocity.json"
 
 def pub_sub():
+    global rgb_sub,dpt_sub,info_sub
     # subscriber
     sub_list=[]
     rgb_sub=message_filters.Subscriber(topicName_rgb,Image)
@@ -96,18 +102,67 @@ def writeLog(rect_list,now):
         one_person=rect_list[0]['center_3d'].tolist()
         one_person.insert(0,now)
         if len(dpt_history)>=2:
-            velocity=np.sqrt((dpt_history[-1][1]-dpt_history[-2][1])**2+(dpt_history[-1][2]-dpt_history[-2][2])**2+(dpt_history[-1][3]-dpt_history[-2][3])**2)/(dpt_history[-1][0]-dpt_history[-2][0])
+            # velocity_3d=np.sqrt((dpt_history[-1][1]-dpt_history[-2][1])**2+(dpt_history[-1][2]-dpt_history[-2][2])**2+(dpt_history[-1][3]-dpt_history[-2][3])**2)/(dpt_history[-1][0]-dpt_history[-2][0])
             velocity=(dpt_history[-1][3]-dpt_history[-2][3])/(dpt_history[-1][0]-dpt_history[-2][0])
             
             one_person.insert(len(one_person),velocity)
         else:
             one_person.insert(len(one_person),0)
         dpt_history.append(one_person)
-        np.savetxt("results.csv",dpt_history,delimiter=",")
+        np.savetxt(csv_path,dpt_history,delimiter=",")
 
+def end_func(thre):
+    data=np.loadtxt(csv_path,delimiter=",")
+    vel_list=data[:,-1]
+    vel_list=np.where(vel_list<-thre,0,vel_list)
+    vel_list=np.where(vel_list>thre,0,vel_list)
+
+    vel_info={
+        # "vel_3d_ave":np.average(vel_list),
+        # "vel_3d_md":np.median(vel_list),
+        # "vel_3d_sd":np.std(vel_list),
+        "vel_z_ave":np.average(vel_list),
+        "vel_z_md":np.median(vel_list),
+        "vel_z_sd":np.std(vel_list),
+    }
+    print(vel_list)
+    print(np.average(vel_list))
+    jsn=open(jsn_path,"w")
+    json.dump(vel_info,jsn)
+    jsn.close()
+    pass
     
+def ImageCallback_realsense(rgb_data,dpt_data,info_data):
+    try:
+        # unpack arrays
+        now=time.time()
+        rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
+        rgb_array=np.nan_to_num(rgb_array)
+        rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
+        dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
+        dpt_array=np.nan_to_num(dpt_array)
+        proj_mtx=np.array(info_data.P).reshape(3,4)
+        # object recognition
+        results=model(rgb_array)
+        objects=results.pandas().xyxy[0]
+        obj_people=objects[objects['name']=='person']
+        rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
+        writeLog(rect_list,now)
+        if len(dpt_history)>=100:
+            rgb_sub.unregister()
+            dpt_sub.unregister()
+            info_sub.unregister()
+            end_func(1500)
+            rospy.on_shutdown(end_func)
 
-def ImageCallback(rgb_data,dpt_data,info_data):
+
+    except Exception:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            pprint(exc_type, fname, exc_tb.tb_lineno)
+
+
+def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     try:
         # unpack arrays
         now=time.time()
@@ -134,10 +189,12 @@ def ImageCallback(rgb_data,dpt_data,info_data):
         dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
         cv2.imwrite("monitor/dpt.jpg",dpt_array_show)
         writeLog(rect_list,now)
-        
-
-
-
+        if len(dpt_history)>=100:
+            end_func(1.5)
+            rgb_sub.unregister()
+            dpt_sub.unregister()
+            info_sub.unregister()
+            rospy.on_shutdown(end_func)
 
 
     except Exception:
@@ -147,16 +204,17 @@ def ImageCallback(rgb_data,dpt_data,info_data):
 
 
 # variable definition
-# topicName_rgb="/camera3/camera/color/image_raw"
-topicName_rgb="/zed/zed_node/rgb/image_rect_color"
-# topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
-topicName_dpt="/zed/zed_node/depth/depth_registered"
-# topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
-topicName_camInfo="/zed/zed_node/rgb/camera_info"
+topicName_rgb="/camera3/camera/color/image_raw"
+topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
+topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
+# topicName_rgb="/zed/zed_node/rgb/image_rect_color"
+# topicName_dpt="/zed/zed_node/depth/depth_registered"
+# topicName_camInfo="/zed/zed_node/rgb/camera_info"
 
 
 
 # subscribe
 mf=pub_sub()
-mf.registerCallback(ImageCallback)
+mf.registerCallback(ImageCallback_realsense)
+# mf.registerCallback(ImageCallback_ZED)
 rospy.spin()
