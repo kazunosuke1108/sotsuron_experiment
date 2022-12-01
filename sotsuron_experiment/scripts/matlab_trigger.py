@@ -1,9 +1,25 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from glob import glob
 import os
+import time
 
 # print(os.environ['HOME'])
 # current_dir=os.getcwd()
 # print(current_dir)
+
+jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
+
+
+while True:
+    if os.path.isfile(jsn_path):
+        print("### file found ###")
+        break
+    else:
+        print("### file not found")
+        time.sleep(0.5)
+
 print(os.environ['HOME']+"src/")
 matlab_ws=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_simulator/matlab_ws/*"))
 
