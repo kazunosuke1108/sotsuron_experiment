@@ -26,10 +26,10 @@ model = torch.hub.load("/usr/local/lib/python3.8/dist-packages/yolov5", 'custom'
 dpt_history=[]
 
 # csv
-csv_path="monitor/results.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/results.csv"
 
 # json
-jsn_path="monitor/velocity.json"
+jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
 
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
@@ -106,21 +106,25 @@ def writeLog(rect_list,now):
             velocity=(dpt_history[-1][3]-dpt_history[-2][3])/(dpt_history[-1][0]-dpt_history[-2][0])
             
             one_person.insert(len(one_person),velocity)
+            if rect_list[0]['center_3d'].tolist()[2]!=0 and velocity!=0:
+                print(velocity)
+                dpt_history.append(one_person)
         else:
             one_person.insert(len(one_person),0)
-        dpt_history.append(one_person)
+            dpt_history.append(one_person)
+        
         np.savetxt(csv_path,dpt_history,delimiter=",")
 
 def end_func(thre):
     data=np.loadtxt(csv_path,delimiter=",")
+    z_list=data[:,3]
     vel_list=data[:,-1]
     vel_list=np.where(vel_list<-thre,0,vel_list)
     vel_list=np.where(vel_list>thre,0,vel_list)
 
     vel_info={
-        # "vel_3d_ave":np.average(vel_list),
-        # "vel_3d_md":np.median(vel_list),
-        # "vel_3d_sd":np.std(vel_list),
+        "z_ave":np.average(z_list[-10:]),
+        "z_latest":z_list[-1],
         "vel_z_ave":np.average(vel_list),
         "vel_z_md":np.median(vel_list),
         "vel_z_sd":np.std(vel_list),
@@ -184,10 +188,10 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
 
         # draw & save
-        dpt_array_show=np.nan_to_num(dpt_array,copy=False)
-        dpt_array_show=dpt_array_show*255/dpt_array.max()
-        dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
-        cv2.imwrite("monitor/dpt.jpg",dpt_array_show)
+        # dpt_array_show=np.nan_to_num(dpt_array,copy=False)
+        # dpt_array_show=dpt_array_show*255/dpt_array.max()
+        # dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
+        # cv2.imwrite("monitor/dpt.jpg",dpt_array_show)
         writeLog(rect_list,now)
         if len(dpt_history)>=100:
             end_func(1.5)
@@ -203,18 +207,18 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
             pprint(exc_type, fname, exc_tb.tb_lineno)
 
 
-# variable definition
-topicName_rgb="/camera3/camera/color/image_raw"
-topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
-topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
-# topicName_rgb="/zed/zed_node/rgb/image_rect_color"
-# topicName_dpt="/zed/zed_node/depth/depth_registered"
-# topicName_camInfo="/zed/zed_node/rgb/camera_info"
+
+# topicName_rgb="/camera3/camera/color/image_raw"
+# topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
+# topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
+topicName_rgb="/zed/zed_node/rgb/image_rect_color"
+topicName_dpt="/zed/zed_node/depth/depth_registered"
+topicName_camInfo="/zed/zed_node/rgb/camera_info"
 
 
 
 # subscribe
 mf=pub_sub()
-mf.registerCallback(ImageCallback_realsense)
-# mf.registerCallback(ImageCallback_ZED)
+# mf.registerCallback(ImageCallback_realsense)
+mf.registerCallback(ImageCallback_ZED)
 rospy.spin()

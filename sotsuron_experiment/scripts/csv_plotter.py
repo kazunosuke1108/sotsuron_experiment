@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-data=np.loadtxt("monitor/results.csv",delimiter=",")
+data=np.loadtxt("sotsuron_experiment/sotsuron_experiment/scripts/monitor/results.csv",delimiter=",")
 print(data)
 
 col=1

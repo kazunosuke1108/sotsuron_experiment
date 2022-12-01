@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="python_start_delay" default="10.0" />
+    <node pkg="sotsuron_experiment" name="human_tracker" type="human_tracker.py" output="screen" launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' "/>
+
+
+</launch>
