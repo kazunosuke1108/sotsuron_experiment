@@ -2,7 +2,7 @@
 <launch>
     <!-- <include "$(find ytlab_zed_modules)/launch/user_zed.launch"/> -->
     <arg name="matlab_start_delay" default="10.0" />
-    <!-- <node pkg="sotsuron_experiment" name="human_tracker" type="human_tracker.py" output="screen"/> -->
+    <node pkg="sotsuron_experiment" name="human_tracker" type="human_tracker.py" output="screen"/>
     <node pkg="sotsuron_experiment" name="matlab_trigger" type="matlab_trigger.py" output="screen" launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "/>
 
 
