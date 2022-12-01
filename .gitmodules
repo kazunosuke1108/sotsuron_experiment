@@ -1,0 +1,6 @@
+[submodule "third_party/ytlab_zed"]
+	path = third_party/ytlab_zed
+	url = git@github.com:Takahashi-Lab-Keio/ytlab_zed.git
+[submodule "third_party/zed-ros-wrapper"]
+	path = third_party/zed-ros-wrapper
+	url = https://github.com/stereolabs/zed-ros-wrapper.git
