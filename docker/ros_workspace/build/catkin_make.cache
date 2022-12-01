@@ -1,2 +1,2 @@
-sotsuron_experiment
+sotsuron_experiment:third_party/ytlab_zed/ytlab_zed_modules:third_party/zed-ros-wrapper/zed_nodelets:third_party/zed-ros-wrapper/zed_ros:third_party/zed-ros-wrapper/zed_wrapper
 -DCMAKE_BUILD_TYPE=Release -DCATKIN_DEVEL_PREFIX=/home/hayashide/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/hayashide/catkin_ws/install -G Unix Makefiles
