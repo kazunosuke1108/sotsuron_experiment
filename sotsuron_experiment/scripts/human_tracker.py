@@ -31,6 +31,13 @@ csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/
 # json
 jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
 
+
+try:
+    os.remove(csv_path)
+    os.remove(jsn_path)
+except FileNotFoundError:
+    pass
+
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
     # subscriber
