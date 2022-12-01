@@ -19,7 +19,7 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
 
-from detectron2_core import Detector
+from sotsuron_experiment.sotsuron_experiment.scripts.sources.detectron2_core import Detector
 
 
 
