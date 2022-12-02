@@ -104,23 +104,25 @@ def get_position(rgb_array,dpt_array,obj_people,proj_mtx):
         print(one_person)
     return rect_list
 
-def writeLog(rect_list,now):
+def get_velocity(rect_list,now):
     if len(rect_list)>0:
         one_person=rect_list[0]['center_3d'].tolist()
         one_person.insert(0,now)
+
         if len(dpt_history)>=2:
-            # velocity_3d=np.sqrt((dpt_history[-1][1]-dpt_history[-2][1])**2+(dpt_history[-1][2]-dpt_history[-2][2])**2+(dpt_history[-1][3]-dpt_history[-2][3])**2)/(dpt_history[-1][0]-dpt_history[-2][0])
-            velocity=(dpt_history[-1][3]-dpt_history[-2][3])/(dpt_history[-1][0]-dpt_history[-2][0])
-            
+            #velocity=np.sqrt((dpt_history[-1][1]-dpt_history[-2][1])**2+(dpt_history[-1][2]-dpt_history[-2][2])**2+(dpt_history[-1][3]-dpt_history[-2][3])**2)/(dpt_history[-1][0]-dpt_history[-2][0])
+            velocity=(one_person[3]-dpt_history[-1][3])/(now-dpt_history[-1][0])
             one_person.insert(len(one_person),velocity)
-            if rect_list[0]['center_3d'].tolist()[2]!=0 and velocity!=0:
-                print(velocity)
+            if rect_list[0]['center_3d'].tolist()[2]!=0 and str(rect_list[0]['center_3d'][2])!="nan":
+                rospy.loginfo(f"{velocity} m/s")
                 dpt_history.append(one_person)
         else:
             one_person.insert(len(one_person),0)
             dpt_history.append(one_person)
         
         np.savetxt(csv_path,dpt_history,delimiter=",")
+    else:
+        rospy.loginfo("get_velocity: No one detected")
 
 def end_func(thre):
     data=np.loadtxt(csv_path,delimiter=",")
@@ -136,41 +138,44 @@ def end_func(thre):
         "vel_z_md":np.median(vel_list),
         "vel_z_sd":np.std(vel_list),
     }
-    print(vel_list)
-    print(np.average(vel_list))
+    # print(vel_list)
+    # print(np.average(vel_list))
     jsn=open(jsn_path,"w")
     json.dump(vel_info,jsn)
     jsn.close()
+    rospy.loginfo(f"### velocity recognition summary ###")
+    rospy.loginfo(vel_info)
+    rospy.loginfo(f"### velocity recognition summary end ###")
     pass
     
-def ImageCallback_realsense(rgb_data,dpt_data,info_data):
-    try:
-        # unpack arrays
-        now=time.time()
-        rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
-        rgb_array=np.nan_to_num(rgb_array)
-        rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
-        dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
-        dpt_array=np.nan_to_num(dpt_array)
-        proj_mtx=np.array(info_data.P).reshape(3,4)
-        # object recognition
-        results=model(rgb_array)
-        objects=results.pandas().xyxy[0]
-        obj_people=objects[objects['name']=='person']
-        rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
-        writeLog(rect_list,now)
-        if len(dpt_history)>=100:
-            rgb_sub.unregister()
-            dpt_sub.unregister()
-            info_sub.unregister()
-            end_func(1500)
-            rospy.on_shutdown(end_func)
+# def ImageCallback_realsense(rgb_data,dpt_data,info_data):
+#     try:
+#         # unpack arrays
+#         now=time.time()
+#         rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
+#         rgb_array=np.nan_to_num(rgb_array)
+#         rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
+#         dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
+#         dpt_array=np.nan_to_num(dpt_array)
+#         proj_mtx=np.array(info_data.P).reshape(3,4)
+#         # object recognition
+#         results=model(rgb_array)
+#         objects=results.pandas().xyxy[0]
+#         obj_people=objects[objects['name']=='person']
+#         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
+#         get_velocity(rect_list,now)
+#         if len(dpt_history)>=100:
+#             rgb_sub.unregister()
+#             dpt_sub.unregister()
+#             info_sub.unregister()
+#             end_func(1500)
+#             rospy.on_shutdown(end_func)
 
 
-    except Exception:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            pprint(exc_type, fname, exc_tb.tb_lineno)
+#     except Exception:
+#             exc_type, exc_obj, exc_tb = sys.exc_info()
+#             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+#             pprint(exc_type, fname, exc_tb.tb_lineno)
 
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data):
@@ -183,7 +188,7 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
 
         dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
         dpt_array=np.array(dpt_array,dtype=np.float32)
-        dpt_array=np.where(dpt_array>20,0,dpt_array)
+        dpt_array=np.where(dpt_array>40,0,dpt_array)
         dpt_array=np.where(dpt_array<0,0,dpt_array)
 
         proj_mtx=np.array(info_data.P).reshape(3,4)
@@ -194,12 +199,8 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
         obj_people=objects[objects['name']=='person']
         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
 
-        # draw & save
-        # dpt_array_show=np.nan_to_num(dpt_array,copy=False)
-        # dpt_array_show=dpt_array_show*255/dpt_array.max()
-        # dpt_array_show=cv2.applyColorMap(np.uint8(dpt_array_show),cv2.COLORMAP_JET)
-        # cv2.imwrite("monitor/dpt.jpg",dpt_array_show)
-        writeLog(rect_list,now)
+        get_velocity(rect_list,now)
+
         if len(dpt_history)>=100:
             end_func(1.5)
             rgb_sub.unregister()
@@ -211,7 +212,7 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     except Exception:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            pprint(exc_type, fname, exc_tb.tb_lineno)
+            rospy.loginfo(f"{exc_type}, {fname},{ exc_tb.tb_lineno}")
 
 
 

@@ -1,9 +1,36 @@
 <?xml version="1.0"?>
 <launch>
     <!-- <include "$(find ytlab_zed_modules)/launch/user_zed.launch"/> -->
-    <arg name="matlab_start_delay" default="10.0" />
-    <node pkg="sotsuron_experiment" name="human_tracker" type="human_tracker.py" output="screen"/>
-    <node pkg="sotsuron_experiment" name="matlab_trigger" type="matlab_trigger.py" output="screen" launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "/>
 
+    <!-- <arg name="play_bag_name" default="_2022-12-02-11-44-17"/> -->
+    <arg name="play_bag_name" default="_2022-12-02-11-49-05"/>
+    <!-- <arg name="play_bag_name" default="_2022-12-02-11-51-22"/> -->
+
+    <arg name="python_start_delay" default="1.0" />
+    <arg name="rosbag_start_delay" default="10.0" />
+    <arg name="matlab_start_delay" default="20.0" />
+
+
+    <node pkg="sotsuron_experiment" 
+        name="human_tracker" 
+        type="human_tracker.py" 
+        launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' "
+    />
+        <!-- output="screen"  -->
+
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag"
+        launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' "
+    />
+
+    <!-- <node pkg="sotsuron_experiment" 
+        name="matlab_trigger" 
+        type="matlab_trigger.py" 
+        output="screen" 
+        launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "
+    /> -->
 
 </launch>

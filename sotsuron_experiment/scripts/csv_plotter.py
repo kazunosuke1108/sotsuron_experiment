@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -50,10 +51,11 @@ for i,row in enumerate(vel_plot[window:]):
     i+=window
     ave=np.average(vel_plot[i-window:i])
     vel_ave.append(ave)
-plt.plot(data[:,0],x_plot,label="x")
-plt.plot(data[:,0],y_plot,label="y")
+# plt.plot(data[:,0],x_plot,label="x")
+# plt.plot(data[:,0],y_plot,label="y")
 plt.plot(data[:,0],z_plot,label="z")
-plt.plot(data[:,0],vel_plot,label="vel_raw")
+# plt.plot(data[:,0],vel_plot,label="vel_raw")
 plt.plot(data[:,0],vel_ave,label="vel_ave")
 plt.legend()
 plt.show()
+# plt.savefig(os.environ['HOME'])
