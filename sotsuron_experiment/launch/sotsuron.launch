@@ -22,9 +22,10 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag"
+        args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag"
         launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' "
     />
+        <!-- args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag" -->
 
     <!-- <node pkg="sotsuron_experiment" 
         name="matlab_trigger" 

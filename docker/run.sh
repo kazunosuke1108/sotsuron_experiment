@@ -40,6 +40,7 @@ else
     -v /etc/passwd:/etc/passwd:ro \
     -v /etc/localtime:/etc/localtime:ro \
     -v /media:/media \
+    -v "/${PWD}/../../../ytlab_ros_ws/ytlab_rosbag/rosbag:/home/${USER}/catkin_ws/src/rosbag" \
     -v /dev:/dev \
     --net host \
     ${USER}/whill

@@ -104,6 +104,14 @@ def get_position(rgb_array,dpt_array,obj_people,proj_mtx):
         print(one_person)
     return rect_list
 
+def export_csv(rect_list,now):
+    print(rect_list)
+    if len(rect_list)>0:
+        center_3d=rect_list[0]['center_3d']
+        print(type(center_3d))
+    else:
+        rospy.loginfo("get_velocity: No one detected")
+
 def get_velocity(rect_list,now):
     if len(rect_list)>0:
         one_person=rect_list[0]['center_3d'].tolist()
@@ -128,8 +136,8 @@ def end_func(thre):
     data=np.loadtxt(csv_path,delimiter=",")
     z_list=data[:,3]
     vel_list=data[:,-1]
-    vel_list=np.where(vel_list<-thre,0,vel_list)
-    vel_list=np.where(vel_list>thre,0,vel_list)
+    vel_list=np.where(vel_list<-thre,-thre,vel_list)
+    vel_list=np.where(vel_list>thre,thre,vel_list)
 
     vel_info={
         "z_ave":np.average(z_list[-10:]),
@@ -181,7 +189,7 @@ def end_func(thre):
 def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     try:
         # unpack arrays
-        now=time.time()
+        now=rospy.get_time()
         rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
         rgb_array=np.nan_to_num(rgb_array, copy=False)
         rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
@@ -199,7 +207,8 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
         obj_people=objects[objects['name']=='person']
         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
 
-        get_velocity(rect_list,now)
+        # get_velocity(rect_list,now)
+        export_csv(rect_list,now)
 
         if len(dpt_history)>=100:
             end_func(1.5)
