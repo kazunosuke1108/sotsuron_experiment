@@ -3,8 +3,11 @@
 
 import os
 import sys
+from glob import glob
+import shutil
 import json
 import time
+import datetime
 import numpy as np
 import cv2
 import rospy
@@ -25,6 +28,9 @@ model = torch.hub.load("/usr/local/lib/python3.8/dist-packages/yolov5", 'custom'
 # dpt history
 dpt_history=[]
 
+# 過去データファイル
+history_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/history/"
+monitor_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/"
 # csv
 csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/results.csv"
 
@@ -36,11 +42,15 @@ end_flg=False
 end_semi_flg=False
 
 # end_thre
-end_thre=18
+end_thre=20
 
 try:
-    os.remove(csv_path)
-    os.remove(jsn_path)
+    dt_now=datetime.datetime.now()
+    now_str=dt_now.strftime('%Y%m%d_%H%M%S')
+    os.makedirs(history_path+now_str,exist_ok=True)
+    monitor_files=sorted(glob(monitor_path+"*"))
+    for filepath in monitor_files:
+        shutil.move(filepath,history_path+now_str+"/"+os.path.basename(filepath))
 except FileNotFoundError:
     pass
 
@@ -154,6 +164,7 @@ def save_vel():
     vel_info={
         "z_ave":np.average(z_list[-10:]),
         "z_latest":z_list[-1],
+        "z_linear_z":a*t_list[-1]+b,
         "z_linear_a":a,
         "z_linear_b":b,
     }
@@ -162,6 +173,7 @@ def save_vel():
     jsn=open(jsn_path,"w")
     json.dump(vel_info,jsn)
     jsn.close()
+    import csv_plotter
     rospy.loginfo(f"### velocity recognition summary ###")
     rospy.loginfo(vel_info)
     rospy.loginfo(f"### velocity recognition summary end ###")
@@ -222,23 +234,40 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     # get_velocity(rect_list,now)
     export_csv(rect_list,now)
 
-    if end_flg:
-        save_vel()
-        rgb_sub.unregister()
-        dpt_sub.unregister()
-        info_sub.unregister()
-        rospy.on_shutdown(save_vel)
-    else: 
-        try: # 2回連続で基準値を下回ったら次の時点で終了
-            if rect_list[0]['center_3d'][2]<end_thre:
-                if end_semi_flg:
-                    end_flg=True
-                else:
-                    end_semi_flg=True
-            else:
-                end_semi_flg=False
-        except IndexError:
-            pass
+    try:
+        data=np.loadtxt(csv_path,delimiter=",")
+        z_list=data[:,3]
+        t_list=data[:,0]
+        # 線形近似
+        a,b=np.polyfit(t_list,z_list,1)
+        estimated_z=a*t_list[-1]+b
+        if estimated_z<end_thre:
+            save_vel()
+            rgb_sub.unregister()
+            dpt_sub.unregister()
+            info_sub.unregister()
+            rospy.on_shutdown(save_vel)
+
+    except (FileNotFoundError,IndexError):
+        pass
+
+    # if end_flg:
+    #     save_vel()
+    #     rgb_sub.unregister()
+    #     dpt_sub.unregister()
+    #     info_sub.unregister()
+    #     rospy.on_shutdown(save_vel)
+    # else: 
+    #     try: # 2回連続で基準値を下回ったら次の時点で終了
+    #         if rect_list[0]['center_3d'][2]<end_thre:
+    #             if end_semi_flg:
+    #                 end_flg=True
+    #             else:
+    #                 end_semi_flg=True
+    #         else:
+    #             end_semi_flg=False
+    #     except IndexError:
+    #         pass
 
 
 
