@@ -31,6 +31,12 @@ csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/
 # json
 jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
 
+# end_flg
+end_flg=False
+end_semi_flg=False
+
+# end_thre
+end_thre=18
 
 try:
     os.remove(csv_path)
@@ -105,46 +111,51 @@ def get_position(rgb_array,dpt_array,obj_people,proj_mtx):
     return rect_list
 
 def export_csv(rect_list,now):
-    print(rect_list)
     if len(rect_list)>0:
         center_3d=rect_list[0]['center_3d']
-        print(type(center_3d))
-    else:
-        rospy.loginfo("get_velocity: No one detected")
-
-def get_velocity(rect_list,now):
-    if len(rect_list)>0:
-        one_person=rect_list[0]['center_3d'].tolist()
-        one_person.insert(0,now)
-
-        if len(dpt_history)>=2:
-            #velocity=np.sqrt((dpt_history[-1][1]-dpt_history[-2][1])**2+(dpt_history[-1][2]-dpt_history[-2][2])**2+(dpt_history[-1][3]-dpt_history[-2][3])**2)/(dpt_history[-1][0]-dpt_history[-2][0])
-            velocity=(one_person[3]-dpt_history[-1][3])/(now-dpt_history[-1][0])
-            one_person.insert(len(one_person),velocity)
-            if rect_list[0]['center_3d'].tolist()[2]!=0 and str(rect_list[0]['center_3d'][2])!="nan":
-                rospy.loginfo(f"{velocity} m/s")
-                dpt_history.append(one_person)
+        if np.isnan(center_3d).any():
+            rospy.loginfo("export csv: remove nan")
         else:
-            one_person.insert(len(one_person),0)
-            dpt_history.append(one_person)
-        
+            center_3d=rect_list[0]['center_3d']
+            export_data=center_3d.tolist()
+            export_data.insert(0,now)
+            dpt_history.append(export_data)
         np.savetxt(csv_path,dpt_history,delimiter=",")
+        rospy.loginfo(center_3d)
     else:
         rospy.loginfo("get_velocity: No one detected")
 
-def end_func(thre):
+# def get_velocity(rect_list,now):
+#     if len(rect_list)>0:
+#         one_person=rect_list[0]['center_3d'].tolist()
+#         one_person.insert(0,now)
+
+#         if len(dpt_history)>=2:
+#             #velocity=np.sqrt((dpt_history[-1][1]-dpt_history[-2][1])**2+(dpt_history[-1][2]-dpt_history[-2][2])**2+(dpt_history[-1][3]-dpt_history[-2][3])**2)/(dpt_history[-1][0]-dpt_history[-2][0])
+#             velocity=(one_person[3]-dpt_history[-1][3])/(now-dpt_history[-1][0])
+#             one_person.insert(len(one_person),velocity)
+#             if rect_list[0]['center_3d'].tolist()[2]!=0 and str(rect_list[0]['center_3d'][2])!="nan":
+#                 rospy.loginfo(f"{velocity} m/s")
+#                 dpt_history.append(one_person)
+#         else:
+#             one_person.insert(len(one_person),0)
+#             dpt_history.append(one_person)
+        
+#         np.savetxt(csv_path,dpt_history,delimiter=",")
+#     else:
+#         rospy.loginfo("get_velocity: No one detected")
+
+def save_vel():
     data=np.loadtxt(csv_path,delimiter=",")
     z_list=data[:,3]
-    vel_list=data[:,-1]
-    vel_list=np.where(vel_list<-thre,-thre,vel_list)
-    vel_list=np.where(vel_list>thre,thre,vel_list)
-
+    t_list=data[:,0]
+    # 線形近似
+    a,b=np.polyfit(t_list,z_list,1)
     vel_info={
         "z_ave":np.average(z_list[-10:]),
         "z_latest":z_list[-1],
-        "vel_z_ave":np.average(vel_list),
-        "vel_z_md":np.median(vel_list),
-        "vel_z_sd":np.std(vel_list),
+        "z_linear_a":a,
+        "z_linear_b":b,
     }
     # print(vel_list)
     # print(np.average(vel_list))
@@ -176,8 +187,8 @@ def end_func(thre):
 #             rgb_sub.unregister()
 #             dpt_sub.unregister()
 #             info_sub.unregister()
-#             end_func(1500)
-#             rospy.on_shutdown(end_func)
+#             save_vel(1500)
+#             rospy.on_shutdown(save_vel)
 
 
 #     except Exception:
@@ -187,41 +198,54 @@ def end_func(thre):
 
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data):
-    try:
+    global end_flg, end_semi_flg
+    # try:
         # unpack arrays
-        now=rospy.get_time()
-        rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
-        rgb_array=np.nan_to_num(rgb_array, copy=False)
-        rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
+    now=rospy.get_time()
+    rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
+    rgb_array=np.nan_to_num(rgb_array, copy=False)
+    rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
 
-        dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
-        dpt_array=np.array(dpt_array,dtype=np.float32)
-        dpt_array=np.where(dpt_array>40,0,dpt_array)
-        dpt_array=np.where(dpt_array<0,0,dpt_array)
+    dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
+    dpt_array=np.array(dpt_array,dtype=np.float32)
+    dpt_array=np.where(dpt_array>40,0,dpt_array)
+    dpt_array=np.where(dpt_array<0,0,dpt_array)
 
-        proj_mtx=np.array(info_data.P).reshape(3,4)
-        
-        # object recognition
-        results=model(rgb_array)
-        objects=results.pandas().xyxy[0]
-        obj_people=objects[objects['name']=='person']
-        rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
+    proj_mtx=np.array(info_data.P).reshape(3,4)
+    
+    # object recognition
+    results=model(rgb_array)
+    objects=results.pandas().xyxy[0]
+    obj_people=objects[objects['name']=='person']
+    rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
 
-        # get_velocity(rect_list,now)
-        export_csv(rect_list,now)
+    # get_velocity(rect_list,now)
+    export_csv(rect_list,now)
 
-        if len(dpt_history)>=100:
-            end_func(1.5)
-            rgb_sub.unregister()
-            dpt_sub.unregister()
-            info_sub.unregister()
-            rospy.on_shutdown(end_func)
+    if end_flg:
+        save_vel()
+        rgb_sub.unregister()
+        dpt_sub.unregister()
+        info_sub.unregister()
+        rospy.on_shutdown(save_vel)
+    else: 
+        try: # 2回連続で基準値を下回ったら次の時点で終了
+            if rect_list[0]['center_3d'][2]<end_thre:
+                if end_semi_flg:
+                    end_flg=True
+                else:
+                    end_semi_flg=True
+            else:
+                end_semi_flg=False
+        except IndexError:
+            pass
 
 
-    except Exception:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            rospy.loginfo(f"{exc_type}, {fname},{ exc_tb.tb_lineno}")
+
+    # except Exception:
+    #         exc_type, exc_obj, exc_tb = sys.exc_info()
+    #         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    #         rospy.loginfo(f"{exc_type}, {fname},{ exc_tb.tb_lineno}")
 
 
 

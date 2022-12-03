@@ -71,7 +71,7 @@ alias dlbox_mode='export ROS_MASTER_URI=http://${dlbox_ip}:11311 export PS1="\[\
 # sudo mkdir -p ~/.config/Ultralytics
 sudo mkdir -p ~/.config/matplotlib
 # sudo chmod -R 777 /home/hayashide/.config/matplotlib
-sudo chmod -R 777 /media
+sudo chmod 777 -R /media
 # sudo chmod 777 -R ~/catkin_ws/devel/setup.bash
 # sudo chmod 777 -R ~/catkin_ws/build
 
