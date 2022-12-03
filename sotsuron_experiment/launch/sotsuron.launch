@@ -27,11 +27,11 @@
     />
         <!-- args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag" -->
 
-    <!-- <node pkg="sotsuron_experiment" 
+    <node pkg="sotsuron_experiment" 
         name="matlab_trigger" 
         type="matlab_trigger.py" 
         output="screen" 
         launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "
-    /> -->
+    />
 
 </launch>
