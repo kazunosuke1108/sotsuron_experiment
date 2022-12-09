@@ -1,0 +1,21 @@
+<launch>
+    <arg name="play_bag_name" default="_2022-12-08-20-08-06"/>
+
+    <node
+    pkg="rosbag" 
+    name="play" 
+    type="play" 
+    args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag"
+    />
+    <!-- launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' " -->
+    <!-- args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag" -->
+
+    <node pkg="sotsuron_experiment" 
+        name="odom_subscriber" 
+        type="odom_subscriber.py" 
+        output="screen" 
+    />
+
+        <!-- launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' " -->
+
+</launch>
