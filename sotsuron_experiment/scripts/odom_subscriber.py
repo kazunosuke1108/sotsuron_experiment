@@ -9,7 +9,7 @@ import numpy as np
 
 _odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
 
-csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/monitor/odom_2022-12-08-20-08-06.csv"
+csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/monitor/odom_2022-12-11-18-54-07.csv"
 odom_history=[]
 
 def callback_odom(msg):
