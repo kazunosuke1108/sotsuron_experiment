@@ -7,6 +7,7 @@ from nav_msgs.msg import Odometry
 import tf
 from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
+from geometry_msgs.msg import PointStamped
 import message_filters
 csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.csv"
 
@@ -36,7 +37,7 @@ def idx_to_dist(msg_scan,idx1,idx2):
     return dist
 
 def pub_sub():
-    global rgb_sub,dpt_sub,info_sub
+    global rgb_sub,dpt_sub,info_sub,pub_PointStamped
     # subscriber
     sub_list=[]
     odom_sub = message_filters.Subscriber('/hsrb/odom', Odometry)
@@ -47,6 +48,7 @@ def pub_sub():
     mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,0.5)
     
     # publisher
+    pub_PointStamped=rospy.Publisher("publisher_point",PointStamped,queue_size=1)
 
     # listener
 
@@ -93,11 +95,23 @@ def Callback(msg_odom,msg_scan):
                     # c条件クリア・足全体認定
                     candidate_list.append(ranges.index(edge_list[i][0]))
                     pass
+    for i,idx in enumerate(candidate_list):
+        point=PointStamped()
+        point.header.stamp=rospy.Time.now()
+        point.header.frame_id="base_link"
+        pos=idx_to_pos(msg_scan,idx)
+        point.point.x=pos[0]
+        point.point.y=pos[1]
+        point.point.z=0
+        rospy.loginfo(point)
+        pub_PointStamped.publish(point)
+        # POINT自体をちゃんと打ててないので、LRF視野の左端に重なるようにpublishできるようにする
+
     yorozu_idx.append(candidate_list)
     print("candidate")
     print(candidate_list)
     for i in range(len(yorozu_idx)):
-        
+
         pass
 
     # # 2d func assumption

@@ -16,7 +16,7 @@
         output="screen" 
     />
 
-	<node pkg="rviz" type="rviz" name="lrfpose_server_rviz" args="-d $(find sotsuron_experiment)/rviz/my_rviz.rviz" />
+	<node pkg="rviz" type="rviz" name="my_rviz" args="-d $(find sotsuron_experiment)/rviz/my_rviz.rviz" />
         <!-- launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' " -->
 
 </launch>
