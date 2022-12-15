@@ -2,14 +2,38 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import rospy 
+import os
 from nav_msgs.msg import Odometry   
 import tf
 from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
 import message_filters
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.csv"
 
 _odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
+footcandidate=[]
+footcandidate_idx=[]
+footcandidate2=[]
+footcandidate2_idx=[]
+footcandidate3=[]
+footcandidate3_idx=[]
+footcandidate4=[]
+footcandidate4_idx=[]
+yorozu_idx=[]
 
+def idx_to_pos(msg_scan,idx):
+    rad_p_idx=(msg_scan.range_max-msg_scan.range_min)/len(msg_scan.ranges)
+    rad=msg_scan.range_min+rad_p_idx*idx
+    xR=msg_scan.ranges[idx]*np.cos(rad)
+    yR=msg_scan.ranges[idx]*np.sin(rad)
+    
+    return np.array([xR,yR]).T
+
+def idx_to_dist(msg_scan,idx1,idx2):
+    pos1=idx_to_pos(msg_scan,idx1)
+    pos2=idx_to_pos(msg_scan,idx2)
+    dist=np.sqrt((pos1[0]-pos2[0])**2+(pos1[1]-pos2[1])**2)
+    return dist
 
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
@@ -42,16 +66,68 @@ def Callback(msg_odom,msg_scan):
     q = (qx, qy, qz, qw)
     e = euler_from_quaternion(q)
     _odom_theta = e[2] 
-    rospy.loginfo("Odomery: x=%s y=%s theta=%s", _odom_x, _odom_y, _odom_theta)
+    # rospy.loginfo("Odomery: x=%s y=%s theta=%s", _odom_x, _odom_y, _odom_theta)
 
     # Scan
     ranges=msg_scan.ranges
-    rospy.loginfo(f"max:{max(ranges)}, min:{min(ranges)}")
-    rospy.loginfo(msg_scan.range_max)
+    # rospy.loginfo(f"max:{max(ranges)}, min:{min(ranges)}")
 
+    # yorozu method
+    edge_list=[]
+    candidate_list=[]
+    for i in range(1,len(ranges)):
+        if abs(ranges[i]-ranges[i-1])>0.1:
+            # エッジ認定
+            edge_list.append([ranges[i],i])
+            pass
+    for i in range(3,len(edge_list)):
+        if idx_to_dist(msg_scan,i,i-1)>0.01 and idx_to_dist(msg_scan,i-2,i-3)<0.2:
+            # a条件クリア・柱認定
+            left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
+            right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
+            dist=idx_to_dist(msg_scan,left_idx,right_idx)
+            if dist>0.1 and dist<1.0:
+                # b条件クリア・2本の柱認定
+                feetwidth=idx_to_dist(msg_scan,i,i-3)
+                if feetwidth>0.2 and feetwidth<0.4:
+                    # c条件クリア・足全体認定
+                    candidate_list.append(ranges.index(edge_list[i][0]))
+                    pass
+    yorozu_idx.append(candidate_list)
+    print("candidate")
+    print(candidate_list)
+    for i in range(len(yorozu_idx)):
+        
+        pass
 
-    pass
+    # # 2d func assumption
+    # win=15
+    # err_list=[]
+    # for i in range(len(ranges)-win):
+    #     ranges_roi=np.array(ranges[i:i+win])
+    #     if np.average(ranges_roi)>20:
+    #         err_list.append(9999)
+    #         continue
+    #     ranges_norm=(ranges_roi-min(ranges_roi))/(max(ranges_roi)-min(ranges_roi))
+    #     indexes=np.arange(-1,1,2/win)
+    #     a,b,c=np.polyfit(indexes,ranges_norm,2)
+    #     if a<0:
+    #         err_list.append(999)
+    #         continue
+    #     estm=a*ranges_norm**2+b*ranges_norm+c
+    #     err=np.average(ranges_norm-estm)
+    #     err_list.append(abs(err))
 
+    # err_sorted=sorted(err_list)
+    # footcandidate.append(ranges[err_list.index(err_sorted[0])+int(win/2)])
+    # footcandidate_idx.append(err_list.index(err_sorted[0]))
+    # footcandidate2.append(ranges[err_list.index(err_sorted[1])]+int(win/2))
+    # footcandidate2_idx.append(err_list.index(err_sorted[1]))
+    # savemtx=np.column_stack((np.array(footcandidate).T,np.array(footcandidate_idx).T,np.array(footcandidate2).T,np.array(footcandidate2_idx).T))
+    # np.savetxt(csv_path,savemtx,delimiter=",")
+    # rospy.loginfo(f"{err_list.index(min(err_list))} {min(err_list)}")
+
+    
 rospy.init_node("lrf_subscriber")
 mf=pub_sub()
 mf.registerCallback(Callback)
