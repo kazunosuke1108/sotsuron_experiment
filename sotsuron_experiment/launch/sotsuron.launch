@@ -2,8 +2,11 @@
 <launch>
     <!-- <include "$(find ytlab_zed_modules)/launch/user_zed.launch"/> -->
 
+    <!-- 0.6m/s -->
     <!-- <arg name="play_bag_name" default="_2022-12-02-11-44-17"/> -->
+    <!-- 1.2m/s -->
     <!-- <arg name="play_bag_name" default="_2022-12-02-11-49-05"/> -->
+    <!-- 0.9m/s -->
     <arg name="play_bag_name" default="_2022-12-02-11-51-22"/>
 
     <arg name="python_start_delay" default="1.0" />
@@ -27,11 +30,11 @@
     />
         <!-- args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag" -->
 
-    <node pkg="sotsuron_experiment" 
+    <!-- <node pkg="sotsuron_experiment" 
         name="matlab_trigger" 
         type="matlab_trigger.py" 
         output="screen" 
         launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "
-    />
+    /> -->
 
 </launch>

@@ -32,7 +32,7 @@ dpt_history=[]
 history_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/history/"
 monitor_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/"
 # csv
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/results.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/sources/track_results_1216_090.csv"
 
 # json
 jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
@@ -234,22 +234,23 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     # get_velocity(rect_list,now)
     export_csv(rect_list,now)
 
-    try:
-        data=np.loadtxt(csv_path,delimiter=",")
-        z_list=data[:,3]
-        t_list=data[:,0]
-        # 線形近似
-        a,b=np.polyfit(t_list,z_list,1)
-        estimated_z=a*t_list[-1]+b
-        if estimated_z<end_thre:
-            save_vel()
-            rgb_sub.unregister()
-            dpt_sub.unregister()
-            info_sub.unregister()
-            rospy.on_shutdown(save_vel)
+    # 終了判定
+    # try:
+    #     data=np.loadtxt(csv_path,delimiter=",")
+    #     z_list=data[:,3]
+    #     t_list=data[:,0]
+    #     # 線形近似
+    #     a,b=np.polyfit(t_list,z_list,1)
+    #     estimated_z=a*t_list[-1]+b
+    #     if estimated_z<end_thre:
+    #         save_vel()
+    #         rgb_sub.unregister()
+    #         dpt_sub.unregister()
+    #         info_sub.unregister()
+    #         rospy.on_shutdown(save_vel)
 
-    except (FileNotFoundError,IndexError):
-        pass
+    # except (FileNotFoundError,IndexError):
+    #     pass
 
     # if end_flg:
     #     save_vel()
