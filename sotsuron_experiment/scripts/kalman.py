@@ -1,62 +1,87 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
-import sys
-print(sys.version)
-# import numpy as np
-# # from numpy.random import *
-# import matplotlib.pyplot as plt
 
-# def Kalman(y, xK1, pK1, sigmaW, sigmaV):
+import os
+import numpy as np
+import scipy as sp
+from scipy import linalg
+import matplotlib.pyplot as plt
 
-#     # Predict State Variable
-#     xK = xK1
+def kalman_filter(z,fps=15):
+    po=z # position observed
+    # 速度を求める
+    dansage=np.insert(z[:-1],0,0)
+    vo=z-dansage
+    vo[0]=0
+    vectors_p=np.column_stack([po,vo])
+    print(vectors_p.shape)
 
-#     # Update Sigma Variable
-#     pK = pK1 + sigmaW
+    A=np.array([[1,1/fps],[0,1]])
+    B=np.array([[0],[1]])
+    C=np.array([[1,0],[0,1]])
+    # G=np.array([[0],[1]])
 
-#     # Update Kalman Gain
-#     kGain = pK / (pK + sigmaV)
+    
+    R=1 # システム（プロセス）雑音の分散
+    Q=1 # 観測雑音の分散
 
-#     # Filter State and Variable
-#     xFilt = xK + kGain * (y - xK)
-#     pFilt = (1 - kGain) * pK
+    n_v=np.random.normal(
+        loc   = 0,      # 平均
+        scale = np.sqrt(R),      # 標準偏差
+        size  = vectors_p.shape,# 出力配列のサイズ(タプルも可)
+        )
+    
+    n_p=np.random.normal(
+        loc   = 0,      # 平均
+        scale = np.sqrt(Q),      # 標準偏差
+        size  = vectors_p.shape,# 出力配列のサイズ(タプルも可)
+        )
 
-#     return xFilt, pFilt
+    print(n_v[0]@n_v[0])
+    print(n_v[0]@n_v[1])
+    print(n_v[1]@n_v[1])
+
+    Q=np.array([[1,0],[0,1]])
+
+    P=sp.linalg.solve_continuous_are(A,B,Q,R)
+    print(P)
+    M=P@C.T@np.linalg.pinv(R+C@P@C.T)
+    print(M)
+    pHat_k_km1=vectors_p[0]
+
+    estm_list=[]
+    estm_list.append(pHat_k_km1)
+    for vector_p in vectors_p[1:]: 
+        pHat_k_k=pHat_k_km1+M@(vector_p-C@pHat_k_km1)
+        pHat_Kp1_k=A@pHat_k_k
+        estm_list.append(pHat_Kp1_k)
+
+    return np.array(estm_list)
 
 
-# def CreateFilteredData(measData, initPredVar, sigmaW, sigmaV):
+speed="090"
+csv_path=os.environ['HOME']+f"/catkin_ws/src/sotsuron_experiment/scripts/sources/track_results_1216_{speed}.csv"
+png_path=os.environ['HOME']+f"/catkin_ws/src/sotsuron_experiment/scripts/sources/1216_{speed}_z.png"
 
-#     length = len(measData)
-#     filteredMeasData = np.zeros(length + 1)
-#     filteredPredVar = np.zeros(length + 1)
-#     filteredPredVar[0] = initPredVar
+try:
+    data=np.loadtxt(csv_path,delimiter=",")
+except OSError:
+    csv_path=os.environ['HOME']+f"/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/sources/track_results_1216_{speed}.csv"
+    png_path=os.environ['HOME']+f"/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/sources/1216_{speed}_z.png"
+    data=np.loadtxt(csv_path,delimiter=",")
 
-#     for i in range(0, length):
-#         xFilt, pFilt = Kalman(measData[i], filteredMeasData[i], filteredPredVar[i], sigmaW, sigmaV)
-#         filteredMeasData[i + 1] = xFilt
-#         filteredPredVar[i + 1] = pFilt
 
-#     return np.delete(filteredMeasData, 0), np.delete(filteredPredVar, 0)
+t=data[:,0]
+x=data[:,1]
+y=data[:,2]
+z=np.array(data[:,3])
 
-# def CreateSampleData(height, var, size):
+plt.plot(t,z,label=f"{speed}z_raw")
 
-#     indexes = [idx for idx in range(0, size)]
-#     heightListWithNoise = np.random.normal(height, var, size)
+estm_list=kalman_filter(z,fps=15)
 
-#     return indexes, heightListWithNoise
+plt.plot(t,estm_list[:,0],label=f"{speed}z_kalman")
 
-# if __name__ == '__main__':
-#     print("Sample Kalman Filter started.")
+plt.legend()
+plt.savefig(png_path)
 
-#     height = 1.0
-#     var = 0.5
-#     size = 100
-
-#     indexes, data = CreateSampleData(height, var, size)
-#     filteredData, filteredVars = CreateFilteredData(data, 10000, 100, 10000)
-
-#     plt.plot(indexes, data)
-#     plt.plot(indexes, filteredData)
-#     #plt.plot(indexes, filteredVars)
-#     plt.show()
-print("hello")
