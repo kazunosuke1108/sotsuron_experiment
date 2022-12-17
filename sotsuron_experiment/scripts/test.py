@@ -1,13 +1,15 @@
 import numpy as np
 
-sample=[]
-sample.append([1,2,3])
-sample.append([1,2,3,4,5])
+print(np.arange(1,10,0.01))
+
+# sample=[]
+# sample.append([1,2,3])
+# sample.append([1,2,3,4,5])
 
 
-for i in range(len(sample)):
+# for i in range(len(sample)):
 	
-	print(sample[i])
+# 	print(sample[i])
 
 # import numpy as np
 # import matplotlib.pyplot as plt
