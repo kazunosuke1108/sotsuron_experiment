@@ -79,39 +79,19 @@ def Callback(msg_odom,msg_scan):
     a_list=[]
     b_list=[]
     candidate_list=[]
-    for i in range(1,len(ranges)):
-        if abs(ranges[i]-ranges[i-1])>0.1:
-            # エッジ認定
-            edge_list.append([ranges[i],i])
-
-    for i in range(3,len(edge_list)):
-        if idx_to_dist(msg_scan,i,i-1)>0.01 and idx_to_dist(msg_scan,i,i-1)<0.2 and idx_to_dist(msg_scan,i-2,i-3)>0.01 and idx_to_dist(msg_scan,i-2,i-3)<0.2:
-            # a条件クリア・柱認定
-            a_list.append(ranges.index(edge_list[i][0]))
-            left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
-            right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
-            dist=idx_to_dist(msg_scan,left_idx,right_idx)
-            if dist>0.1 and dist<1.0:
-                # b条件クリア・2本の柱認定
-                b_list.append(ranges.index(edge_list[i][0]))
-                feetwidth=idx_to_dist(msg_scan,i,i-3)
-                if feetwidth>0.2 and feetwidth<0.4:
-                    # c条件クリア・足全体認定
-                    candidate_list.append(ranges.index(edge_list[i][0]))
-                    pass
     # for i in range(1,len(ranges)):
-    #     if abs(ranges[i]-ranges[i-1])>=0:
+    #     if abs(ranges[i]-ranges[i-1])>0.1:
     #         # エッジ認定
     #         edge_list.append([ranges[i],i])
 
     # for i in range(3,len(edge_list)):
-    #     if idx_to_dist(msg_scan,i,i-1)>0.001 and idx_to_dist(msg_scan,i,i-1)<100 and idx_to_dist(msg_scan,i-2,i-3)>0.001 and idx_to_dist(msg_scan,i-2,i-3)<100.0:
-    #         # a条件クリア・柱が**隣接して**2つある認定
+    #     if idx_to_dist(msg_scan,i,i-1)>0.01 and idx_to_dist(msg_scan,i,i-1)<0.2 and idx_to_dist(msg_scan,i-2,i-3)>0.01 and idx_to_dist(msg_scan,i-2,i-3)<0.2:
+    #         # a条件クリア・柱認定
     #         a_list.append(ranges.index(edge_list[i][0]))
     #         left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
     #         right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
     #         dist=idx_to_dist(msg_scan,left_idx,right_idx)
-    #         if dist>0.01 and dist<3.0:
+    #         if dist>0.1 and dist<1.0:
     #             # b条件クリア・2本の柱認定
     #             b_list.append(ranges.index(edge_list[i][0]))
     #             feetwidth=idx_to_dist(msg_scan,i,i-3)
@@ -119,6 +99,26 @@ def Callback(msg_odom,msg_scan):
     #                 # c条件クリア・足全体認定
     #                 candidate_list.append(ranges.index(edge_list[i][0]))
     #                 pass
+    for i in range(1,len(ranges)):
+        if abs(ranges[i]-ranges[i-1])>=0:
+            # エッジ認定
+            edge_list.append([ranges[i],i])
+
+    for i in range(3,len(edge_list)):
+        if idx_to_dist(msg_scan,i,i-1)>0.001 and idx_to_dist(msg_scan,i,i-1)<100 and idx_to_dist(msg_scan,i-2,i-3)>0.001 and idx_to_dist(msg_scan,i-2,i-3)<100.0:
+            # a条件クリア・柱が**隣接して**2つある認定
+            a_list.append(ranges.index(edge_list[i][0]))
+            left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
+            right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
+            dist=idx_to_dist(msg_scan,left_idx,right_idx)
+            if dist>0.01 and dist<3.0:
+                # b条件クリア・2本の柱認定
+                b_list.append(ranges.index(edge_list[i][0]))
+                feetwidth=idx_to_dist(msg_scan,i,i-3)
+                if feetwidth>0.2 and feetwidth<0.4:
+                    # c条件クリア・足全体認定
+                    candidate_list.append(ranges.index(edge_list[i][0]))
+                    pass
     for i,idx in enumerate(candidate_list):
         point=PointStamped()
         point.header.stamp=rospy.Time.now()
