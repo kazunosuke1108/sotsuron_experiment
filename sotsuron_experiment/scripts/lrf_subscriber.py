@@ -10,6 +10,7 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import PointStamped
 import message_filters
 csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.csv"
+ranges_csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/sources/ranges.csv"
 
 _odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
 footcandidate=[]
@@ -74,6 +75,37 @@ def Callback(msg_odom,msg_scan):
     ranges=msg_scan.ranges
     # rospy.loginfo(f"max:{max(ranges)}, min:{min(ranges)}")
 
+    np.savetxt(ranges_csv_path,ranges,delimiter=",")
+
+    point=PointStamped()
+    point.header.stamp=rospy.Time.now()
+    point.header.frame_id="base_link"
+    # pos=idx_to_pos(msg_scan,idx-1)
+    point.point.x=0
+    point.point.y=0
+    point.point.z=0
+    # rospy.loginfo(point)
+    pub_PointStamped.publish(point)
+
+    # original_candidate=[]
+    # for i in range(1,len(ranges)):
+    #     if abs(ranges[i]-ranges[i-1])>=1.0:
+    #         # エッジ認定
+    #         original_candidate.append([ranges[i],i])
+    
+    # print(len(original_candidate))
+    # for i,data in enumerate(original_candidate):
+    #     idx=data[1]
+    #     point=PointStamped()
+    #     point.header.stamp=rospy.Time.now()
+    #     point.header.frame_id="base_link"
+    #     pos=idx_to_pos(msg_scan,idx-1)
+    #     point.point.x=pos[0]
+    #     point.point.y=pos[1]
+    #     point.point.z=0
+    #     # rospy.loginfo(point)
+    #     pub_PointStamped.publish(point)
+
     # yorozu method
     edge_list=[]
     a_list=[]
@@ -99,40 +131,51 @@ def Callback(msg_odom,msg_scan):
     #                 # c条件クリア・足全体認定
     #                 candidate_list.append(ranges.index(edge_list[i][0]))
     #                 pass
-    for i in range(1,len(ranges)):
-        if abs(ranges[i]-ranges[i-1])>=0:
-            # エッジ認定
-            edge_list.append([ranges[i],i])
 
-    for i in range(3,len(edge_list)):
-        if idx_to_dist(msg_scan,i,i-1)>0.001 and idx_to_dist(msg_scan,i,i-1)<100 and idx_to_dist(msg_scan,i-2,i-3)>0.001 and idx_to_dist(msg_scan,i-2,i-3)<100.0:
-            # a条件クリア・柱が**隣接して**2つある認定
-            a_list.append(ranges.index(edge_list[i][0]))
-            left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
-            right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
-            dist=idx_to_dist(msg_scan,left_idx,right_idx)
-            if dist>0.01 and dist<3.0:
-                # b条件クリア・2本の柱認定
-                b_list.append(ranges.index(edge_list[i][0]))
-                feetwidth=idx_to_dist(msg_scan,i,i-3)
-                if feetwidth>0.2 and feetwidth<0.4:
-                    # c条件クリア・足全体認定
-                    candidate_list.append(ranges.index(edge_list[i][0]))
-                    pass
-    for i,idx in enumerate(candidate_list):
-        point=PointStamped()
-        point.header.stamp=rospy.Time.now()
-        point.header.frame_id="base_link"
-        pos=idx_to_pos(msg_scan,idx-1)
-        point.point.x=pos[0]
-        point.point.y=pos[1]
-        point.point.z=0
-        # rospy.loginfo(point)
-        pub_PointStamped.publish(point)
-        # POINT自体をちゃんと打ててないので、LRF視野の左端に重なるようにpublishできるようにする
-    print(f"{len(edge_list)} -> {len(a_list)} -> {len(b_list)} -> {len(candidate_list)}")
-    yorozu_idx.append(candidate_list)
+    # for i in range(1,len(ranges)):
+    #     if abs(ranges[i]-ranges[i-1])>=0:
+    #         # エッジ認定
+    #         edge_list.append([ranges[i],i])
+
+    # for i in range(3,len(edge_list)):
+    #     if idx_to_dist(msg_scan,i,i-1)>0.001 and idx_to_dist(msg_scan,i,i-1)<100 and idx_to_dist(msg_scan,i-2,i-3)>0.001 and idx_to_dist(msg_scan,i-2,i-3)<100.0:
+    #         # a条件クリア・柱が**隣接して**2つある認定
+    #         a_list.append(ranges.index(edge_list[i][0]))
+    #         left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
+    #         right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
+    #         dist=idx_to_dist(msg_scan,left_idx,right_idx)
+    #         if dist>0.01 and dist<3.0:
+    #             # b条件クリア・2本の柱認定
+    #             b_list.append(ranges.index(edge_list[i][0]))
+    #             feetwidth=idx_to_dist(msg_scan,i,i-3)
+    #             if feetwidth>0.2 and feetwidth<0.4:
+    #                 # c条件クリア・足全体認定
+    #                 candidate_list.append(ranges.index(edge_list[i][0]))
+    #                 pass
+    # for i,idx in enumerate(candidate_list):
+    #     point=PointStamped()
+    #     point.header.stamp=rospy.Time.now()
+    #     point.header.frame_id="base_link"
+    #     pos=idx_to_pos(msg_scan,idx-1)
+    #     point.point.x=pos[0]
+    #     point.point.y=pos[1]
+    #     point.point.z=0
+    #     # rospy.loginfo(point)
+    #     pub_PointStamped.publish(point)
+    # print(f"{len(edge_list)} -> {len(a_list)} -> {len(b_list)} -> {len(candidate_list)}")
+    # yorozu_idx.append(candidate_list)
     # print(candidate_list)
+
+
+
+
+
+
+
+
+
+
+
 
     # # 2d func assumption
     # win=15

@@ -7,7 +7,10 @@
     <!-- 1.2m/s -->
     <!-- <arg name="play_bag_name" default="_2022-12-02-11-49-05"/> -->
     <!-- 0.9m/s -->
-    <arg name="play_bag_name" default="_2022-12-02-11-51-22"/>
+    <!-- <arg name="play_bag_name" default="_2022-12-02-11-51-22"/> -->
+    <!-- <arg name="play_bag_name" default="_2022-12-19-17-14-54_20m"/> -->
+    <!-- <arg name="play_bag_name" default="_2022-12-19-17-15-32_15m"/> -->
+    <arg name="play_bag_name" default="_2022-12-19-17-15-55_10m"/>
 
     <arg name="python_start_delay" default="1.0" />
     <arg name="rosbag_start_delay" default="10.0" />
@@ -25,10 +28,10 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag"
+        args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag"
         launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' "
     />
-        <!-- args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag" -->
+        <!-- args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag" -->
 
     <!-- <node pkg="sotsuron_experiment" 
         name="matlab_trigger" 

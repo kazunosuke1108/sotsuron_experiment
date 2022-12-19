@@ -32,7 +32,7 @@ dpt_history=[]
 history_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/history/"
 monitor_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/"
 # csv
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/sources/track_results_1216_090.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/kalman/kalman_stop_10.csv"
 
 # json
 jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
