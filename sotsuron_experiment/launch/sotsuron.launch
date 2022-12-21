@@ -12,17 +12,22 @@
     <!-- <arg name="play_bag_name" default="_2022-12-19-17-15-32_15m"/> -->
     <arg name="play_bag_name" default="_2022-12-19-17-15-55_10m"/>
 
-    <arg name="python_start_delay" default="1.0" />
+    <arg name="python_start_delay" default="0.1" />
     <arg name="rosbag_start_delay" default="10.0" />
     <arg name="matlab_start_delay" default="20.0" />
 
 
-    <node pkg="sotsuron_experiment" 
+    <!-- <node pkg="sotsuron_experiment" 
         name="human_tracker" 
         type="human_tracker.py" 
         launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' "
+    /> -->
+    <node pkg="sotsuron_experiment" 
+        name="detectron2_kp_ros" 
+        type="detectron2_kp_ros.py" 
+        output="screen" 
+        launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' "
     />
-        <!-- output="screen"  -->
 
     <node
         pkg="rosbag" 

@@ -117,7 +117,7 @@ def get_position(rgb_array,dpt_array,obj_people,proj_mtx):
             'dpt':dpt
             }
         rect_list.append(one_person)
-        print(one_person)
+        rospy.loginfo(dpt)
     return rect_list
 
 def export_csv(rect_list,now):
@@ -230,9 +230,10 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     objects=results.pandas().xyxy[0]
     obj_people=objects[objects['name']=='person']
     rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
+    rospy.loginfo(rect_list)
 
     # get_velocity(rect_list,now)
-    export_csv(rect_list,now)
+    # export_csv(rect_list,now)
 
     # 終了判定
     # try:
