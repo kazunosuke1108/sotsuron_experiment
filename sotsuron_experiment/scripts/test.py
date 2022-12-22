@@ -1,7 +1,6 @@
 import numpy as np
 
-print(np.arange(1,10,0.01))
-
+np.loadtxt("hoge.csv",delimiter=",")
 # sample=[]
 # sample.append([1,2,3])
 # sample.append([1,2,3,4,5])
