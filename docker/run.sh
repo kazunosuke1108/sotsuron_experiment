@@ -40,7 +40,7 @@ else
     -v /etc/passwd:/etc/passwd:ro \
     -v /etc/localtime:/etc/localtime:ro \
     -v /media:/media \
-    -v "/${PWD}/../../../ytlab_ros_ws/ytlab_rosbag/rosbag:/home/${USER}/catkin_ws/src/rosbag" \
+    -v "/${PWD}/../../../ytlab_ros_ws/ytlab_rosbag:/home/${USER}/catkin_ws/src/ytlab_rosbag" \
     -v "/${PWD}/../../../ytlab_ros_ws/ytlab_hsr:/home/${USER}/catkin_ws/src/ytlab_hsr" \
     -v "/$(pwd)/../../../ytlab_ros_ws/ytlab_navigation:/home/${USER}/catkin_ws/src/ytlab_navigation" \
     -v "/$(pwd)/../../../ytlab_ros_ws/ytlab_environment/ytlab_environment_msgs:/home/${USER}/catkin_ws/src/ytlab_environment/ytlab_environment_msgs" \

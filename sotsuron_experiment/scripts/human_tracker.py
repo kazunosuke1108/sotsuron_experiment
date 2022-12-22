@@ -32,7 +32,8 @@ dpt_history=[]
 history_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/history/"
 monitor_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/"
 # csv
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/kalman/kalman_stop_10.csv"
+# zed_csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/kalman/kalman_stop_10.csv"
+zed_csv_path=os.environ['HOME']+"/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_data/zed.csv"
 
 # json
 jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
@@ -130,7 +131,7 @@ def export_csv(rect_list,now):
             export_data=center_3d.tolist()
             export_data.insert(0,now)
             dpt_history.append(export_data)
-        np.savetxt(csv_path,dpt_history,delimiter=",")
+        np.savetxt(zed_csv_path,dpt_history,delimiter=",")
         rospy.loginfo(center_3d)
     else:
         rospy.loginfo("get_velocity: No one detected")
@@ -151,33 +152,33 @@ def export_csv(rect_list,now):
 #             one_person.insert(len(one_person),0)
 #             dpt_history.append(one_person)
         
-#         np.savetxt(csv_path,dpt_history,delimiter=",")
+#         np.savetxt(zed_csv_path,dpt_history,delimiter=",")
 #     else:
 #         rospy.loginfo("get_velocity: No one detected")
 
-def save_vel():
-    data=np.loadtxt(csv_path,delimiter=",")
-    z_list=data[:,3]
-    t_list=data[:,0]
-    # 線形近似
-    a,b=np.polyfit(t_list,z_list,1)
-    vel_info={
-        "z_ave":np.average(z_list[-10:]),
-        "z_latest":z_list[-1],
-        "z_linear_z":a*t_list[-1]+b,
-        "z_linear_a":a,
-        "z_linear_b":b,
-    }
-    # print(vel_list)
-    # print(np.average(vel_list))
-    jsn=open(jsn_path,"w")
-    json.dump(vel_info,jsn)
-    jsn.close()
-    import csv_plotter
-    rospy.loginfo(f"### velocity recognition summary ###")
-    rospy.loginfo(vel_info)
-    rospy.loginfo(f"### velocity recognition summary end ###")
-    pass
+# def save_vel():
+#     data=np.loadtxt(zed_csv_path,delimiter=",")
+#     z_list=data[:,3]
+#     t_list=data[:,0]
+#     # 線形近似
+#     a,b=np.polyfit(t_list,z_list,1)
+#     vel_info={
+#         "z_ave":np.average(z_list[-10:]),
+#         "z_latest":z_list[-1],
+#         "z_linear_z":a*t_list[-1]+b,
+#         "z_linear_a":a,
+#         "z_linear_b":b,
+#     }
+#     # print(vel_list)
+#     # print(np.average(vel_list))
+#     jsn=open(jsn_path,"w")
+#     json.dump(vel_info,jsn)
+#     jsn.close()
+#     import csv_plotter
+#     rospy.loginfo(f"### velocity recognition summary ###")
+#     rospy.loginfo(vel_info)
+#     rospy.loginfo(f"### velocity recognition summary end ###")
+#     pass
     
 # def ImageCallback_realsense(rgb_data,dpt_data,info_data):
 #     try:
@@ -237,7 +238,7 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
 
     # 終了判定
     # try:
-    #     data=np.loadtxt(csv_path,delimiter=",")
+    #     data=np.loadtxt(zed_csv_path,delimiter=",")
     #     z_list=data[:,3]
     #     t_list=data[:,0]
     #     # 線形近似
