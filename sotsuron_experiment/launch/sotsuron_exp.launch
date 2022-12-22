@@ -1,49 +1,50 @@
 <?xml version="1.0"?>
 <launch>
     <!-- variables -->
+    <arg name="start_delay" default="0.0" />
+    <arg name="play_bag_name" default="_2022-12-22-20-23-18_25222" />
 
     <!-- clear z.csv, t.csv, zed.csv -->
-    <node 
+    <!-- <node 
         pkg="sotsuron_experiment" 
         name="initialization" 
         type="initialization.py" 
         output="screen" 
-    />
-    <!-- launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' " -->
+        launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' "
+    /> -->
 
     <!-- human_tracking -->
-    <node 
+    <!-- <node 
         pkg="sotsuron_experiment"
         name="human_tracker"
         type="human_tracker.py" 
         output="screen" 
-    />
+        launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' "
+    /> -->
     <!-- matlab -->
     <node 
         pkg="sotsuron_experiment" 
         name="matlab_trigger" 
         type="matlab_trigger.py" 
         output="screen" 
+        launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' "
     />
     <!-- robot publisher -->
-    <node 
-        pkg="ytlab_hsr_modules"
-        name="experiment_runner"
-        type="experiment_runner.py" 
-        output="screen" 
-    />
+    <!-- ytlab_hsr側のlaunchで起動すること -->
 
     <!-- rosbag recorder -->
     <!-- <include file="$(find ytlab_rosbag_modules)/launch/rosbag_record_all.launch"/> -->
-    <!-- <include file="$(find ytlab_rosbag_modules)/launch/rosbag_record_for_zed.launch"/> -->
+    <!-- <include 
+        file="$(find ytlab_rosbag_modules)/launch/rosbag_record_for_zed.launch"
+    /> -->
 
     <!-- rosbag player -->
-    <!-- <node
+    <node
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag"
-        launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' "
-    /> -->
+        args="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg play_bag_name).bag"
+        launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' "
+    />
 
 </launch>

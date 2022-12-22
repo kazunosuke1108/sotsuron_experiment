@@ -126,13 +126,15 @@ def export_csv(rect_list,now):
         center_3d=rect_list[0]['center_3d']
         if np.isnan(center_3d).any():
             rospy.loginfo("export csv: remove nan")
+        elif center_3d[2]<0.1:
+            rospy.loginfo("export csv: remove dpt=0")
         else:
             center_3d=rect_list[0]['center_3d']
             export_data=center_3d.tolist()
             export_data.insert(0,now)
             dpt_history.append(export_data)
         np.savetxt(zed_csv_path,dpt_history,delimiter=",")
-        rospy.loginfo(center_3d)
+        # rospy.loginfo(center_3d)
     else:
         rospy.loginfo("get_velocity: No one detected")
 
@@ -231,10 +233,10 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     objects=results.pandas().xyxy[0]
     obj_people=objects[objects['name']=='person']
     rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
-    rospy.loginfo(rect_list)
+    # rospy.loginfo(rect_list)
 
     # get_velocity(rect_list,now)
-    # export_csv(rect_list,now)
+    export_csv(rect_list,now)
 
     # 終了判定
     # try:
