@@ -34,6 +34,8 @@ monitor_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/moni
 # csv
 # zed_csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/kalman/kalman_stop_10.csv"
 zed_csv_path=os.environ['HOME']+"/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_data/zed.csv"
+now=datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+zed_legacy_csv_path=os.environ['HOME']+f"/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_data/zed_{now}.csv"
 
 # json
 jsn_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/velocity.json"
@@ -134,9 +136,11 @@ def export_csv(rect_list,now):
             export_data.insert(0,now)
             dpt_history.append(export_data)
         np.savetxt(zed_csv_path,dpt_history,delimiter=",")
+        np.savetxt(zed_legacy_csv_path,dpt_history,delimiter=",")
         # rospy.loginfo(center_3d)
     else:
-        rospy.loginfo("get_velocity: No one detected")
+        pass
+        # rospy.loginfo("get_velocity: No one detected")
 
 # def get_velocity(rect_list,now):
 #     if len(rect_list)>0:
