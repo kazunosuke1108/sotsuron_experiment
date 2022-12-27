@@ -2,8 +2,8 @@
 <launch>
     <!-- variables -->
     <arg name="erase_delay" default="0.0" />
-    <arg name="matlab_delay" default="5.0" />
-    <arg name="start_delay" default="15.0" />
+    <arg name="matlab_delay" default="2.0" />
+    <arg name="start_delay" default="10.0" />
     <arg name="play_bag_name" default="_2022-12-22-20-23-18_25222" />
 
     <!-- clear z.csv, t.csv, zed.csv -->
