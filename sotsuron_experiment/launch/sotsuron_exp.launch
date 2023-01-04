@@ -16,13 +16,13 @@
     />
 
     <!-- human_tracking -->
-    <node 
+    <!-- <node 
         pkg="sotsuron_experiment"
         name="human_tracker"
         type="human_tracker.py" 
         output="screen" 
         launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' "
-    />
+    /> -->
     <!-- matlab -->
     <node 
         pkg="sotsuron_experiment" 
