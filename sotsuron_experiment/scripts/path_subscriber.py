@@ -16,6 +16,11 @@ import torch
 from pprint import pprint
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
+from sensor_msgs.msg import JointState
+from nav_msgs.msg import Odometry
+from tf.transformations import euler_from_quaternion
+
+
 import message_filters
 from cv_bridge import CvBridge
 
@@ -37,7 +42,7 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/test.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/test1734.csv"
 
 gravity_history=[]
 
@@ -51,6 +56,10 @@ def pub_sub():
     sub_list.append(dpt_sub)
     info_sub=message_filters.Subscriber(topicName_camInfo,CameraInfo)
     sub_list.append(info_sub)
+    odm_sub = message_filters.Subscriber(topicName_odm, Odometry)
+    sub_list.append(odm_sub)
+    joi_sub = message_filters.Subscriber(topicName_joi,JointState)
+    sub_list.append(joi_sub)
     mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,0.5)
     
     # publisher
@@ -176,8 +185,13 @@ def savefig(rgb_array,np_pred_keypoints):
 
     cv2.imwrite(remap_img,img)
 
-def ImageCallback_ZED(rgb_data,dpt_data,info_data):
-    # rospy.loginfo("####### debug ROI #######")
+def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
+    img_time=rgb_data.header.stamp
+    img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
+    odm_time=odm_data.header.stamp
+    odm_time_str=str(odm_time.secs) + '.' + str(odm_time.nsecs)
+    # rospy.loginfo(str(img_time.secs) + '.' + str(img_time.nsecs))
+    # rospy.loginfo(img_time)
     now=rospy.get_time()
     rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
     rgb_array=np.nan_to_num(rgb_array, copy=False)
@@ -190,6 +204,22 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     # rospy.loginfo(dpt_array)
 
     proj_mtx=np.array(info_data.P).reshape(3,4)
+
+    # odom
+    _odom_x = odm_data.pose.pose.position.x  
+    _odom_y = odm_data.pose.pose.position.y  
+    qx = odm_data.pose.pose.orientation.x
+    qy = odm_data.pose.pose.orientation.y
+    qz = odm_data.pose.pose.orientation.z
+    qw = odm_data.pose.pose.orientation.w
+    q = (qx, qy, qz, qw)
+    e = euler_from_quaternion(q)
+    _odom_theta = e[2] 
+
+    # pan
+    idx=joi_data.name.index('head_pan_joint')
+    pan=joi_data.position[idx]
+    
     
     # keypoint detection
     np_pred_keypoints=detect_kp(rgb_array)
@@ -203,10 +233,15 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
         gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
 
         # save gravity
-
         gravity_zone=gravity_zone.tolist()
-        gravity_zone.insert(0,time.time())
-        print(gravity_zone)
+        gravity_zone.insert(0,float(img_time_str))
+        gravity_zone.append(float(odm_time_str))
+        gravity_zone.append(_odom_x)
+        gravity_zone.append(_odom_y)
+        gravity_zone.append(_odom_theta)
+        rospy.loginfo("####### debug ROI #######")
+        gravity_zone.append(pan)
+        rospy.loginfo("####### debug ROI #######")
         gravity_history.append(gravity_zone)
         np.savetxt(csv_path,gravity_history,delimiter=",")
 
@@ -230,7 +265,8 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
 topicName_rgb="/hsrb/head_rgbd_sensor/rgb/image_rect_color"
 topicName_dpt="/hsrb/head_rgbd_sensor/depth_registered/image"
 topicName_camInfo="/hsrb/head_rgbd_sensor/rgb/camera_info"
-
+topicName_odm="/hsrb/odom"
+topicName_joi="/hsrb/joint_states"
 results_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results"
 
 
@@ -306,3 +342,26 @@ rospy.spin()
 #                 lineType=cv2.LINE_4)
 
 #     cv2.imwrite(remap_img,img)
+
+# def ImageCallback_realsense(rgb_data,dpt_data,info_data):
+#     try:
+#         # unpack arrays
+#         now=time.time()
+#         rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
+#         rgb_array=np.nan_to_num(rgb_array)
+#         rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
+#         dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
+#         dpt_array=np.nan_to_num(dpt_array)
+#         proj_mtx=np.array(info_data.P).reshape(3,4)
+#         # object recognition
+#         results=model(rgb_array)
+#         objects=results.pandas().xyxy[0]
+#         obj_people=objects[objects['name']=='person']
+#         rect_list=get_position(rgb_array,dpt_array,obj_people,proj_mtx)
+#         get_velocity(rect_list,now)
+#         if len(dpt_history)>=100:
+#             rgb_sub.unregister()
+#             dpt_sub.unregister()
+#             info_sub.unregister()
+#             save_vel(1500)
+#             rospy.on_shutdown(save_vel)
