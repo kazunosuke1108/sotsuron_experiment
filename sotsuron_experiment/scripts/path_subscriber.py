@@ -42,7 +42,7 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/test1734.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
 
 gravity_history=[]
 
@@ -60,7 +60,7 @@ def pub_sub():
     sub_list.append(odm_sub)
     joi_sub = message_filters.Subscriber(topicName_joi,JointState)
     sub_list.append(joi_sub)
-    mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,0.5)
+    mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,5)
     
     # publisher
 
@@ -185,7 +185,67 @@ def savefig(rgb_array,np_pred_keypoints):
 
     cv2.imwrite(remap_img,img)
 
+def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
+    rospy.loginfo("####### debug ROI #######")
+    img_time=rgb_data.header.stamp
+    img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
+    odm_time=odm_data.header.stamp
+    odm_time_str=str(odm_time.secs) + '.' + str(odm_time.nsecs)
+    # rospy.loginfo(str(img_time.secs) + '.' + str(img_time.nsecs))
+    # rospy.loginfo(img_time)
+    now=rospy.get_time()
+    rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
+    rgb_array=np.nan_to_num(rgb_array)
+    rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
+
+    dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
+    dpt_array=np.nan_to_num(dpt_array)
+    # dpt_array=np.where(dpt_array>40,0,dpt_array)
+    # dpt_array=np.where(dpt_array<0,0,dpt_array)
+    # rospy.loginfo(dpt_array)
+
+    proj_mtx=np.array(info_data.P).reshape(3,4)
+
+    # odom
+    _odom_x = odm_data.pose.pose.position.x  
+    _odom_y = odm_data.pose.pose.position.y  
+    qx = odm_data.pose.pose.orientation.x
+    qy = odm_data.pose.pose.orientation.y
+    qz = odm_data.pose.pose.orientation.z
+    qw = odm_data.pose.pose.orientation.w
+    q = (qx, qy, qz, qw)
+    e = euler_from_quaternion(q)
+    _odom_theta = e[2] 
+
+    # pan
+    idx=joi_data.name.index('head_pan_joint')
+    pan=joi_data.position[idx]
+    
+    
+    # keypoint detection
+    np_pred_keypoints=detect_kp(rgb_array)
+    # rospy.loginfo(np_pred_keypoints)
+
+    # 2D to 3D
+    if len(np_pred_keypoints)>1:
+        np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
+        
+        # gravity
+        gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
+
+        # save gravity
+        gravity_zone=gravity_zone.tolist()
+        gravity_zone.insert(0,float(img_time_str))
+        gravity_zone.append(float(odm_time_str))
+        gravity_zone.append(_odom_x)
+        gravity_zone.append(_odom_y)
+        gravity_zone.append(_odom_theta)
+        gravity_zone.append(pan)
+        gravity_history.append(gravity_zone)
+        np.savetxt(csv_path,gravity_history,delimiter=",")
+
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
+    rospy.loginfo("####### debug ROI #######")
     img_time=rgb_data.header.stamp
     img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
     odm_time=odm_data.header.stamp
@@ -239,9 +299,7 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
         gravity_zone.append(_odom_x)
         gravity_zone.append(_odom_y)
         gravity_zone.append(_odom_theta)
-        rospy.loginfo("####### debug ROI #######")
         gravity_zone.append(pan)
-        rospy.loginfo("####### debug ROI #######")
         gravity_history.append(gravity_zone)
         np.savetxt(csv_path,gravity_history,delimiter=",")
 
@@ -262,21 +320,28 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
 # topicName_dpt="/zed/zed_node/depth/depth_registered"
 # topicName_camInfo="/zed/zed_node/rgb/camera_info"
 
-topicName_rgb="/hsrb/head_rgbd_sensor/rgb/image_rect_color"
-topicName_dpt="/hsrb/head_rgbd_sensor/depth_registered/image"
-topicName_camInfo="/hsrb/head_rgbd_sensor/rgb/camera_info"
+# topicName_rgb="/hsrb/head_rgbd_sensor/rgb/image_rect_color"
+# topicName_dpt="/hsrb/head_rgbd_sensor/depth_registered/image"
+# topicName_camInfo="/hsrb/head_rgbd_sensor/rgb/camera_info"
+topicName_rgb="/hsrb/realsense/camera/color/image_raw"
+# topicName_dpt="/hsrb/realsense/camera/depth/image_rect_raw"
+topicName_dpt="/hsrb/realsense/camera/aligned_depth_to_color/image_raw"
+topicName_camInfo="/hsrb/realsense/camera/color/camera_info"
+
 topicName_odm="/hsrb/odom"
 topicName_joi="/hsrb/joint_states"
 results_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results"
 
 
 
+rospy.loginfo("####### debug ROI #######")
 detector=Detector(model_type="KP")
 
 # subscribe
 mf=pub_sub()
+rospy.loginfo(mf)
 # mf.registerCallback(ImageCallback_realsense)
-mf.registerCallback(ImageCallback_ZED)
+mf.registerCallback(ImageCallback_realsense)
 rospy.spin()
 
 

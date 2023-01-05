@@ -5,13 +5,13 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/test1734.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
 data=np.loadtxt(csv_path,delimiter=",")
 
 t_img=data[:,0]
-x=data[:,1]
-y=data[:,2]
-z=data[:,3]
+x=data[:,1]/1000
+y=data[:,2]/1000
+z=data[:,3]/1000
 t_odm=data[:,5]
 xR=data[:,6]
 yR=data[:,7]
