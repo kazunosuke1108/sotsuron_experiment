@@ -1,0 +1,25 @@
+<launch>
+    <arg name="bag_basename" default="20230105_d_060_LAN_cable_cover"/>
+    <arg name="avi_basename" default="20230105_d_060_LAN_cable_cover"/>
+
+    <!-- <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/$(arg bag_basename).bag"/> -->
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_basename).bag"/>
+    <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/>
+    <arg name="fps" default="6"/>
+    <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/>
+
+
+    <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg topic_name)' _fps:='$(arg fps)' _filename:='$(arg save_path)'"
+    />
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path)"
+    />    
+</launch>

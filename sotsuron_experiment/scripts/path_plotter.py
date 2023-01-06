@@ -31,8 +31,8 @@ yH=yR+z*np.sin(thR+pan)-x*np.cos(thR+pan)
 # plt.plot(t_img,yH,label="yH")
 # plt.plot(t_img,t_odm-t_img,label="time gap")
 
-plt.plot(xR,yR)
-plt.plot(xH,yH)
-
+plt.plot(xR,yR,label="HSR position by odometry")
+plt.plot(xH,yH,label="gravity zone of the human")
+plt.plot([-2,7],[0,0],label="truth path of the human")
 plt.legend()
 plt.show()
