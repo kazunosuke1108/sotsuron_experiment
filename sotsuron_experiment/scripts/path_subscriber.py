@@ -42,8 +42,10 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
-
+# csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
+args=sys.argv
+csv_path=str(args[1])
+rospy.loginfo(f"## writing: {csv_path} ##")
 gravity_history=[]
 
 def pub_sub():

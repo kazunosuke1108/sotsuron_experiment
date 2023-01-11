@@ -1,0 +1,21 @@
+<launch>
+    <arg name="bag_basename" default="20230107_rotation_0_18_yoshinari_yoko"/>
+
+    <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/$(arg bag_basename).bag"/>
+    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
+
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="-r 0.1 $(arg bag_path)"
+    />    
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="path_subscriber" 
+        type="path_subscriber.py" 
+        output="screen" 
+        args="$(arg csv_path)"
+    />
+</launch>
