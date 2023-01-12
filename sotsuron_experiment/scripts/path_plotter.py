@@ -38,6 +38,15 @@ for csv_path in csv_paths:
         plt.plot(xH_clbd,yH_clbd,label="gravity zone of the human (calibrated)")
 
 
+    # VICON data import
+
+    
+
+    xR_HSR=np.average(xR)
+    yR_HSR=np.average(yR)
+    xR_VCN=np.average()
+    
+
     # plt.plot(t_img,x,label="x")
     # plt.plot(t_img,y,label="y")
     # plt.plot(t_img,z,label="z")
