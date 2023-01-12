@@ -135,8 +135,8 @@ for csv_path in csv_paths:
         print(os.path.basename(csv_path))
         anl=[int(os.path.basename(csv_path)[-10:-8]),np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2)]
         analysis.append(anl)
-        np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis)
+        np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis,delimiter=",")
     except (TypeError,ValueError):
         anl=[0,np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2)]
         analysis.append(anl)
-        np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis)
+        np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis,delimiter=",")
