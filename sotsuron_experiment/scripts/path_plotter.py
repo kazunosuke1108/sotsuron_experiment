@@ -11,7 +11,7 @@ csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0
 
 csv_paths=sorted(glob(csv_dir_path+"/*"))
 vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/vicon_processed/*"))
-
+analysis=[]
 for csv_path in csv_paths:
     data=np.loadtxt(csv_path,delimiter=",")
 
@@ -92,8 +92,8 @@ for csv_path in csv_paths:
     xH_odm_cps=xH_odm_cps+np.average(xR_VCN)
     yH_odm_cps=yH_odm_cps+np.average(yR_VCN)
 
-    if "18" not in csv_path:
-        np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results.csv",np.column_stack((xR,yR,xH,yH)),delimiter=",")
+    np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_HSR.csv",np.column_stack((xH,yH,xH_odm_cps,yH_odm_cps)),delimiter=",")
+    np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN.csv",np.column_stack((xH_VCN,yH_VCN,xR_VCN,yR_VCN)),delimiter=",")
 
     plt.scatter(xH_VCN,yH_VCN,label="VICON: human position",s=2,color="r")
     plt.scatter(xH,yH,label="HSR: human position (raw)",s=2,color="b")
@@ -114,6 +114,8 @@ for csv_path in csv_paths:
     xH_odm_cps_m2t2,yH_odm_cps_m2t2=xH_odm_cps_m2t2[xH_odm_cps_m2t2<=2],yH_odm_cps_m2t2[xH_odm_cps_m2t2<=2]
     xH_VCN_m2t2,yH_VCN_m2t2=xH_VCN[xH_VCN>=-2],yH_VCN[xH_VCN>=-2]
     xH_VCN_m2t2,yH_VCN_m2t2=xH_VCN_m2t2[xH_VCN_m2t2<=2],yH_VCN_m2t2[xH_VCN_m2t2<=2]
+    # xR_VCN_m2t2,yR_VCN_m2t2=xR_VCN[xR_VCN>=-2],yR_VCN[xR_VCN>=-2]
+    # xR_VCN_m2t2,yR_VCN_m2t2=xR_VCN_m2t2[xR_VCN_m2t2<=2],yR_VCN_m2t2[xR_VCN_m2t2<=2]
     plt.hist(yH_VCN_m2t2,bins=80,density = True,label="VICON: truth",color="r",alpha=0.7)
     plt.hist(yH_m2t2,bins=80,density = True,label="HSR: raw",color="b",alpha=0.7)
     plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="HSR: odometry compensated",color="g",alpha=0.7)
@@ -123,3 +125,18 @@ for csv_path in csv_paths:
     plt.legend(loc="upper right")
     plt.savefig(csv_result_path+"/graph/"+os.path.basename(csv_path[:-8])+"_histgram.png")
     plt.cla()
+    print(xH_m2t2.shape)
+    print(xH_odm_cps_m2t2.shape)
+    np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_raw_m2t2.csv",np.column_stack((xH_m2t2,yH_m2t2)),delimiter=",")
+    np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_cps_m2t2.csv",np.column_stack((xH_odm_cps_m2t2,yH_odm_cps_m2t2)),delimiter=",")
+    np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN_m2t2.csv",np.column_stack((xH_VCN_m2t2,yH_VCN_m2t2)),delimiter=",")
+
+    try:
+        print(os.path.basename(csv_path))
+        anl=[int(os.path.basename(csv_path)[-10:-8]),np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2)]
+        analysis.append(anl)
+        np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis)
+    except (TypeError,ValueError):
+        anl=[0,np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2)]
+        analysis.append(anl)
+        np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis)
