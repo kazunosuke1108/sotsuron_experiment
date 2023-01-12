@@ -92,27 +92,16 @@ for csv_path in csv_paths:
     xH_odm_cps=xH_odm_cps+np.average(xR_VCN)
     yH_odm_cps=yH_odm_cps+np.average(yR_VCN)
 
-
-    plt.scatter(xR_VCN,yR_VCN,label="HSR position seen from VICON",s=2)
-    plt.scatter(xH,yH,label="human estimated by HSR (raw)",s=2)
-    plt.scatter(xH_odm_cps,yH_odm_cps,label="human estimated by HSR (odometry compensated)",s=2)
-    plt.scatter(xH_VCN,yH_VCN,label="gravity zone of the human estimated by VICON",s=2)
-
     if "18" not in csv_path:
         np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results.csv",np.column_stack((xR,yR,xH,yH)),delimiter=",")
 
-
-    # plt.plot(t_img,x,label="x")
-    # plt.plot(t_img,y,label="y")
-    # plt.plot(t_img,z,label="z")
-    # plt.plot(t_odm,xR,label="xR")
-    # plt.plot(t_odm,yR,label="yR")
-    # plt.plot(t_odm,thR,label="thR")
-    # plt.plot(t_img,xH,label="xH")
-    # plt.plot(t_img,yH,label="yH")
-    # plt.plot(t_img,t_odm-t_img,label="time gap")
-    # plt.plot([-2,7],[0,0],label="truth path of the human")
-    plt.legend()
+    plt.scatter(xH_VCN,yH_VCN,label="VICON: human position",s=2,color="r")
+    plt.scatter(xH,yH,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(xH_odm_cps,yH_odm_cps,label="HSR: human position (odometry compensated)",s=2,color="g")
+    plt.scatter(xR_VCN,yR_VCN,label="VICON: HSR position",s=2,color="k")
+    plt.xlabel("x (hallway direction) [m]")
+    plt.ylabel("y (width direction) [m]")
+    plt.legend(loc='lower left')
     plt.title(os.path.basename(csv_path[:-4]))
     # plt.xlim([-3,3])
     plt.savefig(csv_result_path+"/graph/"+os.path.basename(csv_path[:-8])+".png",dpi=300)
@@ -125,9 +114,12 @@ for csv_path in csv_paths:
     xH_odm_cps_m2t2,yH_odm_cps_m2t2=xH_odm_cps_m2t2[xH_odm_cps_m2t2<=2],yH_odm_cps_m2t2[xH_odm_cps_m2t2<=2]
     xH_VCN_m2t2,yH_VCN_m2t2=xH_VCN[xH_VCN>=-2],yH_VCN[xH_VCN>=-2]
     xH_VCN_m2t2,yH_VCN_m2t2=xH_VCN_m2t2[xH_VCN_m2t2<=2],yH_VCN_m2t2[xH_VCN_m2t2<=2]
-    plt.hist(yH_m2t2,bins=80,density = True,label="raw",color="r")
-    plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="odometry compensated",color="g")
-    plt.hist(yH_VCN_m2t2,bins=80,density = True,label="VICON",color="b")
-    plt.legend()
+    plt.hist(yH_VCN_m2t2,bins=80,density = True,label="VICON: truth",color="r",alpha=0.7)
+    plt.hist(yH_m2t2,bins=80,density = True,label="HSR: raw",color="b",alpha=0.7)
+    plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="HSR: odometry compensated",color="g",alpha=0.7)
+    plt.xlabel("y (width direction) [m]")
+    plt.ylabel("abundance frequency (normalized)")
+    plt.title(os.path.basename(csv_path[:-4]))
+    plt.legend(loc="upper right")
     plt.savefig(csv_result_path+"/graph/"+os.path.basename(csv_path[:-8])+"_histgram.png")
     plt.cla()
