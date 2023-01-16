@@ -15,7 +15,17 @@ vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gai
 analysis=[]
 for csv_path in csv_paths:
     data=np.loadtxt(csv_path,delimiter=",")
+    if "02" in csv_path:
+        data=data[:254,:]  
+    if "03" in csv_path:
+        data=data[:238,:]
+    if "06" in csv_path:
+        data=data[:222,:]
+    if "13" in csv_path:
+        data=data[:214,:]
 
+    if "16" in csv_path:
+        data=data[:208,:]        
     t_img=data[:,0]
     x=data[:,1]/1000
     y=data[:,2]/1000
