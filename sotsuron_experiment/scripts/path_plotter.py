@@ -105,7 +105,7 @@ for csv_path in csv_paths:
     plt.legend(loc='lower left')
     plt.title(os.path.basename(csv_path[:-4]))
     # plt.xlim([-3,3])
-    plt.savefig(csv_result_path+"/graph/"+os.path.basename(csv_path[:-8])+".png",dpi=300)
+    plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+".png",dpi=300)
     plt.cla()
 
     # xH, xH_odm_cps, xH_VCN
@@ -124,13 +124,27 @@ for csv_path in csv_paths:
     plt.ylabel("abundance frequency (normalized)")
     plt.title(os.path.basename(csv_path[:-4]))
     plt.legend(loc="upper right")
-    plt.savefig(csv_result_path+"/graph/"+os.path.basename(csv_path[:-8])+"_histgram.png")
+    plt.savefig(csv_result_path+"/graph/histgram/"+os.path.basename(csv_path[:-8])+"_histgram.png")
     plt.cla()
     print(xH_m2t2.shape)
     print(xH_odm_cps_m2t2.shape)
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_raw_m2t2.csv",np.column_stack((xH_m2t2,yH_m2t2)),delimiter=",")
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_cps_m2t2.csv",np.column_stack((xH_odm_cps_m2t2,yH_odm_cps_m2t2)),delimiter=",")
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN_m2t2.csv",np.column_stack((xH_VCN_m2t2,yH_VCN_m2t2)),delimiter=",")
+
+    plt.scatter(xH_VCN_m2t2,yH_VCN_m2t2,label="VICON: human position",s=2,color="r")
+    plt.scatter(xH_m2t2,yH_m2t2,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(xH_odm_cps_m2t2,yH_odm_cps_m2t2,label="HSR: human position (odometry compensated)",s=2,color="g")
+    plt.scatter(xR_VCN,yR_VCN,label="VICON: HSR position",s=2,color="k")
+    plt.xlabel("x (hallway direction) [m]")
+    plt.ylabel("y (width direction) [m]")
+    plt.legend(loc='lower left')
+    plt.title(os.path.basename(csv_path[:-4]))
+    # plt.xlim([-3,3])
+    plt.savefig(csv_result_path+"/graph/path_m2t2/"+os.path.basename(csv_path[:-8])+"_m2t2.png",dpi=300)
+    plt.cla()
+
+
 
     try:
         print(os.path.basename(csv_path))
