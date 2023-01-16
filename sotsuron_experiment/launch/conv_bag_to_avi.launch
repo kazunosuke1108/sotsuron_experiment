@@ -1,11 +1,11 @@
 <launch>
-    <arg name="bag_basename" default="20230105_d_060_LAN_cable_cover"/>
-    <arg name="avi_basename" default="20230105_d_060_LAN_cable_cover"/>
+    <arg name="bag_basename" default="20230107_rotation_10_12_yoshinari"/>
+    <arg name="avi_basename" default="20230107_rotation_10_12_yoshinari"/>
 
     <!-- <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/$(arg bag_basename).bag"/> -->
-    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_basename).bag"/>
+    <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/20230107_rotation_10_12_yoshinari.bag"/>
     <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/>
-    <arg name="fps" default="6"/>
+    <arg name="fps" default="30"/>
     <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/>
 
 

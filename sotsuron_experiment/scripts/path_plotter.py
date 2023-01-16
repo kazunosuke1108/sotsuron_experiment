@@ -3,6 +3,7 @@
 
 import os
 import numpy as np
+import scipy as sp
 import matplotlib.pyplot as plt
 from glob import glob
 # csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0108/csv"
@@ -133,10 +134,10 @@ for csv_path in csv_paths:
 
     try:
         print(os.path.basename(csv_path))
-        anl=[int(os.path.basename(csv_path)[-10:-8]),np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2)]
+        anl=[int(os.path.basename(csv_path)[-10:-8]),np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2),sp.stats.skew(xH_m2t2),sp.stats.skew(yH_m2t2),sp.stats.skew(xH_odm_cps_m2t2),sp.stats.skew(yH_odm_cps_m2t2),sp.stats.skew(xH_VCN_m2t2),sp.stats.skew(yH_VCN_m2t2),sp.stats.kurtosis(xH_m2t2),sp.stats.kurtosis(yH_m2t2),sp.stats.kurtosis(xH_odm_cps_m2t2),sp.stats.kurtosis(yH_odm_cps_m2t2),sp.stats.kurtosis(xH_VCN_m2t2),sp.stats.kurtosis(yH_VCN_m2t2)]
         analysis.append(anl)
         np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis,delimiter=",")
     except (TypeError,ValueError):
-        anl=[0,np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2)]
+        anl=[0,np.mean(xH_m2t2),np.mean(yH_m2t2),np.mean(xH_odm_cps_m2t2),np.mean(yH_odm_cps_m2t2),np.mean(xH_VCN_m2t2),np.mean(yH_VCN_m2t2),np.std(xH_m2t2),np.std(yH_m2t2),np.std(xH_odm_cps_m2t2),np.std(yH_odm_cps_m2t2),np.std(xH_VCN_m2t2),np.std(yH_VCN_m2t2),sp.stats.skew(xH_m2t2),sp.stats.skew(yH_m2t2),sp.stats.skew(xH_odm_cps_m2t2),sp.stats.skew(yH_odm_cps_m2t2),sp.stats.skew(xH_VCN_m2t2),sp.stats.skew(yH_VCN_m2t2),sp.stats.kurtosis(xH_m2t2),sp.stats.kurtosis(yH_m2t2),sp.stats.kurtosis(xH_odm_cps_m2t2),sp.stats.kurtosis(yH_odm_cps_m2t2),sp.stats.kurtosis(xH_VCN_m2t2),sp.stats.kurtosis(yH_VCN_m2t2)]
         analysis.append(anl)
         np.savetxt(csv_result_path+"/csv/"+"analysis.csv",analysis,delimiter=",")
