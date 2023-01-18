@@ -4,8 +4,8 @@ from glob import glob
 import matlab.engine
 eng = matlab.engine.start_matlab()
 
-mat_dir_path="/home/hayashide/ytlab_ros_ws/ytlab_hsr/ytlab_hsr_modules/datas/07_exp/mat/0107"
-csv_dir_path="/home/hayashide/ytlab_ros_ws/ytlab_hsr/ytlab_hsr_modules/datas/07_exp/csv/0107"
+mat_dir_path="/home/hayashide/ytlab_ros_ws/ytlab_hsr/ytlab_hsr_modules/datas/07_exp/mat/0117_2"
+csv_dir_path="/home/hayashide/ytlab_ros_ws/ytlab_hsr/ytlab_hsr_modules/datas/07_exp/csv/0117_2"
 
 mat_files=sorted(glob(mat_dir_path+"/*"))
 for mat_file in mat_files:

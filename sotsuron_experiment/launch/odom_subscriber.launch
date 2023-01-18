@@ -1,11 +1,11 @@
 <launch>
-    <arg name="play_bag_name" default="_2022-12-16-19-32-43"/>
+    <arg name="play_bag_name" default="20230117_d_060_1_Hayashide"/>
 
     <node
     pkg="rosbag" 
     name="play" 
     type="play" 
-    args="/home/hayashide/catkin_ws/src/rosbag/$(arg play_bag_name).bag"
+    args="/media/hayashide/KIOXIA/hayashide/rosbag/1117/$(arg play_bag_name).bag"
     />
     <!-- launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' " -->
     <!-- args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag" -->
@@ -14,6 +14,7 @@
         name="odom_subscriber" 
         type="odom_subscriber.py" 
         output="screen" 
+        args="$(arg play_bag_name)"
     />
 
         <!-- launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' " -->

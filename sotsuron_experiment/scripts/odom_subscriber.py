@@ -4,12 +4,15 @@
 import rospy 
 from nav_msgs.msg import Odometry   
 import tf
+import sys
 from tf.transformations import euler_from_quaternion
 import numpy as np
 
 _odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
 
-csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/monitor/odom_2022-12-16-19-32-43.csv"
+bag_basename=sys.argv[1]
+
+csv_path=f"/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/monitor/{bag_basename}.csv"
 odom_history=[]
 zero_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/sources/odom_zero.csv"
 

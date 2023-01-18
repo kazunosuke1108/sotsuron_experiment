@@ -1,9 +1,12 @@
 <launch>
     <arg name="bag_basename" default="20230107_rotation_0_18_yoshinari_yoko"/>
+    <arg name="avi_basename" default="20230107_rotation_10_12_yoshinari"/>
 
     <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/$(arg bag_basename).bag"/>
     <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
-
+    <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/>
+    <arg name="fps" default="30"/>
+    <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/>
     <node
         pkg="rosbag" 
         name="play" 
@@ -17,5 +20,13 @@
         type="path_subscriber.py" 
         output="screen" 
         args="$(arg csv_path)"
+    />
+
+    <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg topic_name)' _fps:='$(arg fps)' _filename:='$(arg save_path)'"
     />
 </launch>

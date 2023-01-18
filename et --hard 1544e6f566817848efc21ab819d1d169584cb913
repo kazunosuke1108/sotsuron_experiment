@@ -1,0 +1,116 @@
+[33mcommit 8471af6b29eced1d2abc256d794a93b20e659849[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Merge: 92eeab6 1544e6f
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Wed Jan 18 15:17:59 2023 +0900
+
+    Merge branch 'master' of github.com:kazunosuke1108/sotsuron_experiment
+
+[33mcommit 92eeab63ab9f9b38aa9f901da783f008e3ce0fce[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Wed Jan 18 15:17:30 2023 +0900
+
+    resest
+
+[33mcommit 3c1eeef08c587b00baa51cfea1a8ea5e0cd55572[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Wed Jan 18 14:52:09 2023 +0900
+
+    results odom
+
+[33mcommit 1544e6f566817848efc21ab819d1d169584cb913[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Tue Jan 17 13:35:21 2023 +0900
+
+    2020e
+
+[33mcommit 620e9cbb5142f14c633c9a2e44b9f0276964a7de[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Mon Jan 16 12:38:12 2023 +0900
+
+    remove back
+
+[33mcommit 3ddd44b2dcb094bf722f2c778ee54bec06990df7[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Mon Jan 16 12:02:32 2023 +0900
+
+    m2t2 plot
+
+[33mcommit d4a1ee12e5db16b3fbe0ee35123812705c81dd5d[m
+Merge: 8fda5da d546310
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Mon Jan 16 10:34:23 2023 +0900
+
+    git add .Merge branch 'master' of github.com:kazunosuke1108/sotsuron_experiment
+    merge
+
+[33mcommit 8fda5da55ae1eabc9351dfa82c60aaf819ec6e07[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Mon Jan 16 10:34:04 2023 +0900
+
+    add skew etc.
+
+[33mcommit d5463101489d50a75dbd2e1570ebfe0d494616fb[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 23:23:27 2023 +0900
+
+    vmax_actual
+
+[33mcommit dbb3d46fd2d6896fcf11bed167ca5156b7deef3d[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 18:20:14 2023 +0900
+
+    WIP
+
+[33mcommit eca3a859e506be15ad61d6c45521756a2f66ea39[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 18:18:24 2023 +0900
+
+    fin
+
+[33mcommit c499858a9f3b2131bf2d4a6a123b7d8208159941[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 17:26:07 2023 +0900
+
+    modified graph
+
+[33mcommit 680829f58841aefa1ed14fa29cadc84e88bc4fa7[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 14:30:34 2023 +0900
+
+    dekita
+
+[33mcommit a360145934058bc66b806671ec99f59147c95fda[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 12:17:02 2023 +0900
+
+    odometry compensated
+
+[33mcommit 07b23e39633d74af188c5f6e36056d2e22a6d113[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 10:08:51 2023 +0900
+
+    renamed results
+
+[33mcommit 0b47142fe392897f0f7277177cb7a6c8b4155c14[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Thu Jan 12 10:05:46 2023 +0900
+
+    rename
+
+[33mcommit cec07fcdd96b503e26ce981fcf5241f1603a2be3[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Wed Jan 11 23:09:09 2023 +0900
+
+    fin processing
+
+[33mcommit f021b2109554368419ee5b9f2974802c480c66e3[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Wed Jan 11 19:58:54 2023 +0900
+
+    walk10
+
+[33mcommit c9ed54f508466e5a1c3d68c450f100ea3942358a[m
+Author: kazunosuke1108 <hyperturbo.kazunosuke@gmail.com>
+Date:   Wed Jan 11 19:39:01 2023 +0900
+
+    add vicon
