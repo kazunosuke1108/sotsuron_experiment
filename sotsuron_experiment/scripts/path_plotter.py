@@ -132,9 +132,9 @@ for csv_path in csv_paths:
     xH_VCN_m2t2,yH_VCN_m2t2=xH_VCN_m2t2[xH_VCN_m2t2<=2],yH_VCN_m2t2[xH_VCN_m2t2<=2]
     # xR_VCN_m2t2,yR_VCN_m2t2=xR_VCN[xR_VCN>=-2],yR_VCN[xR_VCN>=-2]
     # xR_VCN_m2t2,yR_VCN_m2t2=xR_VCN_m2t2[xR_VCN_m2t2<=2],yR_VCN_m2t2[xR_VCN_m2t2<=2]
-    plt.hist(yH_VCN_m2t2,bins=80,density = True,label="          \n           ",color="r",alpha=0.7)#,label="VICON: truth",color="r",alpha=0.7)
-    plt.hist(yH_m2t2,bins=80,density = True,label="          \n           ",color="b",alpha=0.7)#,label="HSR: raw",color="b",alpha=0.7)
-    plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="          \n           ",color="g",alpha=0.7)#,label="HSR: odometry compensated",color="g",alpha=0.7)
+    plt.hist(yH_VCN_m2t2,bins=80,density = True,label="          \n              ",color="r",alpha=0.7)#,label="VICON: truth",color="r",alpha=0.7)
+    plt.hist(yH_m2t2,bins=80,density = True,label="          \n              ",color="b",alpha=0.7)#,label="HSR: raw",color="b",alpha=0.7)
+    plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="          \n              ",color="g",alpha=0.7)#,label="HSR: odometry compensated",color="g",alpha=0.7)
     plt.xlabel("y (width direction) [m]")
     plt.ylabel("abundance frequency (normalized)")
     # plt.title(os.path.basename(csv_path[:-4]))
