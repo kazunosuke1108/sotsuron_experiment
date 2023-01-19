@@ -96,11 +96,11 @@ for csv_path in csv_paths:
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN.csv",np.column_stack((xH_VCN,yH_VCN,xR_VCN,yR_VCN)),delimiter=",")
 
     #赤青だけ
-    plt.scatter(xH_VCN,yH_VCN,label="     \n      ",s=2,color="r")# ,label="VICON: human position",s=2,color="r")
-    plt.scatter(xH,yH,label="     \n      ",s=2,color="b")# ,label="HSR: human position (raw)",s=2,color="b")
-    # plt.scatter(xH_odm_cps,yH_odm_cps,label="     \n      ",s=2,color="g")# ,label="HSR: human position (odometry compensated)",s=2,color="g")
-    # plt.scatter(xR_VCN,yR_VCN,label="     \n      ",s=2,color="m")# ,label="VICON: HSR position",s=2,color="k")
-    plt.scatter(xR,yR-1,label="     \n      ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xH_VCN,yH_VCN,label="          \n           ",s=2,color="r")# ,label="VICON: human position",s=2,color="r")
+    plt.scatter(xH,yH,label="          \n           ",s=2,color="b")# ,label="HSR: human position (raw)",s=2,color="b")
+    # plt.scatter(xH_odm_cps,yH_odm_cps,label="          \n           ",s=2,color="g")# ,label="HSR: human position (odometry compensated)",s=2,color="g")
+    # plt.scatter(xR_VCN,yR_VCN,label="          \n           ",s=2,color="m")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xR,yR-1,label="          \n           ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
     plt.legend(loc='lower left')
@@ -111,11 +111,11 @@ for csv_path in csv_paths:
 
 
     # フル
-    plt.scatter(xH_VCN,yH_VCN,label="     \n      ",s=2,color="r")# ,label="VICON: human position",s=2,color="r")
-    plt.scatter(xH,yH,label="     \n      ",s=2,color="b")# ,label="HSR: human position (raw)",s=2,color="b")
-    plt.scatter(xH_odm_cps,yH_odm_cps,label="     \n      ",s=2,color="g")# ,label="HSR: human position (odometry compensated)",s=2,color="g")
-    plt.scatter(xR_VCN,yR_VCN,label="     \n      ",s=2,color="m")# ,label="VICON: HSR position",s=2,color="k")
-    plt.scatter(xR,yR-1,label="     \n      ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xH_VCN,yH_VCN,label="          \n           ",s=2,color="r")# ,label="VICON: human position",s=2,color="r")
+    plt.scatter(xH,yH,label="          \n           ",s=2,color="b")# ,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(xH_odm_cps,yH_odm_cps,label="          \n           ",s=2,color="g")# ,label="HSR: human position (odometry compensated)",s=2,color="g")
+    plt.scatter(xR_VCN,yR_VCN,label="          \n           ",s=2,color="m")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xR,yR-1,label="          \n           ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
     plt.legend(loc='lower left')
@@ -132,9 +132,9 @@ for csv_path in csv_paths:
     xH_VCN_m2t2,yH_VCN_m2t2=xH_VCN_m2t2[xH_VCN_m2t2<=2],yH_VCN_m2t2[xH_VCN_m2t2<=2]
     # xR_VCN_m2t2,yR_VCN_m2t2=xR_VCN[xR_VCN>=-2],yR_VCN[xR_VCN>=-2]
     # xR_VCN_m2t2,yR_VCN_m2t2=xR_VCN_m2t2[xR_VCN_m2t2<=2],yR_VCN_m2t2[xR_VCN_m2t2<=2]
-    plt.hist(yH_VCN_m2t2,bins=80,density = True,label="     \n      ",color="r",alpha=0.7)#,label="VICON: truth",color="r",alpha=0.7)
-    plt.hist(yH_m2t2,bins=80,density = True,label="     \n      ",color="b",alpha=0.7)#,label="HSR: raw",color="b",alpha=0.7)
-    plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="     \n      ",color="g",alpha=0.7)#,label="HSR: odometry compensated",color="g",alpha=0.7)
+    plt.hist(yH_VCN_m2t2,bins=80,density = True,label="          \n           ",color="r",alpha=0.7)#,label="VICON: truth",color="r",alpha=0.7)
+    plt.hist(yH_m2t2,bins=80,density = True,label="          \n           ",color="b",alpha=0.7)#,label="HSR: raw",color="b",alpha=0.7)
+    plt.hist(yH_odm_cps_m2t2,bins=80,density = True,label="          \n           ",color="g",alpha=0.7)#,label="HSR: odometry compensated",color="g",alpha=0.7)
     plt.xlabel("y (width direction) [m]")
     plt.ylabel("abundance frequency (normalized)")
     # plt.title(os.path.basename(csv_path[:-4]))
@@ -146,11 +146,11 @@ for csv_path in csv_paths:
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_raw_m2t2.csv",np.column_stack((xH_m2t2,yH_m2t2)),delimiter=",")
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_cps_m2t2.csv",np.column_stack((xH_odm_cps_m2t2,yH_odm_cps_m2t2)),delimiter=",")
     np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN_m2t2.csv",np.column_stack((xH_VCN_m2t2,yH_VCN_m2t2)),delimiter=",")
-    plt.scatter(xH_VCN_m2t2,yH_VCN_m2t2,label="     \n      ",s=2,color="r")#,label="VICON: human position",s=2,color="r")
-    plt.scatter(xH_m2t2,yH_m2t2,label="     \n      ",s=2,color="b")#,label="HSR: human position (raw)",s=2,color="b")
-    plt.scatter(xH_odm_cps_m2t2,yH_odm_cps_m2t2,label="     \n      ",s=2,color="g")#,label="HSR: human position (odometry compensated)",s=2,color="g")
-    plt.scatter(xR_VCN,yR_VCN,label="     \n      ",s=2,color="m")#,label="VICON: HSR position",s=2,color="k")
-    plt.scatter(xR,yR-1,label="     \n      ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xH_VCN_m2t2,yH_VCN_m2t2,label="          \n           ",s=2,color="r")#,label="VICON: human position",s=2,color="r")
+    plt.scatter(xH_m2t2,yH_m2t2,label="          \n           ",s=2,color="b")#,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(xH_odm_cps_m2t2,yH_odm_cps_m2t2,label="          \n           ",s=2,color="g")#,label="HSR: human position (odometry compensated)",s=2,color="g")
+    plt.scatter(xR_VCN,yR_VCN,label="          \n           ",s=2,color="m")#,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xR,yR-1,label="          \n           ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
     plt.legend(loc='lower left')
