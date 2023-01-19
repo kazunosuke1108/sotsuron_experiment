@@ -111,11 +111,11 @@ for csv_path in csv_paths:
 
 
     # フル
-    plt.scatter(xH_VCN,yH_VCN,label="          \n           ",s=2,color="r")# ,label="VICON: human position",s=2,color="r")
-    plt.scatter(xH,yH,label="          \n           ",s=2,color="b")# ,label="HSR: human position (raw)",s=2,color="b")
-    plt.scatter(xH_odm_cps,yH_odm_cps,label="          \n           ",s=2,color="g")# ,label="HSR: human position (odometry compensated)",s=2,color="g")
-    plt.scatter(xR_VCN,yR_VCN,label="          \n           ",s=2,color="m")# ,label="VICON: HSR position",s=2,color="k")
-    plt.scatter(xR,yR-1,label="          \n           ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xH_VCN,yH_VCN,label="          \n                ",s=2,color="r")# ,label="VICON: human position",s=2,color="r")
+    plt.scatter(xH,yH,label="          \n                ",s=2,color="b")# ,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(xH_odm_cps,yH_odm_cps,label="          \n                ",s=2,color="g")# ,label="HSR: human position (odometry compensated)",s=2,color="g")
+    plt.scatter(xR_VCN,yR_VCN,label="          \n                ",s=2,color="m")# ,label="VICON: HSR position",s=2,color="k")
+    plt.scatter(xR,yR-1,label="          \n                ",s=2,color="k")# ,label="VICON: HSR position",s=2,color="k")
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
     plt.legend(loc='lower left')
