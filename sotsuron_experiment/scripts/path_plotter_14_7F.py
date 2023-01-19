@@ -26,7 +26,7 @@ for csv_path in csv_paths:
 
     # if "16" in csv_path:
     #     data=data[:208,:]        
-    data=data[376:1110,:]
+    data=data[376:,:]
 
 
     t_img=data[:,0]
@@ -128,7 +128,7 @@ for csv_path in csv_paths:
     plt.legend(loc='upper left')
     # plt.title(os.path.basename(csv_path[:-4]))
     plt.axis('equal')
-    # plt.xlim([-10,10])
+    plt.xlim([-6,10])
     plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+".png",dpi=300)
     plt.cla()
 
