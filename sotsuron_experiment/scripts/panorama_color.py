@@ -89,6 +89,7 @@ def error_func(t):
     return answer
 
 imgs=[]
+imgs_color=[]
 
 imgs_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
 save_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results"
@@ -97,22 +98,26 @@ img_paths=sorted(glob(imgs_dir+"/*"))
 for img_path in img_paths:
     temp_img=cv2.imread(img_path,cv2.IMREAD_GRAYSCALE)
     imgs.append(temp_img)
+    temp_img=cv2.imread(img_path)
+    imgs_color.append(temp_img)
 
 # 結果出力のキャンバスを作成
 canvas_h, canvas_w = 1000, 3000
-canvas = np.zeros((canvas_h, canvas_w))
+canvas = np.zeros((canvas_h, canvas_w,3))
 canvas += 255
 height, width = imgs[0].shape
 
 # 1枚目の写真を貼る
 vector_root = np.array([100, 100])
 canvas[int(vector_root[0]):int(vector_root[0])+height,
-       int(vector_root[1]):int(vector_root[1])+width] = imgs[0]
+       int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
 
 for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # 写真の名前を定義
     img1 = imgs[i]
     img2 = imgs[i+1]
+    img1_color = imgs_color[i]
+    img2_color = imgs_color[i+1]
     # マッチする特徴点を抽出
     # try:
     img1_pt_s, img2_pt_s = match_feature(img1, img2)
@@ -135,11 +140,11 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
         trim=[500,800]
     else:
         trim=[600,900]
-    koyui=img2<0
+    koyui=img2_color<0
     # print(koyui)
-    img2=img2*(1-koyui)+200*koyui
-    canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1]] = (img2[:,trim[0]:trim[1]] +
-                                                                                         canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1]])/2
+    img2_color=img2_color*(1-koyui)+200*koyui
+    canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:] = (img2_color[:,trim[0]:trim[1],:] +
+                                                                                         canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:])/2
     # canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width] = (img2 +
     #                                                                                      canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width])/2
 
