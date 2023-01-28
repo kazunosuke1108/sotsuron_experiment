@@ -2,10 +2,15 @@
 # -*- coding: utf-8 -*-
 import os
 import cv2
+import torch
 import numpy as np
-import matplotlib.pyplot as plt
-import scipy.optimize as op
 from glob import glob
+import scipy.optimize as op
+import matplotlib.pyplot as plt
+
+# yolov5 model import
+model = torch.hub.load("/usr/local/lib/python3.8/dist-packages/yolov5", 'custom', path=os.environ['HOME']+'/catkin_ws/src/object_detector/config/yolov5/yolov5s.pt',source='local')
+
 
 def save_frame_range_sec(video_path, start_sec, stop_sec, step_sec,
                          dir_path, basename, ext='jpg'):
@@ -102,13 +107,13 @@ for img_path in img_paths:
     imgs_color.append(temp_img)
 
 # 結果出力のキャンバスを作成
-canvas_h, canvas_w = 1000, 5000
+canvas_h, canvas_w = 1000, 3000
 canvas = np.zeros((canvas_h, canvas_w,3))
 canvas += 255
 height, width = imgs[0].shape
 
 # 1枚目の写真を貼る
-vector_root = np.array([100, 500])
+vector_root = np.array([100, 100])
 canvas[int(vector_root[0]):int(vector_root[0])+height,
        int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
 
@@ -134,12 +139,20 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # これから貼り付ける画像の大きさを取得
     height, width = img2.shape
     # 現状の値と貼り付け画像の平均をとって貼り付ける
-    print(vector)
-    print(img2.shape)
-    if i<(len(imgs)-2)/2+6:
-        trim=[500,800]
-    else:
-        trim=[600,900]
+    # print(vector)
+    # print(img2.shape)
+
+    # 人のいる場所を切り出す
+    results=model(img2_color)
+    objects=results.pandas().xyxy[0]
+    obj_people=objects[objects['name']=='person']
+    print(obj_people)
+    trim=[int(obj_people['xmin'][0]-5),int(obj_people['xmax'][0]+5)]
+
+    # if i<(len(imgs)-2)/2+6:
+    #     trim=[500,800]
+    # else:
+    #     trim=[600,900]
     # trim=[0,1280]
     koyui=img2_color<0
     # print(koyui)
@@ -155,6 +168,6 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # ax = fig.add_subplot(projection='3d')
     # ax.plot(t_x, t_y, accum)
     # plt.show()
-    cv2.imwrite(save_dir+"/canvas.jpg", canvas)
+    cv2.imwrite(save_dir+"/canvas_yolo.jpg", canvas)
     
 # 完成した画像を保存
