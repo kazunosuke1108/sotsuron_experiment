@@ -118,9 +118,9 @@ for csv_path in csv_paths:
     # np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN.csv",np.column_stack((xH_VCN,yH_VCN,xR_VCN,yR_VCN)),delimiter=",")
 
     # plt.scatter(xH_VCN,yH_VCN,label="VICON: human position",s=2,color="r")
-    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
+    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     # plt.scatter(observable_xR,observable_yR,label="HSR: HSR position (observing)",s=2,color="k")
-    plt.scatter(observable_xH,observable_yH,label="          \n           ",s=1,color="b")#,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(observable_xH,observable_yH,label="          \n           ",s=1,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     # plt.scatter(xH_odm_cps,yH_odm_cps,label="HSR: human position (odometry compensated)",s=2,color="g")
     # plt.scatter(xR_VCN,yR_VCN,label="VICON: HSR position",s=2,color="k")
     plt.xlabel("x (hallway direction) [m]")
