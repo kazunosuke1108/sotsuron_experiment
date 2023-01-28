@@ -125,11 +125,14 @@ for csv_path in csv_paths:
     # plt.scatter(xR_VCN,yR_VCN,label="VICON: HSR position",s=2,color="k")
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
-    plt.legend(loc='upper left')
+    # plt.legend(loc='upper left')
     # plt.title(os.path.basename(csv_path[:-4]))
-    plt.axis('equal')
-    plt.xlim([-6,10])
-    plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+".png",dpi=300)
+    # plt.ylim([0,3])
+    # plt.xlim([-6,10])
+    # plt.axis('equal')
+    plt.axis([-6, 10, -1, 4]) # x軸、y軸のMin, Maxを指定
+    plt.axes().set_aspect('equal')
+    plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+"_shrink.png",dpi=300)
     plt.cla()
 
     # xH, xH_odm_cps, xH_VCN
