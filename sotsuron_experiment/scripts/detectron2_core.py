@@ -39,7 +39,7 @@ class Detector:
 
         self.predictor=DefaultPredictor(self.cfg)
     
-    def onImage(self, imagePath=False, image_mat=None, savePath="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/save.jpg"):
+    def onImage(self, imagePath=False, image_mat=None, savePath="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/save.jpg",return_skeleton=False):
         # if (image_mat!=None):
         image=image_mat
         if imagePath:
@@ -67,7 +67,10 @@ class Detector:
         if self.model_type=="OD":
             return predictions['instances']#.pred_boxes.to(torch.device('cpu'))
         if self.model_type=="KP":
-            return predictions['instances'].pred_keypoints
+            if return_skeleton:
+                return [predictions['instances'].pred_keypoints,output.get_image()]
+            else:
+                return predictions['instances'].pred_keypoints
         # cv2.imshow("Result",output.get_image()[:,:,::-1])
         # cv2.waitKey(1)
 

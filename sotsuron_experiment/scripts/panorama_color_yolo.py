@@ -7,9 +7,11 @@ import numpy as np
 from glob import glob
 import scipy.optimize as op
 import matplotlib.pyplot as plt
+from detectron2_core import *
 
 # yolov5 model import
 model = torch.hub.load("/usr/local/lib/python3.8/dist-packages/yolov5", 'custom', path=os.environ['HOME']+'/catkin_ws/src/object_detector/config/yolov5/yolov5s.pt',source='local')
+detector=Detector(model_type="KP")
 
 
 def save_frame_range_sec(video_path, start_sec, stop_sec, step_sec,
@@ -154,9 +156,13 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # else:
     #     trim=[600,900]
     # trim=[0,1280]
-    koyui=img2_color<0
-    # print(koyui)
-    img2_color=img2_color*(1-koyui)+200*koyui
+    # koyui=img2_color<0
+    # # print(koyui)
+    # img2_color=img2_color*(1-koyui)+200*koyui
+    # try:
+    [pred_keypoints,img2_color]=detector.onImage(image_mat=img2_color,return_skeleton=True)
+    # except RuntimeError:
+    #     pass
     canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:] = (img2_color[:,trim[0]:trim[1],:] +
                                                                                          canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:])/2
     # canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width] = (img2 +
@@ -168,6 +174,6 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # ax = fig.add_subplot(projection='3d')
     # ax.plot(t_x, t_y, accum)
     # plt.show()
-    cv2.imwrite(save_dir+"/canvas_yolo.jpg", canvas)
+    cv2.imwrite(save_dir+"/canvas_yolo_kp2.jpg", canvas)
     
 # 完成した画像を保存
