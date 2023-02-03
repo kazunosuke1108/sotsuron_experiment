@@ -45,9 +45,9 @@ def save_frame_range_sec(video_path, start_sec, stop_sec, step_sec,
             return
         sec += step_sec
 
-# save_frame_range_sec('/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/20230117_d_060_1_Hayashide.mp4',
-#                      25, 55, 0.5,
-#                      '/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames', 'sample_video_img')
+save_frame_range_sec('/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/20230203_d_060_3_Yoshinari.mp4',
+                     15, 35, 0.45,
+                     '/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames/20230203_d_060_3_Yoshinari', '20230203_d_060_3_Yoshinari')
 
 
 def match_feature(img1, img2):
@@ -98,8 +98,8 @@ def error_func(t):
 imgs=[]
 imgs_color=[]
 
-imgs_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
-save_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results"
+imgs_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames/20230203_d_060_3_Yoshinari"
+save_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results/20230203_d_060_3_Yoshinari"
 
 img_paths=sorted(glob(imgs_dir+"/*"))
 for img_path in img_paths:
@@ -145,11 +145,14 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # print(img2.shape)
 
     # 人のいる場所を切り出す
-    results=model(img2_color)
-    objects=results.pandas().xyxy[0]
-    obj_people=objects[objects['name']=='person']
-    print(obj_people)
-    trim=[int(obj_people['xmin'][0]-5),int(obj_people['xmax'][0]+5)]
+    try:
+        results=model(img2_color)
+        objects=results.pandas().xyxy[0]
+        obj_people=objects[objects['name']=='person']
+        print(obj_people)
+        trim=[int(obj_people['xmin'][0]-5),int(obj_people['xmax'][0]+5)]
+    except Exception:
+        trim=[500,800]
 
     # if i<(len(imgs)-2)/2+6:
     #     trim=[500,800]
@@ -174,6 +177,6 @@ for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
     # ax = fig.add_subplot(projection='3d')
     # ax.plot(t_x, t_y, accum)
     # plt.show()
-    cv2.imwrite(save_dir+"/canvas_yolo_kp2.jpg", canvas)
+    cv2.imwrite(save_dir+"/20230203_d_060_3_Yoshinari_45.jpg", canvas)
     
 # 完成した画像を保存
