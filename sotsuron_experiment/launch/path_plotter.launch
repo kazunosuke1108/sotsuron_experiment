@@ -1,6 +1,6 @@
 <launch>
-    <arg name="bag_basename" default="20230107_rotation_0_18_yoshinari_yoko"/>
-    <arg name="avi_basename" default="20230107_rotation_10_12_yoshinari"/>
+    <arg name="bag_basename" default="20230203_d_060_0_Hayashide"/>
+    <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/>
 
     <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/$(arg bag_basename).bag"/>
     <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>

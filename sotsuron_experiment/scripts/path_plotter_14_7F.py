@@ -7,8 +7,8 @@ import scipy as sp
 import matplotlib.pyplot as plt
 from glob import glob
 # csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0108/csv"
-csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0117/csv"
-csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0117/results"
+csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/csv"
+csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/results"
 
 csv_paths=sorted(glob(csv_dir_path+"/*"))
 # vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/vicon_processed/*"))
@@ -26,7 +26,7 @@ for csv_path in csv_paths:
 
     # if "16" in csv_path:
     #     data=data[:208,:]        
-    data=data[376:,:]
+    # data=data[376:,:]
 
 
     t_img=data[:,0]
@@ -34,9 +34,9 @@ for csv_path in csv_paths:
     y=data[:,2]/1000
     z=data[:,3]/1000
     t_odm=data[:,5]
-    xR=data[:,6]-2.880975666111003086e-01
-    yR=data[:,7]-(-5.041865853597119612e-02)+0.5
-    thR=data[:,8]
+    xR=data[:,6]-data[1,6]#-2.880975666111003086e-01
+    yR=data[:,7]-data[1,7]+0.5#-(-5.041865853597119612e-02)+0.5
+    thR=data[:,8]-data[1,8]
     pan=data[:,9]
 
     xH=xR+z*np.cos(thR+pan)+x*np.sin(thR+pan)
@@ -92,9 +92,11 @@ for csv_path in csv_paths:
     yR_HSR=yR
 
     distance=np.sqrt((xH-xR)**2+(yH-yR)**2)
-    flg=distance<6
+    # flg=distance<6
+    flg=distance<100
     observable_xR=xR_HSR*flg
     observable_yR=yR_HSR*flg
+    flg=distance<6
     observable_xH=xH*flg
     observable_yH=yH*flg
 

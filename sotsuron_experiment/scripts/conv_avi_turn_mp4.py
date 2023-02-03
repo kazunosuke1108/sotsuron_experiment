@@ -1,11 +1,14 @@
 import os
+import sys
 import cv2
 import time
 from glob import glob
 
 videos=sorted(glob("/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/*"))
-avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/"
-
+try:
+    avi_path=sys.argv[1]
+except Exception:
+    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/"
 
 for videoPath in videos:
     video_basename=os.path.basename(videoPath)
@@ -29,5 +32,3 @@ for videoPath in videos:
         del video
         del cap
         del fourcc
-        
-    
