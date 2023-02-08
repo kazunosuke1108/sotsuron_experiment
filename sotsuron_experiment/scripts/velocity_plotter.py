@@ -67,7 +67,7 @@ def plotter(history):
     buffer_t=np.array(buffer_t)
     savedata=np.column_stack([buffer_t,buffer])
     # rospy.loginfo(savedata)
-    np.savetxt(csv_path,savedata)
+    np.savetxt(csv_path,savedata,delimiter=",")
 
     # velocity=velocity_processer(buffer)
     # ax1.plot(buffer_t,buffer[:,0],label="x")
