@@ -227,7 +227,7 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
 
     dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
     dpt_array=np.array(dpt_array,dtype=np.float32)
-    dpt_array=np.where(dpt_array>40,0,dpt_array)
+    dpt_array=np.where(dpt_array>20,0,dpt_array)
     dpt_array=np.where(dpt_array<0,0,dpt_array)
 
     proj_mtx=np.array(info_data.P).reshape(3,4)
@@ -285,16 +285,12 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
     #         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
     #         rospy.loginfo(f"{exc_type}, {fname},{ exc_tb.tb_lineno}")
 
-
-
 # topicName_rgb="/camera3/camera/color/image_raw"
 # topicName_dpt="/camera3/camera/aligned_depth_to_color/image_raw"
 # topicName_camInfo="/camera3/camera/aligned_depth_to_color/camera_info"
 topicName_rgb="/zed/zed_node/rgb/image_rect_color"
-topicName_dpt="/zed/zed_node/depth/depth_registered"
+topicName_dpt="/zed/zed_node/depth/depth_regisetered"
 topicName_camInfo="/zed/zed_node/rgb/camera_info"
-
-
 
 # subscribe
 mf=pub_sub()

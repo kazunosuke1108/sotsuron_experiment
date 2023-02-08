@@ -14,7 +14,7 @@ def kalman_filter(z,fps=15):
     vo=z-dansage
     vo[0]=0
     vectors_p=np.column_stack([po,vo])
-    print(vectors_p.shape)
+    # print(vectors_p.shape)
 
     A=np.array([[1,1/fps],[0,1]])
     B=np.array([[0],[1]])
@@ -37,16 +37,16 @@ def kalman_filter(z,fps=15):
         size  = vectors_p.shape,# 出力配列のサイズ(タプルも可)
         )
 
-    print(n_v[0]@n_v[0])
-    print(n_v[0]@n_v[1])
-    print(n_v[1]@n_v[1])
+    # print(n_v[0]@n_v[0])
+    # print(n_v[0]@n_v[1])
+    # print(n_v[1]@n_v[1])
 
     Q=np.array([[1,0],[0,1]])
 
     P=sp.linalg.solve_continuous_are(A,B,Q,R)
-    print(P)
+    # print(P)
     M=P@C.T@np.linalg.pinv(R+C@P@C.T)
-    print(M)
+    # print(M)
     pHat_k_km1=vectors_p[0]
 
     estm_list=[]
@@ -59,29 +59,29 @@ def kalman_filter(z,fps=15):
     return np.array(estm_list)
 
 
-speed="090"
-csv_path=os.environ['HOME']+f"/catkin_ws/src/sotsuron_experiment/scripts/sources/track_results_1216_{speed}.csv"
-png_path=os.environ['HOME']+f"/catkin_ws/src/sotsuron_experiment/scripts/sources/1216_{speed}_z.png"
+# speed="090"
+# csv_path=os.environ['HOME']+f"/catkin_ws/src/sotsuron_experiment/scripts/sources/track_results_1216_{speed}.csv"
+# png_path=os.environ['HOME']+f"/catkin_ws/src/sotsuron_experiment/scripts/sources/1216_{speed}_z.png"
 
-try:
-    data=np.loadtxt(csv_path,delimiter=",")
-except OSError:
-    csv_path=os.environ['HOME']+f"/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/sources/track_results_1216_{speed}.csv"
-    png_path=os.environ['HOME']+f"/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/sources/1216_{speed}_z.png"
-    data=np.loadtxt(csv_path,delimiter=",")
+# try:
+#     data=np.loadtxt(csv_path,delimiter=",")
+# except OSError:
+#     csv_path=os.environ['HOME']+f"/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/sources/track_results_1216_{speed}.csv"
+#     png_path=os.environ['HOME']+f"/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/sources/1216_{speed}_z.png"
+#     data=np.loadtxt(csv_path,delimiter=",")
 
 
-t=data[:,0]
-x=data[:,1]
-y=data[:,2]
-z=np.array(data[:,3])
+# t=data[:,0]
+# x=data[:,1]
+# y=data[:,2]
+# z=np.array(data[:,3])
 
-plt.plot(t,z,label=f"{speed}z_raw")
+# plt.plot(t,z,label=f"{speed}z_raw")
 
-estm_list=kalman_filter(z,fps=15)
+# estm_list=kalman_filter(z,fps=15)
 
-plt.plot(t,estm_list[:,0],label=f"{speed}z_kalman")
+# plt.plot(t,estm_list[:,0],label=f"{speed}z_kalman")
 
-plt.legend()
-plt.savefig(png_path)
+# plt.legend()
+# plt.savefig(png_path)
 
