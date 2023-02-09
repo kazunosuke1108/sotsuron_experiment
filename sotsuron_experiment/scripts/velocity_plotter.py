@@ -5,7 +5,7 @@ import sys
 import shutil
 from glob import glob
 import numpy as np
-from datetime import datetime
+import datetime
 import matplotlib.pyplot as plt
 import rospy
 from sensor_msgs.msg import Image
@@ -27,16 +27,13 @@ csv_for_m_path="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_da
 history_path="/catkin_ws/src/ytlab_hsr_modules/datas/"
 exp_data_path="/catkin_ws/src/ytlab_hsr_modules/exp_data/"
 def csv_eraser():
-    try:
-        dt_now=datetime.datetime.now()
-        now_str=dt_now.strftime('%Y%m%d_%H%M%S')
-        os.makedirs(history_path+now_str,exist_ok=True)
-        exp_datas=sorted(glob(exp_data_path+"*"))
-        for filepath in exp_datas:
-            shutil.move(filepath,history_path+now_str+"/"+os.path.basename(filepath))
-    except FileNotFoundError:
-        pass
-
+    dt_now=datetime.datetime.now()
+    now_str=dt_now.strftime('%Y%m%d_%H%M%S')
+    os.makedirs(history_path+now_str,exist_ok=True)
+    exp_datas=sorted(glob(exp_data_path+"*"))
+    for filepath in exp_datas:
+        shutil.move(filepath,history_path+now_str+"/"+os.path.basename(filepath))
+    
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
     # subscriber
@@ -107,18 +104,23 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
 
     # detection
     data=get_position_yolov5(rgb_array,dpt_array,proj_mtx)
-    try:
+    rospy.loginfo(type(list(data.values())[0]))
+    rospy.loginfo(list(data.values())[0])
+    if np.isnan(list(data.values())[0]):
+        pass 
+    else:
         data['time']=int(str(rgb_data.header.stamp))/1e9
-    except TypeError:
-        data['time']=0
-        pass
+        history.append(data)
+        # plot
+        plotter(history)
+        rospy.loginfo(data)
+    # except Exception:
+    #     data['time']=0
+    #     pass
     
     # history
-    history.append(data)
-    # plot
-    plotter(history)
-    rospy.loginfo(data)
 
+# csv_eraser()
 
 topicName_rgb="/zed/zed_node/rgb/image_rect_color"
 topicName_dpt="/zed/zed_node/depth/depth_registered"

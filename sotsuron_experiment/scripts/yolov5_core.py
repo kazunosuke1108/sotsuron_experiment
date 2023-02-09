@@ -90,4 +90,15 @@ def get_position_yolov5(rgb_array,dpt_array,proj_mtx):
     try:
         return rect_list[0]
     except IndexError:
-        return None
+        dummy={
+            'xmin_dpt':np.nan,
+            'ymin_dpt':np.nan,
+            'xmax_dpt':np.nan,
+            'ymax_dpt':np.nan,
+            'bd_center_x':np.nan,
+            'bd_center_y':np.nan,
+            'center_3d':np.array([np.nan,np.nan,np.nan,np.nan]),
+            'confidence':np.nan,
+            'dpt':np.nan
+            }
+        return dummy
