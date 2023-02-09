@@ -20,6 +20,7 @@ history=[]
 
 graph_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0207/graph/"+sys.argv[1]+".png"
 csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0207/csv/"+sys.argv[1]+".csv"
+csv_for_m_path="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_data/zed.csv"
 
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
@@ -67,24 +68,8 @@ def plotter(history):
     buffer_t=np.array(buffer_t)
     savedata=np.column_stack([buffer_t,buffer])
     # rospy.loginfo(savedata)
-    np.savetxt(csv_path,savedata,delimiter=",")
-
-    # velocity=velocity_processer(buffer)
-    # ax1.plot(buffer_t,buffer[:,0],label="x")
-    # ax1.plot(buffer_t,buffer[:,2],label="X")
-    # ax1.plot(buffer_t,-buffer[:,1]+0.2,label="Y")
-    # ax2.plot(buffer_t,velocity,label="vxH_kalman")
-    # ax2.plot(buffer_t,buffer[:,2]-np.insert(buffer[:-1,2],0,0),label="vxH_raw")
-    # ax2.set_ylim([-1,1])
-    # plt.legend()
-    # plt.savefig(graph_path)
-
-    
-    # ax2 = fig.add_subplot(2, 2, 2)
-    # ax3 = fig.add_subplot(2, 2, 3)
-    # ax4 = fig.add_subplot(2, 2, 4)
-
-
+    # np.savetxt(csv_path,savedata,delimiter=",")
+    np.savetxt(csv_for_m_path,savedata,delimiter=",")
 
     pass
 

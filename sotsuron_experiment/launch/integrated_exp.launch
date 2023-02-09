@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="matlab_start_delay" default="10"/>
+    <arg name="velocity_start_delay" default="5"/>
+    <arg name="bag_basename" default="20230207_y050_v090_2_Hayashide"/>
+
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_zed/ytlab_zed_modules/rosbag/$(arg bag_basename).bag"/>
+    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path)"
+    />    
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="velocity_plotter" 
+        type="velocity_plotter.py" 
+        output="screen" 
+        args="$(arg bag_basename)"
+        launch-prefix="bash -c 'sleep $(arg velocity_start_delay); $0 $@' "
+    />
+
+    <node pkg="sotsuron_experiment" 
+        name="matlab_trigger" 
+        type="matlab_trigger.py" 
+        output="screen" 
+        launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "
+    />
+
+</launch>
+
+<!-- launch -->
+<!-- integrated_exp: velocity + matlab-->
+<!-- integrated_exp_runner: hsr  -->
+<!-- record_zed_light: zed+rosbag -->
