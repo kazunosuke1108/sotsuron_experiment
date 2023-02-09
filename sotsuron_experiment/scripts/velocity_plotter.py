@@ -1,8 +1,11 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
-
+import os
 import sys
+import shutil
+from glob import glob
 import numpy as np
+from datetime import datetime
 import matplotlib.pyplot as plt
 import rospy
 from sensor_msgs.msg import Image
@@ -21,6 +24,18 @@ history=[]
 graph_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0207/graph/"+sys.argv[1]+".png"
 csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0207/csv/"+sys.argv[1]+".csv"
 csv_for_m_path="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_data/zed.csv"
+history_path="/catkin_ws/src/ytlab_hsr_modules/datas/"
+exp_data_path="/catkin_ws/src/ytlab_hsr_modules/exp_data/"
+def csv_eraser():
+    try:
+        dt_now=datetime.datetime.now()
+        now_str=dt_now.strftime('%Y%m%d_%H%M%S')
+        os.makedirs(history_path+now_str,exist_ok=True)
+        exp_datas=sorted(glob(exp_data_path+"*"))
+        for filepath in exp_datas:
+            shutil.move(filepath,history_path+now_str+"/"+os.path.basename(filepath))
+    except FileNotFoundError:
+        pass
 
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
