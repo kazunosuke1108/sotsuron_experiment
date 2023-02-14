@@ -3,7 +3,7 @@
     <arg name="matlab_start_delay" default="10"/>
     <arg name="rosbag_delay" default="10"/>
     <arg name="velocity_start_delay" default="10"/>
-    <arg name="bag_basename" default="20230214_y075_v000_02_EtoE"/>
+    <arg name="bag_basename" default="20230214_y075_v000_09_EtoE"/>
 
     <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_zed/ytlab_zed_modules/rosbag/$(arg bag_basename).bag"/> -->
     <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_zed/ytlab_zed_modules/rosbag/$(arg bag_basename).bag"/> -->
