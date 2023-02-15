@@ -5,18 +5,18 @@ import os
 import subprocess as sp
 from glob import glob
 
-# bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/*"))
+bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0203/*"))
 # bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
-bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/EtoE/*"))
+# bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/EtoE/*"))
 print(bags)
 
 for bag in bags:#[12:]:
     print(bag)
     bag_basename=os.path.basename(bag)
-    csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0214/csv/"+bag_basename[:-4]+".csv"
-    odom_csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0214/odom_csv/"+bag_basename[:-4]+".csv"
-    avi_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0214/movie/"
-    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0214/movie/"+bag_basename[:-4]+".avi"
+    csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0203/csv/"+bag_basename[:-4]+".csv"
+    odom_csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0203/odom_csv/"+bag_basename[:-4]+".csv"
+    avi_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0203/movie/"
+    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0203/movie/"+bag_basename[:-4]+".avi"
     play_cmd=f"roslaunch sotsuron_experiment path_plotter.launch avi_basename:={bag_basename[:-4]} bag_basename:={bag_basename} bag_path:={bag} csv_path:={csv_path} odom_csv_path:={odom_csv_path} save_path:={avi_path}"
     # runcmd=sp.call(cmd.split())
     # print(runcmd)
