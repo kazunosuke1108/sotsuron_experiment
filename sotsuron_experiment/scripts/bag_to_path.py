@@ -6,8 +6,8 @@ import subprocess as sp
 from glob import glob
 
 # bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/*"))
-# bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
-bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/EtoE/*"))
+bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
+# bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/EtoE/*"))
 print(bags)
 
 for bag in bags:#[12:]:
