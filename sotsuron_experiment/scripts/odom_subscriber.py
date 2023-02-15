@@ -31,9 +31,9 @@ def callback_odom(msg):
     e = euler_from_quaternion(q)
     _odom_theta = e[2] 
 
-    _odom_x-=np.average(zero_data[:,0])
-    _odom_y-=np.average(zero_data[:,1])
-    _odom_theta-=np.average(zero_data[:,2])
+    # _odom_x-=np.average(zero_data[:,0])
+    # _odom_y-=np.average(zero_data[:,1])
+    # _odom_theta-=np.average(zero_data[:,2])
     rospy.loginfo("Odomery: x=%s y=%s theta=%s", _odom_x, _odom_y, _odom_theta)
     odom_history.append([_odom_x,_odom_y,_odom_theta])
     np.savetxt(odom_csv_path,odom_history,delimiter=",")

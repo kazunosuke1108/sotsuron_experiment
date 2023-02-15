@@ -7,12 +7,25 @@ import scipy as sp
 import matplotlib.pyplot as plt
 from glob import glob
 # csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0108/csv"
-csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/csv"
-odom_csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/odom_csv"
-csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/results"
+
+csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/csv"
+odom_csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/odom_csv"
+csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/results"
 
 csv_paths=sorted(glob(csv_dir_path+"/*"))
 odom_csv_paths=sorted(glob(odom_csv_dir_path+"/*"))
+# odom_csvの修正
+# zero_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/sources/odom_zero.csv"
+
+# zero_data=np.loadtxt(zero_path,delimiter=",")
+# for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
+#     data=np.loadtxt(odom_csv_path,delimiter=",")
+#     data[:,0]+=np.average(zero_data[:,0])*2
+#     data[:,1]+=np.average(zero_data[:,1])*2
+#     data[:,2]+=np.average(zero_data[:,2])*2
+#     np.savetxt(odom_csv_path,data,delimiter=",")
+
+
 # vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/vicon_processed/*"))
 analysis=[]
 for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
@@ -37,13 +50,16 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     y=data[:,2]/1000
     z=data[:,3]/1000
     t_odm=data[:,5]
-    xR=data[:,6]-data[0,6]#-2.880975666111003086e-01
-    yR=data[:,7]-data[0,7]+0.5#-(-5.041865853597119612e-02)+0.5
+    xR=data[:,6]-data[0,6]
+    yR=data[:,7]-np.average(data[295:300,7])+1
+    # xR=data[:,6]-odom_data[0,0]#-2.880975666111003086e-01
+    # yR=data[:,7]-odom_data[0,1]#-(-5.041865853597119612e-02)+0.5
     thR=data[:,8]-data[0,8]
-    pan=data[:,9]
+    pan=data[:,9]-data[0,9]
 
     xH=xR+z*np.cos(thR+pan)+x*np.sin(thR+pan)
     yH=yR+z*np.sin(thR+pan)-x*np.cos(thR+pan)
+    print(csv_path)
     # xH=z*np.cos(thR+pan)+x*np.sin(thR+pan)
     # yH=z*np.sin(thR+pan)-x*np.cos(thR+pan)
 
@@ -127,7 +143,7 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     # np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN.csv",np.column_stack((xH_VCN,yH_VCN,xR_VCN,yR_VCN)),delimiter=",")
 
     # plt.scatter(xH_VCN,yH_VCN,label="VICON: human position",s=2,color="r")
-    # plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
     plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     # plt.scatter(observable_xR,observable_yR,label="HSR: HSR position (observing)",s=2,color="k")
     plt.scatter(observable_xH,observable_yH,label="          \n           ",s=1,color="r")#,label="HSR: human position (raw)",s=2,color="b")
