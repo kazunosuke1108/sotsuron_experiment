@@ -5,7 +5,7 @@
     <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/$(arg bag_basename).bag"/>
     <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
     <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/>
-    <arg name="fps" default="30"/>
+    <arg name="fps" default="25"/>
     <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/>
     <node
         pkg="rosbag" 

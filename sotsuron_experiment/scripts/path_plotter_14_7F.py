@@ -7,8 +7,8 @@ import scipy as sp
 import matplotlib.pyplot as plt
 from glob import glob
 # csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0108/csv"
-csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/csv"
-csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0203/results"
+csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/csv"
+csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/results"
 
 csv_paths=sorted(glob(csv_dir_path+"/*"))
 # vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/vicon_processed/*"))
