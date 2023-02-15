@@ -8,9 +8,11 @@ import matplotlib.pyplot as plt
 from glob import glob
 # csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0108/csv"
 csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/csv"
+odom_csv_dir_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/odom_csv"
 csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0214/results"
 
 csv_paths=sorted(glob(csv_dir_path+"/*"))
+odom_csv_paths=sorted(glob(odom_csv_dir_path+"/*"))
 # vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/vicon_processed/*"))
 analysis=[]
 for csv_path in csv_paths:
@@ -35,7 +37,7 @@ for csv_path in csv_paths:
     z=data[:,3]/1000
     t_odm=data[:,5]
     xR=data[:,6]-data[1,6]#-2.880975666111003086e-01
-    yR=data[:,7]-data[1,7]+0.5#-(-5.041865853597119612e-02)+0.5
+    yR=data[:,7]-data[1,7]#-(-5.041865853597119612e-02)+0.5
     thR=data[:,8]-data[1,8]
     pan=data[:,9]
 
