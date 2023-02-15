@@ -38,7 +38,7 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     z=data[:,3]/1000
     t_odm=data[:,5]
     xR=data[:,6]-data[0,6]#-2.880975666111003086e-01
-    yR=data[:,7]-data[0,7]#-(-5.041865853597119612e-02)+0.5
+    yR=data[:,7]-data[0,7]+0.5#-(-5.041865853597119612e-02)+0.5
     thR=data[:,8]-data[0,8]
     pan=data[:,9]
 
