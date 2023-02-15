@@ -10,9 +10,9 @@ import numpy as np
 
 _odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
 
-bag_basename=sys.argv[1]
+odom_csv_path=sys.argv[1]
 
-csv_path=f"/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/monitor/{bag_basename}.csv"
+# csv_path=f"/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/monitor/{bag_basename}.csv"
 odom_history=[]
 zero_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/sources/odom_zero.csv"
 
@@ -36,7 +36,7 @@ def callback_odom(msg):
     _odom_theta-=np.average(zero_data[:,2])
     rospy.loginfo("Odomery: x=%s y=%s theta=%s", _odom_x, _odom_y, _odom_theta)
     odom_history.append([_odom_x,_odom_y,_odom_theta])
-    np.savetxt(csv_path,odom_history,delimiter=",")
+    np.savetxt(odom_csv_path,odom_history,delimiter=",")
 
 def odometry():
     rospy.init_node('odometry')
