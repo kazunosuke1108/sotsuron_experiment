@@ -15,8 +15,9 @@ csv_paths=sorted(glob(csv_dir_path+"/*"))
 odom_csv_paths=sorted(glob(odom_csv_dir_path+"/*"))
 # vcn_paths=sorted(glob(os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/vicon_processed/*"))
 analysis=[]
-for csv_path in csv_paths:
+for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     data=np.loadtxt(csv_path,delimiter=",")
+    odom_data=np.loadtxt(odom_csv_path,delimiter=",")
     # if "02" in csv_path:
     #     data=data[:254,:]  
     # if "03" in csv_path:
@@ -36,9 +37,9 @@ for csv_path in csv_paths:
     y=data[:,2]/1000
     z=data[:,3]/1000
     t_odm=data[:,5]
-    xR=data[:,6]-data[1,6]#-2.880975666111003086e-01
-    yR=data[:,7]-data[1,7]#-(-5.041865853597119612e-02)+0.5
-    thR=data[:,8]-data[1,8]
+    xR=data[:,6]-data[0,6]#-2.880975666111003086e-01
+    yR=data[:,7]-data[0,7]#-(-5.041865853597119612e-02)+0.5
+    thR=data[:,8]-data[0,8]
     pan=data[:,9]
 
     xH=xR+z*np.cos(thR+pan)+x*np.sin(thR+pan)
@@ -90,8 +91,12 @@ for csv_path in csv_paths:
     # xH_odm_cps=xR+z*np.cos(thR+pan+err_th0)+x*np.sin(thR+pan+err_th0)
     # yH_odm_cps=yR+z*np.sin(thR+pan+err_th0)-x*np.cos(thR+pan+err_th0)
 
+
     xR_HSR=xR
     yR_HSR=yR
+
+    xR_HSR_all=odom_data[:,0]-odom_data[0,0]
+    yR_HSR_all=odom_data[:,1]-odom_data[0,1]
 
     distance=np.sqrt((xH-xR)**2+(yH-yR)**2)
     # flg=distance<6
@@ -122,7 +127,8 @@ for csv_path in csv_paths:
     # np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN.csv",np.column_stack((xH_VCN,yH_VCN,xR_VCN,yR_VCN)),delimiter=",")
 
     # plt.scatter(xH_VCN,yH_VCN,label="VICON: human position",s=2,color="r")
-    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    # plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     # plt.scatter(observable_xR,observable_yR,label="HSR: HSR position (observing)",s=2,color="k")
     plt.scatter(observable_xH,observable_yH,label="          \n           ",s=1,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     # plt.scatter(xH_odm_cps,yH_odm_cps,label="HSR: human position (odometry compensated)",s=2,color="g")
