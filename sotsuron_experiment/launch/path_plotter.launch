@@ -12,25 +12,25 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="-r 2 $(arg bag_path)"
+        args="-r 0.05 $(arg bag_path)"
     />    
         <!-- args="-r 0.1 $(arg bag_path)" -->
 
-    <!-- <node
+    <node
         pkg="sotsuron_experiment" 
         name="path_subscriber" 
         type="path_subscriber.py" 
         output="screen" 
         args="$(arg csv_path)"
-    /> -->
+    />
 
-    <node
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="odom_subscriber" 
         type="odom_subscriber.py" 
         output="screen" 
         args="$(arg odom_csv_path)"
-    />
+    /> -->
 
     <!-- <node
         pkg="image_view" 

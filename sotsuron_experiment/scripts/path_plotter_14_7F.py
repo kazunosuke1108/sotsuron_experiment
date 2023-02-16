@@ -31,8 +31,16 @@ analysis=[]
 for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     data=np.loadtxt(csv_path,delimiter=",")
     odom_data=np.loadtxt(odom_csv_path,delimiter=",")
-    # if "02" in csv_path:
-    #     data=data[:254,:]  
+    # if "_02_" in csv_path:
+    #     data=data[:-115,:]  
+    if "_04_" in csv_path:
+        data=data[:827,:]
+    # if "_06_" in csv_path:
+    #     data=data[:785,:]
+    if "_08_" in csv_path:
+        data=data[:750,:]
+    # if "_09_" in csv_path:
+    #     data=data[:572,:]
     # if "03" in csv_path:
     #     data=data[:238,:]
     # if "06" in csv_path:
