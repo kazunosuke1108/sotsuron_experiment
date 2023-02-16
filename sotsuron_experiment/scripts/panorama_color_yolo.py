@@ -45,9 +45,6 @@ def save_frame_range_sec(video_path, start_sec, stop_sec, step_sec,
             return
         sec += step_sec
 
-save_frame_range_sec('/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/20230203_d_060_3_Yoshinari.mp4',
-                     15, 35, 0.45,
-                     '/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames/20230203_d_060_3_Yoshinari', '20230203_d_060_3_Yoshinari')
 
 
 def match_feature(img1, img2):
@@ -95,88 +92,101 @@ def error_func(t):
     accum.append(answer)
     return answer
 
-imgs=[]
-imgs_color=[]
+movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/movie"
+frames_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
+results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results"
 
-imgs_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames/20230203_d_060_3_Yoshinari"
-save_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results/20230203_d_060_3_Yoshinari"
+movie_paths=sorted(glob(movie_dir+"/*.mp4"))
 
-img_paths=sorted(glob(imgs_dir+"/*"))
-for img_path in img_paths:
-    temp_img=cv2.imread(img_path,cv2.IMREAD_GRAYSCALE)
-    imgs.append(temp_img)
-    temp_img=cv2.imread(img_path)
-    imgs_color.append(temp_img)
+for movie_path in movie_paths:
 
-# 結果出力のキャンバスを作成
-canvas_h, canvas_w = 1000, 3000
-canvas = np.zeros((canvas_h, canvas_w,3))
-canvas += 255
-height, width = imgs[0].shape
+    basename=os.path.basename(movie_path)
+    os.makedirs(frames_dir+"/"+basename[:-4],exist_ok=True)
+    os.makedirs(results_dir+"/"+basename[:-4],exist_ok=True)
+    imgs=[]
+    imgs_color=[]
 
-# 1枚目の写真を貼る
-vector_root = np.array([100, 100])
-canvas[int(vector_root[0]):int(vector_root[0])+height,
-       int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
 
-for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
-    # 写真の名前を定義
-    img1 = imgs[i]
-    img2 = imgs[i+1]
-    img1_color = imgs_color[i]
-    img2_color = imgs_color[i+1]
-    # マッチする特徴点を抽出
-    # try:
-    img1_pt_s, img2_pt_s = match_feature(img1, img2)
-    # except:
-    #     break
-    # 最適化可視化のための記録リスト
-    t_x = []
-    t_y = []
-    accum = []
-    # 最適なベクトルtの探索
-    vec = op.minimize(error_func, [0, 500]).x
-    # 前回のベクトルに足し込むことで全体座標系での移動量を求める
-    vector = np.array([vec[1], vec[0]])+vector_root
-    # これから貼り付ける画像の大きさを取得
-    height, width = img2.shape
-    # 現状の値と貼り付け画像の平均をとって貼り付ける
-    # print(vector)
-    # print(img2.shape)
+    save_frame_range_sec(movie_path,
+                        10, 50, 0.5,
+                        frames_dir+"/"+basename[:-4], basename[:-4])
 
-    # 人のいる場所を切り出す
-    try:
-        results=model(img2_color)
-        objects=results.pandas().xyxy[0]
-        obj_people=objects[objects['name']=='person']
-        print(obj_people)
-        trim=[int(obj_people['xmin'][0]-5),int(obj_people['xmax'][0]+5)]
-    except Exception:
-        trim=[500,800]
+    img_paths=sorted(glob(frames_dir+"/"+basename[:-4]+"/*"))
+    for img_path in img_paths:
+        temp_img=cv2.imread(img_path,cv2.IMREAD_GRAYSCALE)
+        imgs.append(temp_img)
+        temp_img=cv2.imread(img_path)
+        imgs_color.append(temp_img)
 
-    # if i<(len(imgs)-2)/2+6:
-    #     trim=[500,800]
-    # else:
-    #     trim=[600,900]
-    # trim=[0,1280]
-    # koyui=img2_color<0
-    # # print(koyui)
-    # img2_color=img2_color*(1-koyui)+200*koyui
-    # try:
-    [pred_keypoints,img2_color]=detector.onImage(image_mat=img2_color,return_skeleton=True)
-    # except RuntimeError:
-    #     pass
-    canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:] = (img2_color[:,trim[0]:trim[1],:] +
-                                                                                         canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:])/2
-    # canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width] = (img2 +
-    #                                                                                      canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width])/2
+    # 結果出力のキャンバスを作成
+    canvas_h, canvas_w = 1000, 3000
+    canvas = np.zeros((canvas_h, canvas_w,3))
+    canvas += 255
+    height, width = imgs[0].shape
 
-    vector_root = vector
-    # 最適化過程のプロット
-    # fig = plt.figure()
-    # ax = fig.add_subplot(projection='3d')
-    # ax.plot(t_x, t_y, accum)
-    # plt.show()
-    cv2.imwrite(save_dir+"/20230203_d_060_3_Yoshinari_45.jpg", canvas)
-    
-# 完成した画像を保存
+    # 1枚目の写真を貼る
+    vector_root = np.array([100, 100])
+    canvas[int(vector_root[0]):int(vector_root[0])+height,
+        int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
+
+    for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
+        # 写真の名前を定義
+        img1 = imgs[i]
+        img2 = imgs[i+1]
+        img1_color = imgs_color[i]
+        img2_color = imgs_color[i+1]
+        # マッチする特徴点を抽出
+        # try:
+        img1_pt_s, img2_pt_s = match_feature(img1, img2)
+        # except:
+        #     break
+        # 最適化可視化のための記録リスト
+        t_x = []
+        t_y = []
+        accum = []
+        # 最適なベクトルtの探索
+        vec = op.minimize(error_func, [0, 500]).x
+        # 前回のベクトルに足し込むことで全体座標系での移動量を求める
+        vector = np.array([vec[1], vec[0]])+vector_root
+        # これから貼り付ける画像の大きさを取得
+        height, width = img2.shape
+        # 現状の値と貼り付け画像の平均をとって貼り付ける
+        # print(vector)
+        # print(img2.shape)
+
+        # 人のいる場所を切り出す
+        try:
+            results=model(img2_color)
+            objects=results.pandas().xyxy[0]
+            obj_people=objects[objects['name']=='person']
+            print(obj_people)
+            trim=[int(obj_people['xmin'][0]-5),int(obj_people['xmax'][0]+5)]
+        except Exception:
+            trim=[500,800]
+
+        # if i<(len(imgs)-2)/2+6:
+        #     trim=[500,800]
+        # else:
+        #     trim=[600,900]
+        # trim=[0,1280]
+        # koyui=img2_color<0
+        # # print(koyui)
+        # img2_color=img2_color*(1-koyui)+200*koyui
+        # try:
+        [pred_keypoints,img2_color]=detector.onImage(image_mat=img2_color,return_skeleton=True)
+        # except RuntimeError:
+        #     pass
+        canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:] = (img2_color[:,trim[0]:trim[1],:] +
+                                                                                            canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:])/2
+        # canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width] = (img2 +
+        #                                                                                      canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width])/2
+
+        vector_root = vector
+        # 最適化過程のプロット
+        # fig = plt.figure()
+        # ax = fig.add_subplot(projection='3d')
+        # ax.plot(t_x, t_y, accum)
+        # plt.show()
+        cv2.imwrite(results_dir+"/"+basename[:-4]+basename[:-4]+".jpg", canvas)
+        
+    # 完成した画像を保存
