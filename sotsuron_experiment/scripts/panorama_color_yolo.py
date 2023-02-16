@@ -97,8 +97,9 @@ frames_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
 results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results"
 
 movie_paths=sorted(glob(movie_dir+"/*.mp4"))
+print(movie_paths)
 
-for movie_path in movie_paths:
+for i, movie_path in enumerate(movie_paths[5:]):
 
     basename=os.path.basename(movie_path)
     os.makedirs(frames_dir+"/"+basename[:-4],exist_ok=True)
@@ -108,7 +109,7 @@ for movie_path in movie_paths:
 
 
     save_frame_range_sec(movie_path,
-                        10, 50, 0.5,
+                        10, 50, 0.25,
                         frames_dir+"/"+basename[:-4], basename[:-4])
 
     img_paths=sorted(glob(frames_dir+"/"+basename[:-4]+"/*"))
@@ -119,13 +120,13 @@ for movie_path in movie_paths:
         imgs_color.append(temp_img)
 
     # 結果出力のキャンバスを作成
-    canvas_h, canvas_w = 1000, 3000
+    canvas_h, canvas_w = 2000, 3000
     canvas = np.zeros((canvas_h, canvas_w,3))
     canvas += 255
     height, width = imgs[0].shape
 
     # 1枚目の写真を貼る
-    vector_root = np.array([100, 100])
+    vector_root = np.array([500, 100])
     canvas[int(vector_root[0]):int(vector_root[0])+height,
         int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
 
@@ -136,10 +137,10 @@ for movie_path in movie_paths:
         img1_color = imgs_color[i]
         img2_color = imgs_color[i+1]
         # マッチする特徴点を抽出
-        # try:
-        img1_pt_s, img2_pt_s = match_feature(img1, img2)
-        # except:
-        #     break
+        try:
+            img1_pt_s, img2_pt_s = match_feature(img1, img2)
+        except:
+            continue
         # 最適化可視化のための記録リスト
         t_x = []
         t_y = []
@@ -148,6 +149,17 @@ for movie_path in movie_paths:
         vec = op.minimize(error_func, [0, 500]).x
         # 前回のベクトルに足し込むことで全体座標系での移動量を求める
         vector = np.array([vec[1], vec[0]])+vector_root
+        print(vector)
+        
+        if i!=0:
+            if vector[1]<=vector_old[1]:
+                vector_old=vector
+                continue
+            else:
+                vector_old=vector
+        else:
+            vector_old=vector
+
         # これから貼り付ける画像の大きさを取得
         height, width = img2.shape
         # 現状の値と貼り付け画像の平均をとって貼り付ける
@@ -159,10 +171,11 @@ for movie_path in movie_paths:
             results=model(img2_color)
             objects=results.pandas().xyxy[0]
             obj_people=objects[objects['name']=='person']
-            print(obj_people)
+            # print(obj_people)
             trim=[int(obj_people['xmin'][0]-5),int(obj_people['xmax'][0]+5)]
         except Exception:
-            trim=[500,800]
+            continue
+            # trim=[500,800]
 
         # if i<(len(imgs)-2)/2+6:
         #     trim=[500,800]
@@ -176,8 +189,11 @@ for movie_path in movie_paths:
         [pred_keypoints,img2_color]=detector.onImage(image_mat=img2_color,return_skeleton=True)
         # except RuntimeError:
         #     pass
-        canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:] = (img2_color[:,trim[0]:trim[1],:] +
+        try:
+            canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:] = (img2_color[:,trim[0]:trim[1],:] +
                                                                                             canvas[int(vector[0]):int(vector[0])+height, int(vector[1])+trim[0]:int(vector[1])+trim[1],:])/2
+        except ValueError:
+            pass
         # canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width] = (img2 +
         #                                                                                      canvas[int(vector[0]):int(vector[0])+height, int(vector[1]):int(vector[1])+width])/2
 
@@ -187,6 +203,6 @@ for movie_path in movie_paths:
         # ax = fig.add_subplot(projection='3d')
         # ax.plot(t_x, t_y, accum)
         # plt.show()
-        cv2.imwrite(results_dir+"/"+basename[:-4]+basename[:-4]+".jpg", canvas)
+        cv2.imwrite(results_dir+"/"+basename[:-4]+"/"+basename[:-4]+".jpg", canvas)
         
     # 完成した画像を保存
