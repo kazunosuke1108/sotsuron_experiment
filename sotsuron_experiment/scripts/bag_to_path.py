@@ -6,13 +6,17 @@ import subprocess as sp
 from glob import glob
 
 # bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0203/*"))
-bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
-# bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/*"))
+# bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
+bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0214/*"))
 print(bags)
 
 partial_bags=[]
 for bag in bags:
+<<<<<<< HEAD
     if "_02_" in bag:
+=======
+    if "_06_" in bag:
+>>>>>>> e2ee629c0c5d6387edd7609cdaaee2caae4a6f2b
         partial_bags.append(bag)
 
 for bag in partial_bags:
