@@ -14,6 +14,9 @@ csv_result_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/results/0
 
 csv_paths=sorted(glob(csv_dir_path+"/*"))
 odom_csv_paths=sorted(glob(odom_csv_dir_path+"/*"))
+
+print(csv_paths)
+print(odom_csv_paths)
 # odom_csvの修正
 # zero_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/sources/odom_zero.csv"
 
@@ -151,23 +154,27 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     # np.savetxt(csv_result_path+"/csv/"+os.path.basename(csv_path[:-8])+"_results_VCN.csv",np.column_stack((xH_VCN,yH_VCN,xR_VCN,yR_VCN)),delimiter=",")
 
     # plt.scatter(xH_VCN,yH_VCN,label="VICON: human position",s=2,color="r")
-    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
-    plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
-    # plt.scatter(observable_xR,observable_yR,label="HSR: HSR position (observing)",s=2,color="k")
-    plt.scatter(observable_xH,observable_yH,label="          \n           ",s=1,color="r")#,label="HSR: human position (raw)",s=2,color="b")
-    # plt.scatter(xH_odm_cps,yH_odm_cps,label="HSR: human position (odometry compensated)",s=2,color="g")
-    # plt.scatter(xR_VCN,yR_VCN,label="VICON: HSR position",s=2,color="k")
-    plt.xlabel("x (hallway direction) [m]")
-    plt.ylabel("y (width direction) [m]")
-    # plt.legend(loc='upper left')
-    # plt.title(os.path.basename(csv_path[:-4]))
-    # plt.ylim([0,3])
-    # plt.xlim([-6,10])
-    # plt.axis('equal')
-    plt.axis([-6, 10, -1, 4]) # x軸、y軸のMin, Maxを指定
-    plt.axes().set_aspect('equal')
-    plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+"_shrink.png",dpi=300)
-    plt.cla()
+    # plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
+    # plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=1,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    # # plt.scatter(observable_xR,observable_yR,label="HSR: HSR position (observing)",s=2,color="k")
+    # plt.scatter(observable_xH,observable_yH,label="          \n           ",s=1,color="r")#,label="HSR: human position (raw)",s=2,color="b")
+    # # plt.scatter(xH_odm_cps,yH_odm_cps,label="HSR: human position (odometry compensated)",s=2,color="g")
+    # # plt.scatter(xR_VCN,yR_VCN,label="VICON: HSR position",s=2,color="k")
+    # plt.xlabel("x (hallway direction) [m]")
+    # plt.ylabel("y (width direction) [m]")
+    # # plt.legend(loc='upper left')
+    # # plt.title(os.path.basename(csv_path[:-4]))
+    # # plt.ylim([0,3])
+    # # plt.xlim([-6,10])
+    # # plt.axis('equal')
+    # plt.axis([-6, 10, -1, 4]) # x軸、y軸のMin, Maxを指定
+    # plt.axes().set_aspect('equal')
+    # plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+"_shrink.png",dpi=300)
+    # plt.cla()
+    plt.scatter(np.arange(len(pan)),pan)
+    plt.scatter(np.arange(len(thR)),thR)
+    plt.scatter(np.arange(len(yH)),yH)
+    plt.show()
 
     # xH, xH_odm_cps, xH_VCN
     # xH_m2t2,yH_m2t2=xH[xH>=-2],yH[xH>=-2]
