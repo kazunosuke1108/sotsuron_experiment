@@ -12,7 +12,7 @@ print(bags)
 
 partial_bags=[]
 for bag in bags:
-    if "_02_" in bag or  "_06_" in bag or "_09_" in bag :
+    if "_02_" in bag:
         partial_bags.append(bag)
 
 for bag in partial_bags:
