@@ -74,6 +74,9 @@ def get_position_yolov5(rgb_array,dpt_array,proj_mtx):
         dpt=np.nanmedian(bd_box)
         bd_center_y=int((ymin_dpt+ymax_dpt)/2)
         bd_center_x=int((xmin_dpt+xmax_dpt)/2)
+
+        # print(proj_mtx)
+
         center_3d=dpt*np.dot(np.linalg.pinv(proj_mtx),np.array([bd_center_x,bd_center_y,1]).T)
         one_person={
             'xmin_dpt':int(xmin_dpt),

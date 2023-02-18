@@ -26,13 +26,8 @@ csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0207/csv/"+s
 csv_for_m_path="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/exp_data/zed.csv"
 history_path="/catkin_ws/src/ytlab_hsr_modules/datas/"
 exp_data_path="/catkin_ws/src/ytlab_hsr_modules/exp_data/"
-def csv_eraser():
-    dt_now=datetime.datetime.now()
-    now_str=dt_now.strftime('%Y%m%d_%H%M%S')
-    os.makedirs(history_path+now_str,exist_ok=True)
-    exp_datas=sorted(glob(exp_data_path+"*"))
-    for filepath in exp_datas:
-        shutil.move(filepath,history_path+now_str+"/"+os.path.basename(filepath))
+
+
     
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub
@@ -74,6 +69,9 @@ def plotter(history):
     buffer_t=[]
     for data in history:
         temp=data['center_3d'].tolist()
+        # if float(data['confidence'])<0.6:
+        #     continue
+        # else:
         buffer.append(temp)
         buffer_t.append(data['time']-history[0]['time'])
     buffer=np.array(buffer)
@@ -82,6 +80,7 @@ def plotter(history):
     # rospy.loginfo(savedata)
     # np.savetxt(csv_path,savedata,delimiter=",")
     np.savetxt(csv_for_m_path,savedata,delimiter=",")
+    # rospy.loginfo(data)
 
     pass
 
@@ -104,16 +103,13 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data):
 
     # detection
     data=get_position_yolov5(rgb_array,dpt_array,proj_mtx)
-    rospy.loginfo(type(list(data.values())[0]))
-    rospy.loginfo(list(data.values())[0])
-    if np.isnan(list(data.values())[0]):
+    if np.isnan(list(data.values())[0]) or float(data['confidence'])<0.6:
         pass 
     else:
         data['time']=int(str(rgb_data.header.stamp))/1e9
         history.append(data)
         # plot
         plotter(history)
-        rospy.loginfo(data)
     # except Exception:
     #     data['time']=0
     #     pass

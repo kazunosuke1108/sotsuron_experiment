@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="matlab_start_delay" default="10"/>
-    <arg name="rosbag_delay" default="10"/>
-    <arg name="velocity_start_delay" default="10"/>
-    <arg name="bag_basename" default="20230214_y075_v000_09_EtoE"/>
+    <arg name="delay" default="0"/>
+    <arg name="matlab_start_delay" default="$(arg delay)"/>
+    <arg name="rosbag_delay" default="$(arg delay)"/>
+    <arg name="velocity_start_delay" default="$(arg delay)"/>
+    <arg name="bag_basename" default="20230214_d_090_8_20230214_y075_v000_06_EtoE"/>
 
     <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_zed/ytlab_zed_modules/rosbag/$(arg bag_basename).bag"/> -->
-    <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_zed/ytlab_zed_modules/rosbag/$(arg bag_basename).bag"/> -->
-    <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0214/$(arg bag_basename).bag"/>
-    <!-- <node
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/$(arg bag_basename).bag"/>
+    <!-- <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0214/$(arg bag_basename).bag"/> -->
+    <node
         pkg="rosbag" 
         name="play" 
         type="play" 
         args="$(arg bag_path)"
         launch-prefix="bash -c 'sleep $(arg rosbag_delay); $0 $@' "
-    />     -->
+    />    
 
     <node
         pkg="sotsuron_experiment" 
@@ -31,6 +32,8 @@
         output="screen" 
         launch-prefix="bash -c 'sleep $(arg matlab_start_delay); $0 $@' "
     />
+
+    <node pkg="rviz" type="rviz" name="rviz_ar" args="-d $(find sotsuron_experiment)/rviz/integrated_exp.rviz" />
 
 </launch>
 
