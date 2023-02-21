@@ -59,7 +59,13 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     #     data=data[:208,:]        
     # data=data[376:,:]
     # shingo
-    if "30" in csv_path:
+    if "_10_" in csv_path:
+        data=data[:-100,:]
+    if "_11_" in csv_path:
+        data=data[:-55,:]
+    if "_26_" in csv_path:
+        data=data[:365,:]
+    if "_30_" in csv_path:
         data=data[:490,:]
 
 
@@ -78,6 +84,16 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
 
     xH=xR+z*np.cos(thR+pan)+x*np.sin(thR+pan)
     yH=yR+z*np.sin(thR+pan)-x*np.cos(thR+pan)
+    # for x in xR+z*np.cos(thR+pan)+x*np.sin(thR+pan):
+    #     for y in yR+z*np.sin(thR+pan)-x*np.cos(thR+pan):
+    #         if x<1e-2 and x>-1e-2:
+    #             if y<1e-2 and y>-1e-2:
+    #                 print("yes I am")
+    #                 continue
+    #             else:
+    #                 xH.append(x)
+
+
     print(csv_path)
 
     xR_HSR=xR
@@ -94,18 +110,50 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     flg=distance<6
     observable_xH=xH*flg
     observable_yH=yH*flg
+    print(observable_xH.shape)
+
+
 
     
-    if "30" in csv_path:
-        observable_xH=observable_xH[30:]
-        observable_yH=observable_yH[30:]
+    if "_10_" in csv_path:
+        omit=0
+        observable_xH=observable_xH[omit:]
+        observable_yH=observable_yH[omit:]        
+    if "_24_" in csv_path:
+        omit=20
+        observable_xH=observable_xH[omit:]
+        observable_yH=observable_yH[omit:]     
+    if "_26_" in csv_path:
+        omit=10
+        observable_xH=observable_xH[omit:]
+        observable_yH=observable_yH[omit:]  
+    if "_30_" in csv_path:
+        omit=30
+        observable_xH=observable_xH[omit:]
+        observable_yH=observable_yH[omit:]        
+
+    observable_xH_nonzero=[]
+    observable_yH_nonzero=[]
+
+    for x,y in zip(observable_xH,observable_yH):
+        if x==0 and y==0:
+            continue
+        else:
+            observable_xH_nonzero.append(x)
+            observable_yH_nonzero.append(y)
+    
+    print(np.array(observable_xH_nonzero).shape)
+
     
     plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
     plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
-    plt.scatter(observable_xH,observable_yH,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
+    # plt.scatter(observable_xH,observable_yH,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
+    plt.scatter(observable_xH_nonzero,observable_yH_nonzero,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
-    plt.axis([-1, 11, -0.5, 3.5]) # x軸、y軸のMin, Maxを指定
+    plt.axis([min(observable_xH_nonzero)-0.5, max(observable_xH_nonzero)+0.5, -0.5, 3.5]) # x軸、y軸のMin, Maxを指定
+    if "_26_" in csv_path:
+        plt.axis([-0.5, max(observable_xH_nonzero)+0.5, -0.5, 3.5]) # x軸、y軸のMin, Maxを指定
     plt.axes().set_aspect('equal')
     plt.savefig(csv_result_path+"/graph/path/"+os.path.basename(csv_path[:-8])+"_shrink.png",dpi=300)
     plt.cla()
