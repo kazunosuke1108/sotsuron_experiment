@@ -69,8 +69,8 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     y=data[:,2]/1000
     z=data[:,3]/1000
     t_odm=data[:,5]
-    xR=data[:,6]-data[0,6]
-    yR=data[:,7]-data[0,7]-np.average(data[295:300,7])+1##
+    xR=data[:,6]-odom_data[0,0]
+    yR=data[:,7]-odom_data[0,1]#-np.average(data[295:300,7])+1##
     # xR=data[:,6]-odom_data[0,0]#-2.880975666111003086e-01
     # yR=data[:,7]-odom_data[0,1]#-(-5.041865853597119612e-02)+0.5
     thR=data[:,8]-data[0,8]
@@ -100,7 +100,7 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
         observable_xH=observable_xH[30:]
         observable_yH=observable_yH[30:]
     
-    # plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
+    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
     plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     plt.scatter(observable_xH,observable_yH,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     plt.xlabel("x (hallway direction) [m]")
