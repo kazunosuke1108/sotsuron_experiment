@@ -58,7 +58,7 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     # if "16" in csv_path:
     #     data=data[:208,:]        
     # data=data[376:,:]
-    shingo
+    # shingo
     if "30" in csv_path:
         data=data[:490,:]
 
