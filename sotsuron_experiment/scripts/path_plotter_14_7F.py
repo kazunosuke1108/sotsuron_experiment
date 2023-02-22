@@ -180,12 +180,13 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     np.savetxt(csv_result_path+"/human_path_csv/"+os.path.basename(csv_path[:-8])+"_hmnPath.csv",np.array([observable_xH_nonzero,observable_yH_nonzero]),delimiter=",")
 
     
-    plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
-    plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    # plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
+    plt.scatter(xR_HSR_all,yR_HSR_all,label="Robot",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     # plt.scatter(observable_xH,observable_yH,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
-    plt.scatter(observable_xH_nonzero,observable_yH_nonzero,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
-    plt.plot([-12,12],[0,0],'k')
-    plt.plot([-12,12],[2.8,2.8],'k')
+    plt.scatter(observable_xH_nonzero,observable_yH_nonzero,label="Human",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
+    plt.plot([-12,12],[0,0],'k',linewidth=0.5)
+    plt.plot([-12,12],[2.8,2.8],'k',linewidth=0.5)
+    plt.legend(loc='upper right')
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
     plt.axis([min(observable_xH_nonzero)-0.5, max(observable_xH_nonzero)+0.5, -0.5, 3.5]) # x軸、y軸のMin, Maxを指定
