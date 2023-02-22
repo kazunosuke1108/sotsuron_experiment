@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import cv2
 import torch
 import numpy as np
@@ -92,24 +93,26 @@ def error_func(t):
     accum.append(answer)
     return answer
 
-movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/movie"
+movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie"
 frames_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
-results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results"
+results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/results/panorama"
 
 movie_paths=sorted(glob(movie_dir+"/*.mp4"))
 print(movie_paths)
 
-for i, movie_path in enumerate(movie_paths[5:]):
+for i, movie_path in enumerate(movie_paths):
 
     basename=os.path.basename(movie_path)
+    if os.path.isdir(frames_dir+"/"+basename[:-4]):
+        shutil.rmtree(frames_dir+"/"+basename[:-4])
     os.makedirs(frames_dir+"/"+basename[:-4],exist_ok=True)
-    os.makedirs(results_dir+"/"+basename[:-4],exist_ok=True)
+    # os.makedirs(results_dir+"/"+basename[:-4],exist_ok=True)
     imgs=[]
     imgs_color=[]
 
 
     save_frame_range_sec(movie_path,
-                        10, 50, 0.25,
+                        10, 35, 0.125,
                         frames_dir+"/"+basename[:-4], basename[:-4])
 
     img_paths=sorted(glob(frames_dir+"/"+basename[:-4]+"/*"))
@@ -203,6 +206,6 @@ for i, movie_path in enumerate(movie_paths[5:]):
         # ax = fig.add_subplot(projection='3d')
         # ax.plot(t_x, t_y, accum)
         # plt.show()
-        cv2.imwrite(results_dir+"/"+basename[:-4]+"/"+basename[:-4]+".jpg", canvas)
+        cv2.imwrite(results_dir+"/"+basename[:-4]+"0125.jpg", canvas)
         
     # 完成した画像を保存

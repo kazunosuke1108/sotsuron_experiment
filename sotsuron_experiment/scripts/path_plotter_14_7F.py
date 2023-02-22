@@ -60,13 +60,15 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     # data=data[376:,:]
     # shingo
     if "_10_" in csv_path:
-        data=data[:-100,:]
+        data=data[:-300,:]
     if "_11_" in csv_path:
         data=data[:-55,:]
+    if "_24_" in csv_path:
+        data=data[:500,:]
     if "_26_" in csv_path:
-        data=data[:365,:]
+        data=data[:355,:]
     if "_30_" in csv_path:
-        data=data[:490,:]
+        data=data[:480,:]
 
 
 
@@ -116,33 +118,66 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
 
     
     if "_10_" in csv_path:
-        omit=0
+        omit=20
         observable_xH=observable_xH[omit:]
         observable_yH=observable_yH[omit:]        
+        observable_xR=observable_xR[omit:]
+        observable_yR=observable_yR[omit:]       
+    if "_23_" in csv_path:
+        omit=20
+        observable_xH=observable_xH[omit:]
+        observable_yH=observable_yH[omit:]     
+        observable_xR=observable_xR[omit:]
+        observable_yR=observable_yR[omit:]
     if "_24_" in csv_path:
         omit=20
         observable_xH=observable_xH[omit:]
         observable_yH=observable_yH[omit:]     
+        observable_xR=observable_xR[omit:]
+        observable_yR=observable_yR[omit:]
     if "_26_" in csv_path:
         omit=10
         observable_xH=observable_xH[omit:]
         observable_yH=observable_yH[omit:]  
+        observable_xR=observable_xR[omit:]
+        observable_yR=observable_yR[omit:]
     if "_30_" in csv_path:
         omit=30
         observable_xH=observable_xH[omit:]
         observable_yH=observable_yH[omit:]        
-
+        observable_xR=observable_xR[omit:]
+        observable_yR=observable_yR[omit:]
     observable_xH_nonzero=[]
     observable_yH_nonzero=[]
+    observable_xR_nonzero=[]
+    observable_yR_nonzero=[]
 
-    for x,y in zip(observable_xH,observable_yH):
-        if x==0 and y==0:
+    for xH_temp,yH_temp,xR_temp,yR_temp in zip(observable_xH,observable_yH,observable_xR,observable_yR):
+        if xH_temp==0 and yH_temp==0:
             continue
         else:
-            observable_xH_nonzero.append(x)
-            observable_yH_nonzero.append(y)
+            observable_xH_nonzero.append(xH_temp)
+            observable_yH_nonzero.append(yH_temp)
+            observable_xR_nonzero.append(xR_temp)
+            observable_yR_nonzero.append(yR_temp)
     
-    print(np.array(observable_xH_nonzero).shape)
+    observable_xH_nonzero=np.array(observable_xH_nonzero)
+    observable_yH_nonzero=np.array(observable_yH_nonzero)
+    observable_xR_nonzero=np.array(observable_xR_nonzero)
+    observable_yR_nonzero=np.array(observable_yR_nonzero)    
+    print("### measured_length ###")
+    print(max(observable_xH_nonzero))
+    print(min(observable_xH_nonzero))
+    print(max(observable_xH_nonzero)-min(observable_xH_nonzero))
+    print("### minimum distance ###")
+    distances=np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2)
+    print(np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2))
+    print(min(np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2)))
+    for i,distance in enumerate(distances):
+        if distance<1.2:
+            plt.scatter(observable_xH_nonzero[i],observable_yH_nonzero[i],s=10,color='g')
+
+    np.savetxt(csv_result_path+"/human_path_csv/"+os.path.basename(csv_path[:-8])+"_hmnPath.csv",np.array([observable_xH_nonzero,observable_yH_nonzero]),delimiter=",")
 
     
     plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
