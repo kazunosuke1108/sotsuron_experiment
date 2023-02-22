@@ -171,11 +171,11 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     print(max(observable_xH_nonzero)-min(observable_xH_nonzero))
     print("### minimum distance ###")
     distances=np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2)
-    print(np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2))
+    # print(np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2))
     print(min(np.sqrt((observable_xR_nonzero-observable_xH_nonzero)**2+(observable_yR_nonzero-observable_yH_nonzero)**2)))
-    for i,distance in enumerate(distances):
-        if distance<1.2:
-            plt.scatter(observable_xH_nonzero[i],observable_yH_nonzero[i],s=10,color='g')
+    # for i,distance in enumerate(distances):
+        # if distance<1.2:
+        #     plt.scatter(observable_xH_nonzero[i],observable_yH_nonzero[i],s=10,color='g')
 
     np.savetxt(csv_result_path+"/human_path_csv/"+os.path.basename(csv_path[:-8])+"_hmnPath.csv",np.array([observable_xH_nonzero,observable_yH_nonzero]),delimiter=",")
 
@@ -184,6 +184,8 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
     plt.scatter(xR_HSR_all,yR_HSR_all,label="          \n           ",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     # plt.scatter(observable_xH,observable_yH,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     plt.scatter(observable_xH_nonzero,observable_yH_nonzero,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
+    plt.plot([-12,12],[0,0],'k')
+    plt.plot([-12,12],[2.8,2.8],'k')
     plt.xlabel("x (hallway direction) [m]")
     plt.ylabel("y (width direction) [m]")
     plt.axis([min(observable_xH_nonzero)-0.5, max(observable_xH_nonzero)+0.5, -0.5, 3.5]) # x軸、y軸のMin, Maxを指定
