@@ -181,7 +181,11 @@ for csv_path,odom_csv_path in zip(csv_paths,odom_csv_paths):
 
     
     # plt.scatter(xR_HSR,yR_HSR,label="          \n           ",s=1,color="k")#,label="HSR: HSR position (whole)",s=1,color="k")
-    plt.scatter(xR_HSR_all,yR_HSR_all,label="Robot",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    
+    if "_26_" in csv_path:
+        plt.scatter(xR_HSR_all[:2435],yR_HSR_all[:2435],label="Robot",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
+    else:
+        plt.scatter(xR_HSR_all[:2900],yR_HSR_all[:2900],label="Robot",s=0.5,color="b")#,label="HSR: HSR position (whole)",s=1,color="k")
     # plt.scatter(observable_xH,observable_yH,label="          \n           ",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     plt.scatter(observable_xH_nonzero,observable_yH_nonzero,label="Human",s=2,color="r")#,label="HSR: human position (raw)",s=2,color="b")
     plt.plot([-12,12],[0,0],'k',linewidth=0.5)
