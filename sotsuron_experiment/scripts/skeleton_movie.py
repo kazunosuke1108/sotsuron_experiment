@@ -18,22 +18,47 @@ import torch
 import cv2
 from glob import glob
 
-videoPath="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/20230203_d_060_3_Yoshinari.mp4"
+videoPath="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie/20230220_d_090_30_shingo_ZED.mp4"
 
 cap=cv2.VideoCapture(videoPath)
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 fourcc = cv2.VideoWriter_fourcc('m','p','4', 'v')
-writer = cv2.VideoWriter("/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results/20230203_d_060_3_Yoshinari_skeleton.mp4",fourcc, fps, (width, height))
+writer = cv2.VideoWriter("/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/skeleton_movie/20230220_d_090_30_shingo_ZED_bbox.mp4",fourcc, fps, (width, height))
+# Detectron2
 detector=Detector(model_type="KP")
+# YOLOv5
+model = torch.hub.load("/usr/local/lib/python3.8/dist-packages/yolov5", 'custom', path=os.environ['HOME']+'/catkin_ws/src/object_detector/config/yolov5/yolov5s.pt',source='local')
 
 
 while True:
     ret,frame=cap.read()
     if ret:
         cv2.imshow("source",frame)
-        [pred_keypoints,output_img]=detector.onImage(image_mat=frame,return_skeleton=True)
+
+        # Detectron2
+        # [pred_keypoints,output_img]=detector.onImage(image_mat=frame,return_skeleton=True)
+        # YOLOv5
+        results=model(frame)
+        objects=results.pandas().xyxy[0]
+        obj_people=objects[objects['name']=='person']
+        for i,row in enumerate(obj_people.itertuples()):
+            # if row['confidence']<0.7:
+            #     continue
+            if row.confidence<0.7:
+                continue
+            xmin=row.xmin
+            ymin=row.ymin
+            xmax=row.xmax
+            ymax=row.ymax
+            print(xmin)
+            try:
+                cv2.rectangle(frame,pt1=(int(xmin),int(ymin)),pt2=(int(xmax),int(ymax)),color=(255,0,0),thickness=3)
+            except cv2.error:
+                pass
+        output_img=frame
+        
         cv2.imshow("result",output_img)
         writer.write(output_img)
 

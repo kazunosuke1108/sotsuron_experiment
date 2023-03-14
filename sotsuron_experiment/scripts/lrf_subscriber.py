@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 import numpy as np
+import matplotlib.pyplot as plt
 import rospy 
 import os
 from nav_msgs.msg import Odometry   
@@ -9,33 +10,36 @@ from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import PointStamped
 import message_filters
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.csv"
+img_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.png"
 ranges_csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/sources/ranges.csv"
 
 _odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
-footcandidate=[]
-footcandidate_idx=[]
-footcandidate2=[]
-footcandidate2_idx=[]
-footcandidate3=[]
-footcandidate3_idx=[]
-footcandidate4=[]
-footcandidate4_idx=[]
-yorozu_idx=[]
 
-def idx_to_pos(msg_scan,idx):
+def get_positions(msg_scan,x,y,th):
+    idx=np.arange(len(msg_scan.ranges))
     rad=msg_scan.angle_min+msg_scan.angle_increment*idx
-    xR=msg_scan.ranges[idx]*np.cos(rad)
-    yR=msg_scan.ranges[idx]*np.sin(rad)
-        
-            
+    xR=x+msg_scan.ranges*np.cos(rad+th)
+    yR=y+msg_scan.ranges*np.sin(rad+th)
     return np.array([xR,yR]).T
 
-def idx_to_dist(msg_scan,idx1,idx2):
-    pos1=idx_to_pos(msg_scan,idx1)
-    pos2=idx_to_pos(msg_scan,idx2)
-    dist=np.sqrt((pos1[0]-pos2[0])**2+(pos1[1]-pos2[1])**2)
-    return dist
+def get_walls(msg_scan,positions):
+    idx=np.arange(len(msg_scan.ranges))
+    rad=np.array(msg_scan.angle_min+msg_scan.angle_increment*idx)
+    r_idx=np.where((rad>-np.pi/2) & (rad<-np.arctan(2/30)) & (np.array(msg_scan.ranges)<30))
+    l_idx=np.where((rad<np.pi/2) & (rad>np.arctan(2/30)) & (np.array(msg_scan.ranges)<30))
+    plt.scatter(positions[r_idx,0],positions[r_idx,1],s=0.5,c='r')
+    plt.scatter(positions[l_idx,0],positions[l_idx,1],s=0.5,c='r')
+    print(positions[r_idx,0][0])
+    r_a,r_b=np.polyfit(positions[r_idx,0][0],positions[r_idx,1][0],1)
+    l_a,l_b=np.polyfit(positions[l_idx,0][0],positions[l_idx,1][0],1)
+    plt.plot([0,30],[r_b,r_a*30+r_b],color="r")
+    plt.plot([0,30],[l_b,l_a*30+l_b],color="r")
+
+# def idx_to_dist(msg_scan,idx1,idx2):
+#     pos1=get_positions(msg_scan,idx1)
+#     pos2=get_positions(msg_scan,idx2)
+#     dist=np.sqrt((pos1[0]-pos2[0])**2+(pos1[1]-pos2[1])**2)
+#     return dist
 
 def pub_sub():
     global rgb_sub,dpt_sub,info_sub,pub_PointStamped
@@ -49,12 +53,10 @@ def pub_sub():
     mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,0.5)
     
     # publisher
-    pub_PointStamped=rospy.Publisher("publisher_point",PointStamped,queue_size=1)
+    # pub_PointStamped=rospy.Publisher("publisher_point",PointStamped,queue_size=1)
 
     # listener
-
     # broadcaster
-
     return mf
 
 def Callback(msg_odom,msg_scan):
@@ -73,136 +75,32 @@ def Callback(msg_odom,msg_scan):
 
     # Scan
     ranges=msg_scan.ranges
-    # rospy.loginfo(f"max:{max(ranges)}, min:{min(ranges)}")
+    print(np.array(ranges).shape)
+    positions=get_positions(msg_scan,_odom_x,_odom_y,_odom_theta)
+    walls=get_walls(msg_scan,positions)
 
-    np.savetxt(ranges_csv_path,ranges,delimiter=",")
+    plt.plot(positions[:,0],positions[:,1])
+    plt.xlim([-10,40])
+    plt.ylim([-1,4])
+    plt.savefig(img_path)
+    plt.cla()
 
-    point=PointStamped()
-    point.header.stamp=rospy.Time.now()
-    point.header.frame_id="base_link"
-    # pos=idx_to_pos(msg_scan,idx-1)
-    point.point.x=0
-    point.point.y=0
-    point.point.z=0
-    # rospy.loginfo(point)
-    pub_PointStamped.publish(point)
+    # np.savetxt(ranges_csv_path,ranges,delimiter=",")
 
-    # original_candidate=[]
-    # for i in range(1,len(ranges)):
-    #     if abs(ranges[i]-ranges[i-1])>=1.0:
-    #         # エッジ認定
-    #         original_candidate.append([ranges[i],i])
-    
-    # print(len(original_candidate))
-    # for i,data in enumerate(original_candidate):
-    #     idx=data[1]
-    #     point=PointStamped()
-    #     point.header.stamp=rospy.Time.now()
-    #     point.header.frame_id="base_link"
-    #     pos=idx_to_pos(msg_scan,idx-1)
-    #     point.point.x=pos[0]
-    #     point.point.y=pos[1]
-    #     point.point.z=0
-    #     # rospy.loginfo(point)
-    #     pub_PointStamped.publish(point)
+    # point=PointStamped()
+    # point.header.stamp=rospy.Time.now()
+    # point.header.frame_id="base_link"
+    # # pos=get_positions(msg_scan,idx-1)
+    # point.point.x=0
+    # point.point.y=0
+    # point.point.z=0
+    # # rospy.loginfo(point)
+    # pub_PointStamped.publish(point)
 
-    # yorozu method
     edge_list=[]
     a_list=[]
     b_list=[]
     candidate_list=[]
-    # for i in range(1,len(ranges)):
-    #     if abs(ranges[i]-ranges[i-1])>0.1:
-    #         # エッジ認定
-    #         edge_list.append([ranges[i],i])
-
-    # for i in range(3,len(edge_list)):
-    #     if idx_to_dist(msg_scan,i,i-1)>0.01 and idx_to_dist(msg_scan,i,i-1)<0.2 and idx_to_dist(msg_scan,i-2,i-3)>0.01 and idx_to_dist(msg_scan,i-2,i-3)<0.2:
-    #         # a条件クリア・柱認定
-    #         a_list.append(ranges.index(edge_list[i][0]))
-    #         left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
-    #         right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
-    #         dist=idx_to_dist(msg_scan,left_idx,right_idx)
-    #         if dist>0.1 and dist<1.0:
-    #             # b条件クリア・2本の柱認定
-    #             b_list.append(ranges.index(edge_list[i][0]))
-    #             feetwidth=idx_to_dist(msg_scan,i,i-3)
-    #             if feetwidth>0.2 and feetwidth<0.4:
-    #                 # c条件クリア・足全体認定
-    #                 candidate_list.append(ranges.index(edge_list[i][0]))
-    #                 pass
-
-    # for i in range(1,len(ranges)):
-    #     if abs(ranges[i]-ranges[i-1])>=0:
-    #         # エッジ認定
-    #         edge_list.append([ranges[i],i])
-
-    # for i in range(3,len(edge_list)):
-    #     if idx_to_dist(msg_scan,i,i-1)>0.001 and idx_to_dist(msg_scan,i,i-1)<100 and idx_to_dist(msg_scan,i-2,i-3)>0.001 and idx_to_dist(msg_scan,i-2,i-3)<100.0:
-    #         # a条件クリア・柱が**隣接して**2つある認定
-    #         a_list.append(ranges.index(edge_list[i][0]))
-    #         left_idx=int((edge_list[i][1]+edge_list[i-1][1])/2)
-    #         right_idx=int((edge_list[i-2][1]+edge_list[i-3][1])/2)
-    #         dist=idx_to_dist(msg_scan,left_idx,right_idx)
-    #         if dist>0.01 and dist<3.0:
-    #             # b条件クリア・2本の柱認定
-    #             b_list.append(ranges.index(edge_list[i][0]))
-    #             feetwidth=idx_to_dist(msg_scan,i,i-3)
-    #             if feetwidth>0.2 and feetwidth<0.4:
-    #                 # c条件クリア・足全体認定
-    #                 candidate_list.append(ranges.index(edge_list[i][0]))
-    #                 pass
-    # for i,idx in enumerate(candidate_list):
-    #     point=PointStamped()
-    #     point.header.stamp=rospy.Time.now()
-    #     point.header.frame_id="base_link"
-    #     pos=idx_to_pos(msg_scan,idx-1)
-    #     point.point.x=pos[0]
-    #     point.point.y=pos[1]
-    #     point.point.z=0
-    #     # rospy.loginfo(point)
-    #     pub_PointStamped.publish(point)
-    # print(f"{len(edge_list)} -> {len(a_list)} -> {len(b_list)} -> {len(candidate_list)}")
-    # yorozu_idx.append(candidate_list)
-    # print(candidate_list)
-
-
-
-
-
-
-
-
-
-
-
-
-    # # 2d func assumption
-    # win=15
-    # err_list=[]
-    # for i in range(len(ranges)-win):
-    #     ranges_roi=np.array(ranges[i:i+win])
-    #     if np.average(ranges_roi)>20:
-    #         err_list.append(9999)
-    #         continue
-    #     ranges_norm=(ranges_roi-min(ranges_roi))/(max(ranges_roi)-min(ranges_roi))
-    #     indexes=np.arange(-1,1,2/win)
-    #     a,b,c=np.polyfit(indexes,ranges_norm,2)
-    #     if a<0:
-    #         err_list.append(999)
-    #         continue
-    #     estm=a*ranges_norm**2+b*ranges_norm+c
-    #     err=np.average(ranges_norm-estm)
-    #     err_list.append(abs(err))
-
-    # err_sorted=sorted(err_list)
-    # footcandidate.append(ranges[err_list.index(err_sorted[0])+int(win/2)])
-    # footcandidate_idx.append(err_list.index(err_sorted[0]))
-    # footcandidate2.append(ranges[err_list.index(err_sorted[1])]+int(win/2))
-    # footcandidate2_idx.append(err_list.index(err_sorted[1]))
-    # savemtx=np.column_stack((np.array(footcandidate).T,np.array(footcandidate_idx).T,np.array(footcandidate2).T,np.array(footcandidate2_idx).T))
-    # np.savetxt(csv_path,savemtx,delimiter=",")
-    # rospy.loginfo(f"{err_list.index(min(err_list))} {min(err_list)}")
 
     
 rospy.init_node("lrf_subscriber")

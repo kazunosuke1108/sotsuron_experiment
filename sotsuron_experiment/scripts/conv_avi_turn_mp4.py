@@ -18,7 +18,7 @@ for videoPath in videos:
         ret,frame=cap.read()
         fourcc = cv2.VideoWriter_fourcc('m','p','4', 'v')
         size=(frame.shape[1],frame.shape[0])
-        video=cv2.VideoWriter(avi_path+video_basename[:-4]+".mp4",fourcc, 25.0,size)
+        video=cv2.VideoWriter(avi_path+video_basename[:-4]+".mp4",fourcc, 15.0,size)
         if cap.isOpened():
             while True:
                 if ret:
