@@ -4,11 +4,11 @@ import cv2
 import time
 from glob import glob
 
-videos=sorted(glob("/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie/*"))
+videos=sorted(glob("/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/movie/*"))
 try:
     avi_path=sys.argv[1]
 except Exception:
-    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie/"
+    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/movie/"
 
 for videoPath in videos:
     video_basename=os.path.basename(videoPath)

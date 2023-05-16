@@ -7,22 +7,22 @@ from glob import glob
 
 # bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0203/*"))
 # bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
-bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0220/*"))
+bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0117/*"))
 print(bags)
 
-partial_bags=[]
-for bag in bags:
-    if "_23_" in bag or "_24_" in bag or "_26_" in bag:
-        partial_bags.append(bag)
+# partial_bags=[]
+# for bag in bags:
+#     if "_23_" in bag or "_24_" in bag or "_26_" in bag:
+#         partial_bags.append(bag)
 
-for bag in partial_bags:
+for bag in bags:# partial_bags:
 # for bag in bags:
     print(bag)
     bag_basename=os.path.basename(bag)
-    csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/csv/"+bag_basename[:-4]+".csv"
-    odom_csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/odom_csv/"+bag_basename[:-4]+".csv"
-    avi_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie/"
-    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie/"+bag_basename[:-4]+".avi"
+    csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/csv/"+bag_basename[:-4]+".csv"
+    odom_csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/odom_csv/"+bag_basename[:-4]+".csv"
+    avi_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/movie/"
+    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/movie/"+bag_basename[:-4]+".avi"
     play_cmd=f"roslaunch sotsuron_experiment path_plotter.launch avi_basename:={bag_basename[:-4]} bag_basename:={bag_basename[:-4]} bag_path:={bag} csv_path:={csv_path} odom_csv_path:={odom_csv_path} save_path:={avi_path}"
     # runcmd=sp.call(cmd.split())
     # print(runcmd)

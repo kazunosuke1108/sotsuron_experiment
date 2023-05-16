@@ -93,14 +93,14 @@ def error_func(t):
     accum.append(answer)
     return answer
 
-movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie"
+movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/movie"
 frames_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
-results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/results/panorama"
+results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/results/panorama"
 
 movie_paths=sorted(glob(movie_dir+"/*.mp4"))
 print(movie_paths)
 
-for i, movie_path in enumerate(movie_paths[2:4]):
+for i, movie_path in enumerate(movie_paths):
 
     basename=os.path.basename(movie_path)
     if os.path.isdir(frames_dir+"/"+basename[:-4]):
@@ -112,7 +112,7 @@ for i, movie_path in enumerate(movie_paths[2:4]):
 
 
     save_frame_range_sec(movie_path,
-                        10, 35, 0.12,
+                        10, 35, 0.225,
                         frames_dir+"/"+basename[:-4], basename[:-4])
 
     img_paths=sorted(glob(frames_dir+"/"+basename[:-4]+"/*"))
@@ -219,6 +219,6 @@ for i, movie_path in enumerate(movie_paths[2:4]):
         # ax = fig.add_subplot(projection='3d')
         # ax.plot(t_x, t_y, accum)
         # plt.show()
-        cv2.imwrite(results_dir+"/"+basename[:-4]+"012.jpg", canvas)
+        cv2.imwrite(results_dir+"/"+basename[:-4]+"0225.jpg", canvas)
         
     # 完成した画像を保存
