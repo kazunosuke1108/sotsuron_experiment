@@ -2,7 +2,8 @@ clc;clear;
 angles=[-90,30;...
     180,90;...
     180,0;...
-    -130,15]
+    -130,15;...
+    -120,15]
 
 for angle=transpose(angles)
 
@@ -177,9 +178,10 @@ for angle=transpose(angles)
         % view([0,15])
         % view([-50,15])
         % view([-130,15])%
-        xlim([-7,7])
+        xlim([-6,6])
         ylim([-0.5,3.5])
         zlim([0,2])
+        fontsize(fig,20,"pixels");
         drawnow
         frames(i)=getframe(fig);
 
