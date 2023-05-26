@@ -87,3 +87,10 @@ echo "ROS_MASTER_URI:"$ROS_MASTER_URI
 echo "==========================="
 echo "=LOADED GLOBAL ROS SETTING="
 echo "==========================="
+
+echo "==========================="
+echo "=   Install Detectron2    ="
+echo "==========================="
+
+git clone https://github.com/facebookresearch/detectron2.git
+python3 -m pip install -e detectron2
