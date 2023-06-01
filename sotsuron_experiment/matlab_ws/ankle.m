@@ -44,7 +44,7 @@ observable_pan=observable_pan(cutfirst:end-cutend);
 
 export_matrix=[observable_xH,observable_yH,observable_zH,observable_xR,observable_yR,observable_thR,observable_pan];
 
-writematrix(export_matrix,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\dev.csv")
+writematrix(export_matrix,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\result.csv")
 % plot(mat_general(:,2),mat_general(:,3));
 % plot3(mat_general(:,2),mat_general(:,3),mat_general(:,4));
 % hold on
