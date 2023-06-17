@@ -21,7 +21,6 @@ function time_compensated=fixTimeBug(mat)
             % scatter(frame_idx(i+1),time_compensated(i+1));
         else
             time_compensated(i+1)=time_series(i+1);
-            hold on
             outlier_flg=false;
         end
     end

@@ -25,9 +25,7 @@ r.relative_mat=r.mat-knee_center;
 l.relative_mat=l.mat-knee_center;
 rbt.relative_mat=rbt.mat-[knee_center(:,1:2),zeros(length(knee_center),2)];
 
-fig1=figure(1);
-frames(length(knee_center)) = struct('cdata',[],'colormap',[]);
-frames(1)=getframe(fig1);
+figure(1)
 for i = 1:length(r.relative_mat)
     plot(r.relative_mat(max(i-5,1):i,1),r.relative_mat(max(i-5,1):i,2),"r","LineWidth",5);
     hold on
@@ -36,22 +34,16 @@ for i = 1:length(r.relative_mat)
     hold on
     rbt_position=rectangle('Position',[rbt.relative_mat(i,1)-0.3,rbt.relative_mat(i,2)-0.3,0.6,0.6],'Curvature',[1 1],'EdgeColor','b');
     hold on
-    rbt_direction=plot([rbt.relative_mat(i,1),rbt.relative_mat(i,1)+0.3*cos(rbt.relative_mat(i,3)+rbt.relative_mat(i,4))],[rbt.relative_mat(i,2),rbt.relative_mat(i,2)+0.3*sin(rbt.relative_mat(i,3)+rbt.relative_mat(i,4))],'b','LineWidth',2);
-    hold on
-    plt_ocl_idx=ocl_idx(find(ocl_idx<=i));
+    plt_ocl_idx=ocl_idx(find(ocl_idx<=i))
     plot(rbt.relative_mat(plt_ocl_idx,1),rbt.relative_mat(plt_ocl_idx,2),"xk","MarkerSize",10);
+    hold on
+    rbt_direction=plot([observable_xR(1),observable_xR(1)+0.3*cos(observable_thR(1)+observable_pan(1))],[observable_yR(1),observable_yR(1)+0.3*sin(observable_thR(1)+observable_pan(1))],'b');
     hold off
     xlim([-6,6])
     ylim([-1,3])
-    title("human centric view")
     xlabel("position x [m]")
-    ylabel("position y [m]")
+    xlabel("position y [m]")
     daspect([1 1 1])
     drawnow
-    frames(i)=getframe(fig1);
+    pause(0.05)
 end
-v = VideoWriter('Hayashide_'+"human_centric"+'_knee.mp4','MPEG-4');
-v.FrameRate=1/0.05;
-open(v);
-writeVideo(v,frames);
-close(v);
