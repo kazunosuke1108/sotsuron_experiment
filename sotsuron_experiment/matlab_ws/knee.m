@@ -1,8 +1,9 @@
+clc;clear;close all
 mat_general=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\0117\csv\20230117_d_060_1_Hayashide.csv");
 mat=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\result.csv")
 labelList=getLabel();
-r.no=13;
-l.no=12;
+r.no=15;
+l.no=14;
 
 % [~,ind] = sort(mat(:,end));
 % mat= mat(ind,:);
@@ -12,40 +13,51 @@ r.mat=[mat(:,r.no),mat(:,r.no+17),mat(:,r.no+17*2)]
 l.mat=[mat(:,l.no),mat(:,l.no+17),mat(:,l.no+17*2)];
 
 
-fig=figure();clf;
+fig=figure(1);
+fig.Position = [100 100 1200 800];
 % plot(1:length(t),t)
 
 subplot(2,2,1)
-plot(t,r.mat(:,1))
+plot(t,r.mat(:,1),"r")
 hold on
-plot(t,l.mat(:,1))
+grid
+plot(t,l.mat(:,1),"b")
 title(labelList(r.no))
 xlabel("time \it{t}\rm [s]",'FontName','Times New Roman')
 ylabel("x position \it{x}\rm [m]",'FontName','Times New Roman')
+legend(labelList(r.no),labelList(l.no))
 
 subplot(2,2,2)
-plot(t,r.mat(:,2))
+plot(t,r.mat(:,2),"r")
 hold on
-plot(t,l.mat(:,2))
+grid
+plot(t,l.mat(:,2),"b")
 title(labelList(r.no+17))
 xlabel("time \it{t}\rm [s]",'FontName','Times New Roman')
 ylabel("y position \it{y}\rm [m]",'FontName','Times New Roman')
+legend(labelList(r.no+17),labelList(l.no+17))
 
 subplot(2,2,3)
-plot(t,r.mat(:,3))
+plot(t,r.mat(:,3),"r")
 hold on
-plot(t,l.mat(:,3))
+grid
+plot(t,l.mat(:,3),"b")
 title(labelList(r.no+17*2))
 xlabel("time \it{t}\rm [s]",'FontName','Times New Roman')
 ylabel("z position \it{z}\rm [m]",'FontName','Times New Roman')
+legend(labelList(r.no+17*2),labelList(l.no+17*2))
 
 subplot(2,2,4)
-plot3(r.mat(:,1),r.mat(:,2),r.mat(:,3))
+plot(r.mat(:,1),r.mat(:,2),"r")
+hold on
+plot(l.mat(:,1),l.mat(:,2),"b")
+% plot3(r.mat(:,1),r.mat(:,2),r.mat(:,3))
 grid on
+ylim([0,5])
 daspect([1 1 1])
 xlabel("position \it{x}\rm [m]",'FontName','Times New Roman')
 ylabel("position \it{y}\rm [m]",'FontName','Times New Roman')
-zlabel("position \it{z}\rm [m]",'FontName','Times New Roman')
+% zlabel("position \it{z}\rm [m]",'FontName','Times New Roman')
 
 % saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\"+"time_noise.png")
 saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\"+labelList(r.no)+"timeFixed.png")
