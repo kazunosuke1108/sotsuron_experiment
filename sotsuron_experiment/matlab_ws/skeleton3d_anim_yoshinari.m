@@ -8,9 +8,9 @@ angles=[-90,30;...
     180,90];
 % addpath "C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\0117"
 load("C:\Users\hayashide\kazu_ws\sotsuron_simulator\matlab_ws\230117\results\230117_7F\230117_200325_vx060_y050\230117_200325_.mat");
-mat_general=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\csv\20230107_rotation_8_15_yoshinari.csv");
-mat_kp=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\csv\20230107_rotation_8_15_yoshinari_kp.csv");
-mat_odom=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\odom_csv\20230107_rotation_8_15_yoshinari.csv");
+mat_general=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\csv\20230107_rotation_16_03_yoshinari.csv");
+mat_kp=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\csv\20230107_rotation_16_03_yoshinari_kp.csv");
+mat_odom=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\odom_csv\20230107_rotation_16_03_yoshinari.csv");
 
 t=mat_general(:,1);
 
@@ -59,7 +59,7 @@ observable_pan=observable_pan(cutfirst:end-cutend);
 
 export_matrix=[observable_xH,observable_yH,observable_zH,observable_xR,observable_yR,observable_thR,observable_pan,observable_t];
 
-writematrix(export_matrix,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\result.csv")
+% writematrix(export_matrix,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\result.csv")
 % plot(mat_general(:,2),mat_general(:,3));
 % plot3(mat_general(:,2),mat_general(:,3),mat_general(:,4));
 % hold on
