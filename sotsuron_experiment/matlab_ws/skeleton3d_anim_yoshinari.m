@@ -19,7 +19,7 @@ y_hmn_cam=mat_kp(:,[2:4:end])/1000;
 z_hmn_cam=mat_kp(:,[3:4:end])/1000;
 
 dt=mat_general(2,1)-mat_general(1,1);
-thR=mat_general(:,9)-mat_general(1,9)+deg2rad(12.5);
+thR=mat_general(:,9)-mat_general(1,9)+deg2rad(5);
 pan=mat_general(:,10)-mat_general(1,10);
 
 xR=mat_general(:,7)-mat_odom(1,1);
@@ -29,11 +29,9 @@ xH=xR+z_hmn_cam.*cos(thR+pan)+x_hmn_cam.*sin(thR+pan);
 yH=yR+z_hmn_cam.*sin(thR+pan)-x_hmn_cam.*cos(thR+pan);
 zH=-y_hmn_cam+0.9;
 flg=sqrt((xH-xR).^2+(yH-yR).^2)<6;
-
-if length(find(sum(flg)==min(sum(flg))))==size(flg,2)
+flg=flg(:,find(sum(flg)==min(sum(flg))));
+if size(flg,2)>1
     flg=flg(:,1)
-else
-    flg=flg(:,find(sum(flg)==min(sum(flg))));
 end
 flg_idx=find(flg~=0);
 
@@ -47,7 +45,7 @@ observable_thR=thR(flg_idx);
 observable_pan=pan(flg_idx);
 
 cutfirst=40;
-cutend=140;
+cutend=100;
 observable_t=observable_t(cutfirst:end-cutend);
 observable_xH=observable_xH(cutfirst:end-cutend,:); 
 observable_yH=observable_yH(cutfirst:end-cutend,:); 
@@ -94,16 +92,16 @@ for angle = transpose(angles)
     arc_left_helper=plot([observable_xR(1),arc_r1_x(end)],[observable_yR(1),arc_r1_y(end)],'--g');
 
 
-    bone_1=plot3([observable_xH(1,1),observable_xH(1,2)],[observable_yH(1,1),observable_yH(1,2)],[observable_zH(1,1),observable_zH(1,2)],'b','LineWidth',1);
-    bone_2=plot3([observable_xH(1,1),observable_xH(1,3)],[observable_yH(1,1),observable_yH(1,3)],[observable_zH(1,1),observable_zH(1,3)],'r','LineWidth',1);
-    bone_3=plot3([observable_xH(1,2),observable_xH(1,4)],[observable_yH(1,2),observable_yH(1,4)],[observable_zH(1,2),observable_zH(1,4)],'b','LineWidth',1);
-    bone_4=plot3([observable_xH(1,3),observable_xH(1,5)],[observable_yH(1,3),observable_yH(1,5)],[observable_zH(1,3),observable_zH(1,5)],'r','LineWidth',1);
-    bone_5=plot3([observable_xH(1,1),1/2*(observable_xH(1,12)+observable_xH(1,13))],[observable_yH(1,1),1/2*(observable_yH(1,12)+observable_yH(1,13))],[observable_zH(1,1),1/2*(observable_zH(1,12)+observable_zH(1,13))],'k','LineWidth',1);
-    bone_6=plot3([observable_xH(1,6),observable_xH(1,7)],[observable_yH(1,6),observable_yH(1,7)],[observable_zH(1,6),observable_zH(1,7)],'k','LineWidth',1);
-    bone_7=plot3([observable_xH(1,6),observable_xH(1,8)],[observable_yH(1,6),observable_yH(1,8)],[observable_zH(1,6),observable_zH(1,8)],'b','LineWidth',1);
-    bone_8=plot3([observable_xH(1,7),observable_xH(1,9)],[observable_yH(1,7),observable_yH(1,9)],[observable_zH(1,7),observable_zH(1,9)],'r','LineWidth',1);
-    bone_9=plot3([observable_xH(1,8),observable_xH(1,10)],[observable_yH(1,8),observable_yH(1,10)],[observable_zH(1,8),observable_zH(1,10)],'b','LineWidth',1);
-    bone_10=plot3([observable_xH(1,9),observable_xH(1,11)],[observable_yH(1,9),observable_yH(1,11)],[observable_zH(1,9),observable_zH(1,11)],'r','LineWidth',1);
+    % bone_1=plot3([observable_xH(1,1),observable_xH(1,2)],[observable_yH(1,1),observable_yH(1,2)],[observable_zH(1,1),observable_zH(1,2)],'b','LineWidth',1);
+    % bone_2=plot3([observable_xH(1,1),observable_xH(1,3)],[observable_yH(1,1),observable_yH(1,3)],[observable_zH(1,1),observable_zH(1,3)],'r','LineWidth',1);
+    % bone_3=plot3([observable_xH(1,2),observable_xH(1,4)],[observable_yH(1,2),observable_yH(1,4)],[observable_zH(1,2),observable_zH(1,4)],'b','LineWidth',1);
+    % bone_4=plot3([observable_xH(1,3),observable_xH(1,5)],[observable_yH(1,3),observable_yH(1,5)],[observable_zH(1,3),observable_zH(1,5)],'r','LineWidth',1);
+    % bone_5=plot3([observable_xH(1,1),1/2*(observable_xH(1,12)+observable_xH(1,13))],[observable_yH(1,1),1/2*(observable_yH(1,12)+observable_yH(1,13))],[observable_zH(1,1),1/2*(observable_zH(1,12)+observable_zH(1,13))],'k','LineWidth',1);
+    % bone_6=plot3([observable_xH(1,6),observable_xH(1,7)],[observable_yH(1,6),observable_yH(1,7)],[observable_zH(1,6),observable_zH(1,7)],'k','LineWidth',1);
+    % bone_7=plot3([observable_xH(1,6),observable_xH(1,8)],[observable_yH(1,6),observable_yH(1,8)],[observable_zH(1,6),observable_zH(1,8)],'b','LineWidth',1);
+    % bone_8=plot3([observable_xH(1,7),observable_xH(1,9)],[observable_yH(1,7),observable_yH(1,9)],[observable_zH(1,7),observable_zH(1,9)],'r','LineWidth',1);
+    % bone_9=plot3([observable_xH(1,8),observable_xH(1,10)],[observable_yH(1,8),observable_yH(1,10)],[observable_zH(1,8),observable_zH(1,10)],'b','LineWidth',1);
+    % bone_10=plot3([observable_xH(1,9),observable_xH(1,11)],[observable_yH(1,9),observable_yH(1,11)],[observable_zH(1,9),observable_zH(1,11)],'r','LineWidth',1);
     bone_11=plot3([observable_xH(1,12),observable_xH(1,14)],[observable_yH(1,12),observable_yH(1,14)],[observable_zH(1,12),observable_zH(1,14)],'b','LineWidth',1);
     bone_12=plot3([observable_xH(1,13),observable_xH(1,15)],[observable_yH(1,13),observable_yH(1,15)],[observable_zH(1,13),observable_zH(1,15)],'r','LineWidth',1);
     bone_13=plot3([observable_xH(1,14),observable_xH(1,16)],[observable_yH(1,14),observable_yH(1,16)],[observable_zH(1,14),observable_zH(1,16)],'b','LineWidth',1);
@@ -115,21 +113,21 @@ for angle = transpose(angles)
     frames(1)=getframe(fig);
     for i=1:length(observable_xH)
         i
-        plot3(observable_xH(1:i,:),observable_yH(1:i,:),observable_zH(1:i,:),"o","Markersize",0.5)
+        % plot3(observable_xH(1:i,:),observable_yH(1:i,:),observable_zH(1:i,:),"o","Markersize",0.5)
         plot3(observable_xR(1:i),observable_yR(1:i),zeros(i,1),'b');
         
         % plot3(mat_part(1:i,1:3:end),mat_part(1:i,2:3:end),mat_part(1:i,3:3:end),"LineWidth",1)
         grid on
-        set(bone_1,"XData",[observable_xH(i,1),observable_xH(i,2)],"YData",[observable_yH(i,1),observable_yH(i,2)],"ZData",[observable_zH(i,1),observable_zH(i,2)]);
-        set(bone_2,"XData",[observable_xH(i,1),observable_xH(i,3)],"YData",[observable_yH(i,1),observable_yH(i,3)],"ZData",[observable_zH(i,1),observable_zH(i,3)]);
-        set(bone_3,"XData",[observable_xH(i,2),observable_xH(i,4)],"YData",[observable_yH(i,2),observable_yH(i,4)],"ZData",[observable_zH(i,2),observable_zH(i,4)]);
-        set(bone_4,"XData",[observable_xH(i,3),observable_xH(i,5)],"YData",[observable_yH(i,3),observable_yH(i,5)],"ZData",[observable_zH(i,3),observable_zH(i,5)]);
-        set(bone_5,"XData",[observable_xH(i,1),1/2*(observable_xH(i,12)+observable_xH(i,13))],"YData",[observable_yH(i,1),1/2*(observable_yH(i,12)+observable_yH(i,13))],"ZData",[observable_zH(i,1),1/2*(observable_zH(i,12)+observable_zH(i,13))]);
-        set(bone_6,"XData",[observable_xH(i,6),observable_xH(i,7)],"YData",[observable_yH(i,6),observable_yH(i,7)],"ZData",[observable_zH(i,6),observable_zH(i,7)]);
-        set(bone_7,"XData",[observable_xH(i,6),observable_xH(i,8)],"YData",[observable_yH(i,6),observable_yH(i,8)],"ZData",[observable_zH(i,6),observable_zH(i,8)]);
-        set(bone_8,"XData",[observable_xH(i,7),observable_xH(i,9)],"YData",[observable_yH(i,7),observable_yH(i,9)],"ZData",[observable_zH(i,7),observable_zH(i,9)]);
-        set(bone_9,"XData",[observable_xH(i,8),observable_xH(i,10)],"YData",[observable_yH(i,8),observable_yH(i,10)],"ZData",[observable_zH(i,8),observable_zH(i,10)]);
-        set(bone_10,"XData",[observable_xH(i,9),observable_xH(i,11)],"YData",[observable_yH(i,9),observable_yH(i,11)],"ZData",[observable_zH(i,9),observable_zH(i,11)]);
+        % set(bone_1,"XData",[observable_xH(i,1),observable_xH(i,2)],"YData",[observable_yH(i,1),observable_yH(i,2)],"ZData",[observable_zH(i,1),observable_zH(i,2)]);
+        % set(bone_2,"XData",[observable_xH(i,1),observable_xH(i,3)],"YData",[observable_yH(i,1),observable_yH(i,3)],"ZData",[observable_zH(i,1),observable_zH(i,3)]);
+        % set(bone_3,"XData",[observable_xH(i,2),observable_xH(i,4)],"YData",[observable_yH(i,2),observable_yH(i,4)],"ZData",[observable_zH(i,2),observable_zH(i,4)]);
+        % set(bone_4,"XData",[observable_xH(i,3),observable_xH(i,5)],"YData",[observable_yH(i,3),observable_yH(i,5)],"ZData",[observable_zH(i,3),observable_zH(i,5)]);
+        % set(bone_5,"XData",[observable_xH(i,1),1/2*(observable_xH(i,12)+observable_xH(i,13))],"YData",[observable_yH(i,1),1/2*(observable_yH(i,12)+observable_yH(i,13))],"ZData",[observable_zH(i,1),1/2*(observable_zH(i,12)+observable_zH(i,13))]);
+        % set(bone_6,"XData",[observable_xH(i,6),observable_xH(i,7)],"YData",[observable_yH(i,6),observable_yH(i,7)],"ZData",[observable_zH(i,6),observable_zH(i,7)]);
+        % set(bone_7,"XData",[observable_xH(i,6),observable_xH(i,8)],"YData",[observable_yH(i,6),observable_yH(i,8)],"ZData",[observable_zH(i,6),observable_zH(i,8)]);
+        % set(bone_8,"XData",[observable_xH(i,7),observable_xH(i,9)],"YData",[observable_yH(i,7),observable_yH(i,9)],"ZData",[observable_zH(i,7),observable_zH(i,9)]);
+        % set(bone_9,"XData",[observable_xH(i,8),observable_xH(i,10)],"YData",[observable_yH(i,8),observable_yH(i,10)],"ZData",[observable_zH(i,8),observable_zH(i,10)]);
+        % set(bone_10,"XData",[observable_xH(i,9),observable_xH(i,11)],"YData",[observable_yH(i,9),observable_yH(i,11)],"ZData",[observable_zH(i,9),observable_zH(i,11)]);
         set(bone_11,"XData",[observable_xH(i,12),observable_xH(i,14)],"YData",[observable_yH(i,12),observable_yH(i,14)],"ZData",[observable_zH(i,12),observable_zH(i,14)]);
         set(bone_12,"XData",[observable_xH(i,13),observable_xH(i,15)],"YData",[observable_yH(i,13),observable_yH(i,15)],"ZData",[observable_zH(i,13),observable_zH(i,15)]);
         set(bone_13,"XData",[observable_xH(i,14),observable_xH(i,16)],"YData",[observable_yH(i,14),observable_yH(i,16)],"ZData",[observable_zH(i,14),observable_zH(i,16)]);
@@ -139,17 +137,17 @@ for angle = transpose(angles)
         set(rbt_direction,"XData",[observable_xR(i),observable_xR(i)+0.3*cos(observable_thR(i)+observable_pan(i))],"YData",[observable_yR(i),observable_yR(i)+0.3*sin(observable_thR(i)+observable_pan(i))])
 
         if mod(i,10)==0
-            plot3([observable_xH(i,1),observable_xH(i,2)],[observable_yH(i,1),observable_yH(i,2)],[observable_zH(i,1),observable_zH(i,2)],'b','LineWidth',1);
-            hold on
-            plot3([observable_xH(i,1),observable_xH(i,3)],[observable_yH(i,1),observable_yH(i,3)],[observable_zH(i,1),observable_zH(i,3)],'r','LineWidth',1);
-            plot3([observable_xH(i,2),observable_xH(i,4)],[observable_yH(i,2),observable_yH(i,4)],[observable_zH(i,2),observable_zH(i,4)],'b','LineWidth',1);
-            plot3([observable_xH(i,3),observable_xH(i,5)],[observable_yH(i,3),observable_yH(i,5)],[observable_zH(i,3),observable_zH(i,5)],'r','LineWidth',1);
-            plot3([observable_xH(i,1),1/2*(observable_xH(i,12)+observable_xH(i,13))],[observable_yH(i,1),1/2*(observable_yH(i,12)+observable_yH(i,13))],[observable_zH(i,1),1/2*(observable_zH(i,12)+observable_zH(i,13))],'k','LineWidth',1);
-            plot3([observable_xH(i,6),observable_xH(i,7)],[observable_yH(i,6),observable_yH(i,7)],[observable_zH(i,6),observable_zH(i,7)],'k','LineWidth',1);
-            plot3([observable_xH(i,6),observable_xH(i,8)],[observable_yH(i,6),observable_yH(i,8)],[observable_zH(i,6),observable_zH(i,8)],'b','LineWidth',1);
-            plot3([observable_xH(i,7),observable_xH(i,9)],[observable_yH(i,7),observable_yH(i,9)],[observable_zH(i,7),observable_zH(i,9)],'r','LineWidth',1);
-            plot3([observable_xH(i,8),observable_xH(i,10)],[observable_yH(i,8),observable_yH(i,10)],[observable_zH(i,8),observable_zH(i,10)],'b','LineWidth',1);
-            plot3([observable_xH(i,9),observable_xH(i,11)],[observable_yH(i,9),observable_yH(i,11)],[observable_zH(i,9),observable_zH(i,11)],'r','LineWidth',1);
+            % plot3([observable_xH(i,1),observable_xH(i,2)],[observable_yH(i,1),observable_yH(i,2)],[observable_zH(i,1),observable_zH(i,2)],'b','LineWidth',1);
+            % hold on
+            % plot3([observable_xH(i,1),observable_xH(i,3)],[observable_yH(i,1),observable_yH(i,3)],[observable_zH(i,1),observable_zH(i,3)],'r','LineWidth',1);
+            % plot3([observable_xH(i,2),observable_xH(i,4)],[observable_yH(i,2),observable_yH(i,4)],[observable_zH(i,2),observable_zH(i,4)],'b','LineWidth',1);
+            % plot3([observable_xH(i,3),observable_xH(i,5)],[observable_yH(i,3),observable_yH(i,5)],[observable_zH(i,3),observable_zH(i,5)],'r','LineWidth',1);
+            % plot3([observable_xH(i,1),1/2*(observable_xH(i,12)+observable_xH(i,13))],[observable_yH(i,1),1/2*(observable_yH(i,12)+observable_yH(i,13))],[observable_zH(i,1),1/2*(observable_zH(i,12)+observable_zH(i,13))],'k','LineWidth',1);
+            % plot3([observable_xH(i,6),observable_xH(i,7)],[observable_yH(i,6),observable_yH(i,7)],[observable_zH(i,6),observable_zH(i,7)],'k','LineWidth',1);
+            % plot3([observable_xH(i,6),observable_xH(i,8)],[observable_yH(i,6),observable_yH(i,8)],[observable_zH(i,6),observable_zH(i,8)],'b','LineWidth',1);
+            % plot3([observable_xH(i,7),observable_xH(i,9)],[observable_yH(i,7),observable_yH(i,9)],[observable_zH(i,7),observable_zH(i,9)],'r','LineWidth',1);
+            % plot3([observable_xH(i,8),observable_xH(i,10)],[observable_yH(i,8),observable_yH(i,10)],[observable_zH(i,8),observable_zH(i,10)],'b','LineWidth',1);
+            % plot3([observable_xH(i,9),observable_xH(i,11)],[observable_yH(i,9),observable_yH(i,11)],[observable_zH(i,9),observable_zH(i,11)],'r','LineWidth',1);
             plot3([observable_xH(i,12),observable_xH(i,14)],[observable_yH(i,12),observable_yH(i,14)],[observable_zH(i,12),observable_zH(i,14)],'b','LineWidth',1);
             plot3([observable_xH(i,13),observable_xH(i,15)],[observable_yH(i,13),observable_yH(i,15)],[observable_zH(i,13),observable_zH(i,15)],'r','LineWidth',1);
             plot3([observable_xH(i,14),observable_xH(i,16)],[observable_yH(i,14),observable_yH(i,16)],[observable_zH(i,14),observable_zH(i,16)],'b','LineWidth',1);
@@ -198,7 +196,7 @@ for angle = transpose(angles)
         drawnow
         frames(i)=getframe(fig);
     end
-    video2=VideoWriter("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\yoshinari_8_15_"+string(angle(1))+"_"+string(angle(2))+".mp4",'MPEG-4');
+    video2=VideoWriter("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\yoshinari_16_03_"+string(angle(1))+"_"+string(angle(2))+"_lower.mp4",'MPEG-4');
     % video2=VideoWriter(savename_avi);
     video2.FrameRate=1/dt;
     open(video2);

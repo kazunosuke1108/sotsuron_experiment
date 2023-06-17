@@ -1,6 +1,6 @@
 clc;clear;close all
-mat_general=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\0117\csv\20230117_d_060_1_Hayashide.csv");
-mat=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\result.csv")
+mat_general=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\20230605\csv\20230107_rotation_16_03_yoshinari.csv");
+mat=readmatrix("C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\result_yoshinari.csv")
 labelList=getLabel();
 r.no=15;
 l.no=14;
@@ -63,4 +63,4 @@ ylabel("position \it{y}\rm [m]",'FontName','Times New Roman')
 % zlabel("position \it{z}\rm [m]",'FontName','Times New Roman')
 
 % saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\"+"time_noise.png")
-saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\"+labelList(r.no)+"_timeFixed.png")
+saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\matlab_ws\"+"yoshinari_"+labelList(r.no)+"_timeFixed.png")

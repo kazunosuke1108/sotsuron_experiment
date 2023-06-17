@@ -14,12 +14,12 @@ y_hmn_cam=mat_kp(:,[2:4:end])/1000;
 z_hmn_cam=mat_kp(:,[3:4:end])/1000;
 
 dt=mat_general(2,1)-mat_general(1,1);
-thR=mat_general(:,9)-mat_general(1,9);
+thR=mat_general(:,9)-mat_general(1,9)+deg2rad(5);
 pan=mat_general(:,10)-mat_general(1,10);
 
 xR=mat_general(:,7)-mat_odom(1,1);
 yR=mat_general(:,8)-mat_odom(1,2)+0.5;
-thR=mat_general(:,9)-mat_odom(1,3);
+% thR=mat_general(:,9)-mat_odom(1,3)+deg2rad(5);
 xH=xR+z_hmn_cam.*cos(thR+pan)+x_hmn_cam.*sin(thR+pan);
 yH=yR+z_hmn_cam.*sin(thR+pan)-x_hmn_cam.*cos(thR+pan);
 zH=-y_hmn_cam+0.9;
@@ -39,8 +39,8 @@ observable_yR=yR(flg_idx);
 observable_thR=thR(flg_idx);
 observable_pan=pan(flg_idx);
 
-cutfirst=22;
-cutend=25;
+cutfirst=40;
+cutend=100;
 observable_t=observable_t(cutfirst:end-cutend);
 observable_xH=observable_xH(cutfirst:end-cutend,:); 
 observable_yH=observable_yH(cutfirst:end-cutend,:); 
