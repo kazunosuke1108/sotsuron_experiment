@@ -7,10 +7,8 @@ from glob import glob
 
 # bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0203/*"))
 # bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/*"))
-bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/*"))
-bags=["/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/20230107_rotation_16_03_yoshinari.bag",
-    "/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/20230107_rotation_12_07_yoshinari.bag",
-    "/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/20230107_rotation_10_11_yoshinari.bag"]
+# bags=sorted(glob("/media/hayashide/KIOXIA/hayashide/rosbag/0203/*"))
+bags=["/media/hayashide/KIOXIA/hayashide/rosbag/0203/20230203_d_060_3_Yoshinari.bag"]
 # bags=["/media/hayashide/KIOXIA/hayashide/rosbag/0203/20230203_d_060_3_Yoshinari.bag",
 #       "/media/hayashide/KIOXIA/hayashide/rosbag/0220/20230220_d_090_30_shingo.bag"]
 print(bags)
@@ -24,11 +22,11 @@ for bag in bags:# partial_bags:
 # for bag in bags:
     print(bag)
     bag_basename=os.path.basename(bag)
-    csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230605/csv/"+bag_basename[:-4]+".csv"
-    odom_csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230605/odom_csv/"+bag_basename[:-4]+".csv"
-    avi_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230605/movie/"
-    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230605/movie/"+bag_basename[:-4]+".avi"
-    skeleton_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230605/skeleton_movie/"+bag_basename[:-4]+".mp4"
+    csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230619/csv/"+bag_basename[:-4]+".csv"
+    odom_csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230619/odom_csv/"+bag_basename[:-4]+".csv"
+    avi_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230619/movie/"
+    avi_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230619/movie/"+bag_basename[:-4]+".avi"
+    skeleton_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230619/skeleton_movie/"+bag_basename[:-4]+".mp4"
     play_cmd=f"roslaunch sotsuron_experiment path_plotter.launch avi_basename:={bag_basename[:-4]} bag_basename:={bag_basename[:-4]} bag_path:={bag} csv_path:={csv_path} odom_csv_path:={odom_csv_path} save_path:={avi_path}"
     # runcmd=sp.call(cmd.split())
     # print(runcmd)
@@ -43,6 +41,9 @@ for bag in bags:# partial_bags:
     skeleton_cmd=f"python3 skeleton_movie.py {avi_path} {skeleton_path}"
     os.system(skeleton_cmd)
 
+    os.system("git add .")
+    os.system("git commit -m 'auto push for skeleton'")
+    os.system("git push origin master")
 
 """
 rosbag play
