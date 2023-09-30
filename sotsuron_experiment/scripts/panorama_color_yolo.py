@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import cv2
 import torch
 import numpy as np
@@ -92,24 +93,26 @@ def error_func(t):
     accum.append(answer)
     return answer
 
-movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/movie"
+movie_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/movie"
 frames_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/frames"
-results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/heavy/results"
+results_dir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0117/results/panorama"
 
 movie_paths=sorted(glob(movie_dir+"/*.mp4"))
 print(movie_paths)
 
-for i, movie_path in enumerate(movie_paths[5:]):
+for i, movie_path in enumerate(movie_paths):
 
     basename=os.path.basename(movie_path)
+    if os.path.isdir(frames_dir+"/"+basename[:-4]):
+        shutil.rmtree(frames_dir+"/"+basename[:-4])
     os.makedirs(frames_dir+"/"+basename[:-4],exist_ok=True)
-    os.makedirs(results_dir+"/"+basename[:-4],exist_ok=True)
+    # os.makedirs(results_dir+"/"+basename[:-4],exist_ok=True)
     imgs=[]
     imgs_color=[]
 
 
     save_frame_range_sec(movie_path,
-                        10, 50, 0.25,
+                        10, 35, 0.225,
                         frames_dir+"/"+basename[:-4], basename[:-4])
 
     img_paths=sorted(glob(frames_dir+"/"+basename[:-4]+"/*"))
@@ -126,9 +129,12 @@ for i, movie_path in enumerate(movie_paths[5:]):
     height, width = imgs[0].shape
 
     # 1枚目の写真を貼る
-    vector_root = np.array([500, 100])
-    canvas[int(vector_root[0]):int(vector_root[0])+height,
-        int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
+    if "_23_" in movie_path or "_24_" in movie_path:
+        vector_root=np.array([500,1500])
+    else:
+        vector_root = np.array([500, 100])
+    # canvas[int(vector_root[0]):int(vector_root[0])+height,
+    #     int(vector_root[1]):int(vector_root[1])+width,:] = imgs_color[0]
 
     for i in range(len(imgs)-2):#range(len(imgs)-2,1,-1):
         # 写真の名前を定義
@@ -150,15 +156,25 @@ for i, movie_path in enumerate(movie_paths[5:]):
         # 前回のベクトルに足し込むことで全体座標系での移動量を求める
         vector = np.array([vec[1], vec[0]])+vector_root
         print(vector)
-        
-        if i!=0:
-            if vector[1]<=vector_old[1]:
-                vector_old=vector
-                continue
+        if "_23_" in movie_path or "_24_" in movie_path:
+            if i!=0:
+                if vector[1]>=vector_old[1]:
+                    vector_old=vector
+                    continue
+                else:
+                    vector_old=vector
             else:
                 vector_old=vector
+
         else:
-            vector_old=vector
+            if i!=0:
+                if vector[1]<=vector_old[1]:
+                    vector_old=vector
+                    continue
+                else:
+                    vector_old=vector
+            else:
+                vector_old=vector
 
         # これから貼り付ける画像の大きさを取得
         height, width = img2.shape
@@ -203,6 +219,6 @@ for i, movie_path in enumerate(movie_paths[5:]):
         # ax = fig.add_subplot(projection='3d')
         # ax.plot(t_x, t_y, accum)
         # plt.show()
-        cv2.imwrite(results_dir+"/"+basename[:-4]+"/"+basename[:-4]+".jpg", canvas)
+        cv2.imwrite(results_dir+"/"+basename[:-4]+"0225.jpg", canvas)
         
     # 完成した画像を保存

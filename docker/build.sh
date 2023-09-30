@@ -11,5 +11,5 @@ else
     echo "=========================" 
     echo "=nvidia docker installed="
     echo "========================="
-    docker build  --tag ${USER}/whill --build-arg USER=${USER} --build-arg USER_ID=`id -u` --build-arg workspace="/home/${USER}/catkin_ws" .
+    docker build  --tag ${USER}/sotsuron_experiment --build-arg USER=${USER} --build-arg USER_ID=`id -u` --build-arg workspace="/home/${USER}/catkin_ws" .
 fi

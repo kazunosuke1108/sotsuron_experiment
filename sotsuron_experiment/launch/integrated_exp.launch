@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="delay" default="0"/>
+    <arg name="delay" default="10"/>
     <arg name="matlab_start_delay" default="$(arg delay)"/>
     <arg name="rosbag_delay" default="$(arg delay)"/>
     <arg name="velocity_start_delay" default="$(arg delay)"/>
-    <arg name="bag_basename" default="20230219_y025_v090_01"/>
+    <arg name="bag_basename" default="20230220_y040_v000_30"/>
 
 
     <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_zed/ytlab_zed_modules/rosbag/$(arg bag_basename).bag"/> -->
     <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/EtoE/$(arg bag_basename).bag"/> -->
     <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0219/$(arg bag_basename).bag"/>
-    <node
+    <!-- <node
         pkg="rosbag" 
         name="play" 
         type="play" 
         args="$(arg bag_path)"
         launch-prefix="bash -c 'sleep $(arg rosbag_delay); $0 $@' "
-    />    
+    />     -->
 
     <node
         pkg="sotsuron_experiment" 
