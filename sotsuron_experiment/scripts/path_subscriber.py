@@ -32,6 +32,8 @@ import torch
 import cv2
 from glob import glob
 
+torch.cuda.empty_cache()
+
 """
 model type
 OD: object detection
@@ -42,9 +44,9 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-# csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/dev_0930.csv"
 args=sys.argv
-# csv_path=str(args[1])
+# csv_path=
 # rospy.loginfo(f"## writing: {csv_path} ##")
 gravity_history=[]
 keypoints_history=[]
@@ -246,8 +248,8 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         gravity_zone.append(_odom_theta)
         gravity_zone.append(pan)
         gravity_history.append(gravity_zone)
-        # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
-        # np.savetxt(csv_path,gravity_history,delimiter=",")
+        np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+        np.savetxt(csv_path,gravity_history,delimiter=",")
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
