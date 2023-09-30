@@ -65,7 +65,7 @@ def pub_sub():
     sub_list.append(odm_sub)
     joi_sub = message_filters.Subscriber(topicName_joi,JointState)
     sub_list.append(joi_sub)
-    mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,5)
+    mf=message_filters.ApproximateTimeSynchronizer(sub_list,2,1)
     
     # publisher
 
@@ -191,6 +191,7 @@ def savefig(rgb_array,np_pred_keypoints):
     cv2.imwrite(remap_img,img)
 
 def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
+    start=time.time()
     img_time=rgb_data.header.stamp
     img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
     odm_time=odm_data.header.stamp
@@ -201,12 +202,18 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
     rgb_array=np.nan_to_num(rgb_array)
     rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
-
+    # rgb_array=np.delete(rgb_array,np.arange(0,28),0)
+    # rgb_array=np.delete(rgb_array,np.arange(rgb_array.shape[0]-28,rgb_array.shape[0]),0)
     dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
     dpt_array=np.nan_to_num(dpt_array) #(1024,1920,1)
     # dpt_array=np.where(dpt_array>40,0,dpt_array)
     # dpt_array=np.where(dpt_array<0,0,dpt_array)
     # rospy.loginfo(dpt_array)
+    original_rgb_array_size=rgb_array.shape
+    modified_rgb_array_size=(400,600)
+    # rgb_array=cv2.resize(rgb_array,dsize=(600,400))
+    # dpt_array=cv2.resize(dpt_array,dsize=(600,400))
+
 
     proj_mtx=np.array(info_data.P).reshape(3,4)
 
@@ -232,6 +239,9 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
 
     # 2D to 3D
     if len(np_pred_keypoints)>1:
+        # original_rgb_array_size=rgb_array.shape
+        # modified_rgb_array_size=(400,600)
+        # rgb_array=cv2.resize(rgb_array,dsize=(modified_rgb_array_size[1],modified_rgb_array_size[0]))
         np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
         keypoints_history.append(np_pred_keypoints_3D.reshape(-1).tolist())
         
@@ -247,16 +257,13 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         gravity_zone.append(_odom_theta)
         gravity_zone.append(pan)
         gravity_history.append(gravity_zone)
-<<<<<<< HEAD
         np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
         np.savetxt(csv_path,gravity_history,delimiter=",")
-=======
-        # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
-        # np.savetxt(csv_path,gravity_history,delimiter=",")
     rospy.loginfo("####### debug ROI #######")
-    rospy.loginfo(np.min(dpt_array))
+    rospy.loginfo(rgb_array.shape)
+    rospy.loginfo(dpt_array.shape)
     rospy.loginfo("####### debug ROI end #######")
->>>>>>> b7da40df366f90ac3f7e6d88529c01c8bb34b46f
+    rospy.loginfo(time.time()-start)
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
@@ -342,11 +349,14 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
 # topicName_dpt="/hsrb/realsense/camera/aligned_depth_to_color/image_raw"
 # topicName_camInfo="/hsrb/realsense/camera/color/camera_info"
 
-# topicName_rgb="/hsrb/head_l_stereo_camera/image_rect_color" # hsrd zed
-topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed
-topicName_dpt="/stereo/depth"
-topicName_camInfo="/hsrb/zed2_stereo/left/camera_info"
-
+# topicName_rgb="/hsrb/head_l_stereo_camera/image_raw" # hsrd zed (960, 1280, 3)
+# topicName_rgb="/hsrb/head_l_stereo_camera/image_rect_color" # hsrd zed (960, 1280, 3)
+# topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed (1080, 1920, 3) -> (1024, 1920, 1) 
+# topicName_rgb="/stereo/left/image_color"
+topicName_rgb="/stereo/left/image_rect"
+topicName_dpt="/stereo/depth" # (1024, 1920, 1) 
+# topicName_camInfo="/hsrb/zed2_stereo/left/camera_info"
+topicName_camInfo="/stereo/left/camera_info"
 topicName_odm="/hsrb/odom"
 topicName_joi="/hsrb/joint_states"
 results_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results"
@@ -362,6 +372,8 @@ rospy.loginfo(mf)
 # mf.registerCallback(ImageCallback_realsense)
 mf.registerCallback(ImageCallback_realsense)
 rospy.spin()
+
+
 
 
 
