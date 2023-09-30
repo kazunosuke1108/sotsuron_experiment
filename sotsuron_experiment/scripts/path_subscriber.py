@@ -44,7 +44,7 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/dev_0930.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/dev_0930_4m.csv"
 args=sys.argv
 # csv_path=
 # rospy.loginfo(f"## writing: {csv_path} ##")
@@ -77,9 +77,18 @@ def pub_sub():
 
 def detect_kp(rgb_array):
     # rospy.loginfo("####### debug ROI #######")
-    pred_keypoints=detector.onImage(image_mat=rgb_array)
+    original_size=rgb_array.shape
+    compress_rate=0.1
+    rgb_array_cprsd=cv2.resize(rgb_array,[int(original_size[1]*compress_rate),int(original_size[0]*compress_rate)])
+    print(rgb_array_cprsd.shape)
+    pred_keypoints=detector.onImage(image_mat=rgb_array_cprsd)
     try:
         np_pred_keypoints=pred_keypoints.to(torch.device('cpu')).detach().clone().numpy()[0]
+        print(np_pred_keypoints)
+        np_pred_keypoints[:,0]=np_pred_keypoints[:,0]/compress_rate
+        np_pred_keypoints[:,1]=np_pred_keypoints[:,1]/compress_rate
+        np_pred_keypoints=np_pred_keypoints.astype('int32')
+
         return np_pred_keypoints
     except IndexError:
         return [None]

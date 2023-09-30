@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/gaits/dev_0930.csv"
+csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/gaits/dev_0930_4m.csv"
 data=pd.read_csv(csvpath,header=None, names=["x","y","z","1","time","odom_x","odom_y","odom_theta","odom_pan"])
 
 print(data)
