@@ -189,7 +189,6 @@ def savefig(rgb_array,np_pred_keypoints):
     cv2.imwrite(remap_img,img)
 
 def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
-    rospy.loginfo("####### debug ROI #######")
     img_time=rgb_data.header.stamp
     img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
     odm_time=odm_data.header.stamp
@@ -202,7 +201,7 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
 
     dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
-    dpt_array=np.nan_to_num(dpt_array)
+    dpt_array=np.nan_to_num(dpt_array) #(1024,1920,1)
     # dpt_array=np.where(dpt_array>40,0,dpt_array)
     # dpt_array=np.where(dpt_array<0,0,dpt_array)
     # rospy.loginfo(dpt_array)
@@ -248,6 +247,9 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         gravity_history.append(gravity_zone)
         # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
         # np.savetxt(csv_path,gravity_history,delimiter=",")
+    rospy.loginfo("####### debug ROI #######")
+    rospy.loginfo(np.min(dpt_array))
+    rospy.loginfo("####### debug ROI end #######")
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
