@@ -328,10 +328,15 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
 # topicName_rgb="/hsrb/head_rgbd_sensor/rgb/image_rect_color"
 # topicName_dpt="/hsrb/head_rgbd_sensor/depth_registered/image"
 # topicName_camInfo="/hsrb/head_rgbd_sensor/rgb/camera_info"
-topicName_rgb="/hsrb/realsense/camera/color/image_raw"
+# topicName_rgb="/hsrb/realsense/camera/color/image_raw"
 # topicName_dpt="/hsrb/realsense/camera/depth/image_rect_raw"
-topicName_dpt="/hsrb/realsense/camera/aligned_depth_to_color/image_raw"
-topicName_camInfo="/hsrb/realsense/camera/color/camera_info"
+# topicName_dpt="/hsrb/realsense/camera/aligned_depth_to_color/image_raw"
+# topicName_camInfo="/hsrb/realsense/camera/color/camera_info"
+
+# topicName_rgb="/hsrb/head_l_stereo_camera/image_rect_color" # hsrd zed
+topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed
+topicName_dpt="/stereo/depth"
+topicName_camInfo="/hsrb/zed2_stereo/left/camera_info"
 
 topicName_odm="/hsrb/odom"
 topicName_joi="/hsrb/joint_states"
