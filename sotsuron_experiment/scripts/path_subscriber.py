@@ -44,8 +44,8 @@ KP: keypoint detection
 rospy.init_node('detectron2_subscriber')
 # csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
 args=sys.argv
-csv_path=str(args[1])
-rospy.loginfo(f"## writing: {csv_path} ##")
+# csv_path=str(args[1])
+# rospy.loginfo(f"## writing: {csv_path} ##")
 gravity_history=[]
 keypoints_history=[]
 
@@ -246,8 +246,8 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         gravity_zone.append(_odom_theta)
         gravity_zone.append(pan)
         gravity_history.append(gravity_zone)
-        np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
-        np.savetxt(csv_path,gravity_history,delimiter=",")
+        # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+        # np.savetxt(csv_path,gravity_history,delimiter=",")
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
@@ -306,7 +306,7 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
         gravity_zone.append(_odom_theta)
         gravity_zone.append(pan)
         gravity_history.append(gravity_zone)
-        np.savetxt(csv_path,gravity_history,delimiter=",")
+        # np.savetxt(csv_path,gravity_history,delimiter=",")
 
     # savefig(rgb_array,np_pred_keypoints)
     
@@ -459,7 +459,7 @@ Traceback (most recent call last):
   File "/opt/ros/noetic/lib/python3/dist-packages/message_filters/__init__.py", line 58, in signalMessage
     cb(*(msg + args))
   File "/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts/path_subscriber.py", line 250, in ImageCallback_realsense
-    np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+    # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
   File "<__array_function__ internals>", line 200, in savetxt
   File "/usr/local/lib/python3.8/dist-packages/numpy/lib/npyio.py", line 1555, in savetxt
     raise ValueError(

@@ -28,7 +28,8 @@ CATKIN_HOME=~/catkin_ws
 # export ros_master=global
 export ros_master=local
 #export ros_master_global=192.168.1.55
-export hsr_ip=192.168.1.47
+export hsrb_ip=192.168.1.47
+export hsrd_ip=192.168.1.156
 export hsr_local_ip=169.254.3.237
 export whill_ip=192.168.1.144
 export dlbox_ip=192.168.1.54
@@ -67,7 +68,8 @@ alias cm="cd ${CATKIN_HOME} && catkin_make -DCMAKE_BUILD_TYPE=Release&& cd -"
 # alias cmpy="cd ${CATKIN_HOME} && catkin_make && source ~/catkin_ws/devel/setup.bash && wstool init && wstool set -y src/geometry2 --git https://github.com/ros/geometry2 -v 0.6.5 && wstool up && rosdep update && rosdep install --from-paths src --ignore-src -y -r && catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so && cd -"
 # https://answers.ros.org/question/326226/importerror-dynamic-module-does-not-define-module-export-function-pyinit__tf2/
 alias cc="cd ${CATKIN_HOME} && rm -rf devel && rm -rf build && cd -"
-alias hsrb_mode='export ROS_MASTER_URI=http://${hsr_ip}:11311 export PS1="\[\033[41;1;37m\]<DOCKER HSR_MODE>\[\033[0m\]\w$ "&& echo "ROS_MASTER_URI:"$ROS_MASTER_URI && rosnode kill pose_integrator'
+alias hsrb_mode='export ROS_MASTER_URI=http://${hsrb_ip}:11311 export PS1="\[\033[41;1;37m\]<DOCKER HSR_MODE>\[\033[0m\]\w$ "&& echo "ROS_MASTER_URI:"$ROS_MASTER_URI && rosnode kill pose_integrator'
+alias hsrd_mode='export ROS_MASTER_URI=http://${hsrd_ip}:11311 export PS1="\[\033[41;1;37m\]<DOCKER HSR_MODE>\[\033[0m\]\w$ "&& echo "ROS_MASTER_URI:"$ROS_MASTER_URI && rosnode kill pose_integrator'
 alias hsrb_local_mode='export ROS_MASTER_URI=http://${hsr_local_ip}:11311 export ROS_MASTER_URI=http://${hsr_local_ip}:11311 export PS1="\[\033[41;1;37m\]<DOCKER HSR_LOCAL_MODE>\[\033[0m\]\w$ "; echo "ROS_MASTER_URI:"$ROS_MASTER_URI; rosnode kill pose_integrator; rosnode kill /hsrb/interactive_teleop; rosnode kill /hsrb/interactive_teleop_joy'
 
 alias whill_mode='export ROS_MASTER_URI=http://${whill_ip}:11311 export PS1="\[\033[41;1;37m\]<DOCKER WHILL_MODE>\[\033[0m\]\w$ "&& echo "ROS_MASTER_URI:"$ROS_MASTER_URI'
