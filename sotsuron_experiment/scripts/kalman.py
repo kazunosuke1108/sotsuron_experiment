@@ -7,7 +7,7 @@ import scipy as sp
 from scipy import linalg
 import matplotlib.pyplot as plt
 
-def kalman_filter(z,fps=15):
+def kalman_filter(z,R=1,Q=1,fps=15):
     po=z # position observed
     # 速度を求める
     dansage=np.insert(z[:-1],0,0)
@@ -22,8 +22,8 @@ def kalman_filter(z,fps=15):
     # G=np.array([[0],[1]])
 
     
-    R=1 # システム（プロセス）雑音の分散
-    Q=1 # 観測雑音の分散
+    # R=1e10 # システム（プロセス）雑音の分散
+    # Q=1 # 観測雑音の分散
 
     n_v=np.random.normal(
         loc   = 0,      # 平均
