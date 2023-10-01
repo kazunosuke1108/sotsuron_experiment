@@ -6,7 +6,7 @@ source ~/catkin_ws/devel/setup.bash
 ipv4addr=$(/sbin/ifconfig -a                                 |
             grep inet[^6]                                     |
             sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' |
-            grep '^192\.168\.'                                )
+            grep '^192\.168\.1.5'                                )
 if [ "$TARGET_IP" = "" ] ; then
     ipv4addr="localhost"
 fi

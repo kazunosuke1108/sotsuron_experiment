@@ -14,6 +14,9 @@ import rospy
 import tf
 import torch
 from pprint import pprint
+import tf2_ros
+import tf2_msgs.msg
+import geometry_msgs.msg
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
 from sensor_msgs.msg import JointState
@@ -46,6 +49,9 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
+
+pub_tf=rospy.Publisher("/tf",tf2_msgs.msg.TFMessage,queue_size=1)
+
 csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/dev_0930_4m.csv"
 args=sys.argv
 # csv_path=
@@ -54,7 +60,7 @@ gravity_history=[]
 keypoints_history=[]
 
 def pub_sub():
-    global rgb_sub,dpt_sub,info_sub
+    global rgb_sub,dpt_sub,info_sub 
     # subscriber
     sub_list=[]
     rgb_sub=message_filters.Subscriber(topicName_rgb,Image)
@@ -82,11 +88,11 @@ def detect_kp(rgb_array):
     original_size=rgb_array.shape
     compress_rate=0.1
     rgb_array_cprsd=cv2.resize(rgb_array,[int(original_size[1]*compress_rate),int(original_size[0]*compress_rate)])
-    print(rgb_array_cprsd.shape)
+    # print(rgb_array_cprsd.shape)
     pred_keypoints=detector.onImage(image_mat=rgb_array_cprsd)
     try:
         np_pred_keypoints=pred_keypoints.to(torch.device('cpu')).detach().clone().numpy()[0]
-        print(np_pred_keypoints)
+        # print(np_pred_keypoints)
         np_pred_keypoints[:,0]=np_pred_keypoints[:,0]/compress_rate
         np_pred_keypoints[:,1]=np_pred_keypoints[:,1]/compress_rate
         np_pred_keypoints=np_pred_keypoints.astype('int32')
@@ -259,6 +265,25 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # gravity
         gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
 
+        # publish gravity
+        t = geometry_msgs.msg.TransformStamped()
+        # t.header.frame_id = "zed_left"
+        t.header.frame_id = "zed_left_optical"
+        t.header.stamp = rospy.Time.now()
+        t.child_frame_id = "hmn"
+        print(gravity_zone)
+        # t.transform.translation.x = gravity_zone[2]/1000
+        # t.transform.translation.y = -gravity_zone[0]/1000
+        # t.transform.translation.z = gravity_zone[1]/1000
+        t.transform.translation.x = gravity_zone[0]/1000
+        t.transform.translation.y = gravity_zone[1]/1000
+        t.transform.translation.z = gravity_zone[2]/1000
+        t.transform.rotation.x = 0.0
+        t.transform.rotation.y = 0.0
+        t.transform.rotation.z = 0.0
+        t.transform.rotation.w = 1.0
+        tfm = tf2_msgs.msg.TFMessage([t])
+        pub_tf.publish(tfm)
         # save gravity
         gravity_zone=gravity_zone.tolist()
         gravity_zone.insert(0,float(img_time_str))
@@ -275,6 +300,9 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo(dpt_array.shape)
     rospy.loginfo("####### debug ROI end #######")
     rospy.loginfo(time.time()-start)
+
+
+
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
