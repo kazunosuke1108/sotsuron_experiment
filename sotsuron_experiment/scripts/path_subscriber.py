@@ -275,27 +275,27 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # t.transform.translation.x = gravity_zone[2]/1000
         # t.transform.translation.y = -gravity_zone[0]/1000
         # t.transform.translation.z = gravity_zone[1]/1000
-        if not np.isnan(gravity_zone[0]):
-            t.transform.translation.x = gravity_zone[0]/1000
-            t.transform.translation.y = gravity_zone[1]/1000
-            t.transform.translation.z = gravity_zone[2]/1000
-            t.transform.rotation.x = 0.0
-            t.transform.rotation.y = 0.0
-            t.transform.rotation.z = 0.0
-            t.transform.rotation.w = 1.0
-            tfm = tf2_msgs.msg.TFMessage([t])
-            pub_tf.publish(tfm)
-            # save gravity
-            gravity_zone=gravity_zone.tolist()
-            gravity_zone.insert(0,float(img_time_str))
-            gravity_zone.append(float(odm_time_str))
-            gravity_zone.append(_odom_x)
-            gravity_zone.append(_odom_y)
-            gravity_zone.append(_odom_theta)
-            gravity_zone.append(pan)
-            gravity_history.append(gravity_zone)
-            np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
-            np.savetxt(csv_path,gravity_history,delimiter=",")
+        # if not np.isnan(gravity_zone[0]):
+        t.transform.translation.x = gravity_zone[0]/1000
+        t.transform.translation.y = gravity_zone[1]/1000
+        t.transform.translation.z = gravity_zone[2]/1000
+        t.transform.rotation.x = 0.0
+        t.transform.rotation.y = 0.0
+        t.transform.rotation.z = 0.0
+        t.transform.rotation.w = 1.0
+        tfm = tf2_msgs.msg.TFMessage([t])
+        pub_tf.publish(tfm)
+        # save gravity
+        gravity_zone=gravity_zone.tolist()
+        gravity_zone.insert(0,float(img_time_str))
+        gravity_zone.append(float(odm_time_str))
+        gravity_zone.append(_odom_x)
+        gravity_zone.append(_odom_y)
+        gravity_zone.append(_odom_theta)
+        gravity_zone.append(pan)
+        gravity_history.append(gravity_zone)
+        np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+        np.savetxt(csv_path,gravity_history,delimiter=",")
     # rospy.loginfo("####### debug ROI #######")
     # rospy.loginfo(rgb_array.shape)
     # rospy.loginfo(dpt_array.shape)
