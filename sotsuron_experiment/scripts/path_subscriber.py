@@ -52,7 +52,7 @@ rospy.init_node('detectron2_subscriber')
 
 pub_tf=rospy.Publisher("/tf",tf2_msgs.msg.TFMessage,queue_size=1)
 
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/dev_0930_4m.csv"
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/1006_wheel_odom_zgzg.csv"
 args=sys.argv
 # csv_path=
 # rospy.loginfo(f"## writing: {csv_path} ##")
@@ -275,31 +275,32 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # t.transform.translation.x = gravity_zone[2]/1000
         # t.transform.translation.y = -gravity_zone[0]/1000
         # t.transform.translation.z = gravity_zone[1]/1000
-        t.transform.translation.x = gravity_zone[0]/1000
-        t.transform.translation.y = gravity_zone[1]/1000
-        t.transform.translation.z = gravity_zone[2]/1000
-        t.transform.rotation.x = 0.0
-        t.transform.rotation.y = 0.0
-        t.transform.rotation.z = 0.0
-        t.transform.rotation.w = 1.0
-        tfm = tf2_msgs.msg.TFMessage([t])
-        pub_tf.publish(tfm)
-        # save gravity
-        gravity_zone=gravity_zone.tolist()
-        gravity_zone.insert(0,float(img_time_str))
-        gravity_zone.append(float(odm_time_str))
-        gravity_zone.append(_odom_x)
-        gravity_zone.append(_odom_y)
-        gravity_zone.append(_odom_theta)
-        gravity_zone.append(pan)
-        gravity_history.append(gravity_zone)
-        np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
-        np.savetxt(csv_path,gravity_history,delimiter=",")
-    rospy.loginfo("####### debug ROI #######")
-    rospy.loginfo(rgb_array.shape)
-    rospy.loginfo(dpt_array.shape)
-    rospy.loginfo("####### debug ROI end #######")
-    rospy.loginfo(time.time()-start)
+        if not np.isnan(gravity_zone[0]):
+            t.transform.translation.x = gravity_zone[0]/1000
+            t.transform.translation.y = gravity_zone[1]/1000
+            t.transform.translation.z = gravity_zone[2]/1000
+            t.transform.rotation.x = 0.0
+            t.transform.rotation.y = 0.0
+            t.transform.rotation.z = 0.0
+            t.transform.rotation.w = 1.0
+            tfm = tf2_msgs.msg.TFMessage([t])
+            pub_tf.publish(tfm)
+            # save gravity
+            gravity_zone=gravity_zone.tolist()
+            gravity_zone.insert(0,float(img_time_str))
+            gravity_zone.append(float(odm_time_str))
+            gravity_zone.append(_odom_x)
+            gravity_zone.append(_odom_y)
+            gravity_zone.append(_odom_theta)
+            gravity_zone.append(pan)
+            gravity_history.append(gravity_zone)
+            np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+            np.savetxt(csv_path,gravity_history,delimiter=",")
+    # rospy.loginfo("####### debug ROI #######")
+    # rospy.loginfo(rgb_array.shape)
+    # rospy.loginfo(dpt_array.shape)
+    # rospy.loginfo("####### debug ROI end #######")
+    # rospy.loginfo(time.time()-start)
 
 
 
@@ -396,7 +397,7 @@ topicName_rgb="/stereo/left/image_rect"
 topicName_dpt="/stereo/depth" # (1024, 1920, 1) 
 # topicName_camInfo="/hsrb/zed2_stereo/left/camera_info"
 topicName_camInfo="/stereo/left/camera_info"
-topicName_odm="/hsrb/odom"
+topicName_odm="/hsrb/wheel_odom"
 topicName_joi="/hsrb/joint_states"
 results_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results"
 
