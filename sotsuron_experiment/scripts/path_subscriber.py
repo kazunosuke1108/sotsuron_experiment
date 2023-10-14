@@ -14,6 +14,9 @@ import rospy
 import tf
 import torch
 from pprint import pprint
+import tf2_ros
+import tf2_msgs.msg
+import geometry_msgs.msg
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
 from sensor_msgs.msg import JointState
@@ -31,6 +34,10 @@ import numpy as np
 import torch
 import cv2
 from glob import glob
+from kalman import kalman_filter
+
+
+torch.cuda.empty_cache()
 
 """
 model type
@@ -42,15 +49,18 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-# csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/0105_cover.csv"
+
+pub_tf=rospy.Publisher("/tf",tf2_msgs.msg.TFMessage,queue_size=1)
+
+csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/1006_wheel_odom_zgzg.csv"
 args=sys.argv
-# csv_path=str(args[1])
+# csv_path=
 # rospy.loginfo(f"## writing: {csv_path} ##")
 gravity_history=[]
 keypoints_history=[]
 
 def pub_sub():
-    global rgb_sub,dpt_sub,info_sub
+    global rgb_sub,dpt_sub,info_sub 
     # subscriber
     sub_list=[]
     rgb_sub=message_filters.Subscriber(topicName_rgb,Image)
@@ -63,7 +73,7 @@ def pub_sub():
     sub_list.append(odm_sub)
     joi_sub = message_filters.Subscriber(topicName_joi,JointState)
     sub_list.append(joi_sub)
-    mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,5)
+    mf=message_filters.ApproximateTimeSynchronizer(sub_list,2,1)
     
     # publisher
 
@@ -75,9 +85,18 @@ def pub_sub():
 
 def detect_kp(rgb_array):
     # rospy.loginfo("####### debug ROI #######")
-    pred_keypoints=detector.onImage(image_mat=rgb_array)
+    original_size=rgb_array.shape
+    compress_rate=0.1
+    rgb_array_cprsd=cv2.resize(rgb_array,[int(original_size[1]*compress_rate),int(original_size[0]*compress_rate)])
+    # print(rgb_array_cprsd.shape)
+    pred_keypoints=detector.onImage(image_mat=rgb_array_cprsd)
     try:
         np_pred_keypoints=pred_keypoints.to(torch.device('cpu')).detach().clone().numpy()[0]
+        # print(np_pred_keypoints)
+        np_pred_keypoints[:,0]=np_pred_keypoints[:,0]/compress_rate
+        np_pred_keypoints[:,1]=np_pred_keypoints[:,1]/compress_rate
+        np_pred_keypoints=np_pred_keypoints.astype('int32')
+
         return np_pred_keypoints
     except IndexError:
         return [None]
@@ -189,6 +208,7 @@ def savefig(rgb_array,np_pred_keypoints):
     cv2.imwrite(remap_img,img)
 
 def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
+    start=time.time()
     img_time=rgb_data.header.stamp
     img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
     odm_time=odm_data.header.stamp
@@ -199,12 +219,18 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
     rgb_array=np.nan_to_num(rgb_array)
     rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
-
+    # rgb_array=np.delete(rgb_array,np.arange(0,28),0)
+    # rgb_array=np.delete(rgb_array,np.arange(rgb_array.shape[0]-28,rgb_array.shape[0]),0)
     dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
     dpt_array=np.nan_to_num(dpt_array) #(1024,1920,1)
     # dpt_array=np.where(dpt_array>40,0,dpt_array)
     # dpt_array=np.where(dpt_array<0,0,dpt_array)
     # rospy.loginfo(dpt_array)
+    original_rgb_array_size=rgb_array.shape
+    modified_rgb_array_size=(400,600)
+    # rgb_array=cv2.resize(rgb_array,dsize=(600,400))
+    # dpt_array=cv2.resize(dpt_array,dsize=(600,400))
+
 
     proj_mtx=np.array(info_data.P).reshape(3,4)
 
@@ -230,12 +256,16 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
 
     # 2D to 3D
     if len(np_pred_keypoints)>1:
+        # original_rgb_array_size=rgb_array.shape
+        # modified_rgb_array_size=(400,600)
+        # rgb_array=cv2.resize(rgb_array,dsize=(modified_rgb_array_size[1],modified_rgb_array_size[0]))
         np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
         keypoints_history.append(np_pred_keypoints_3D.reshape(-1).tolist())
         
         # gravity
         gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
 
+<<<<<<< HEAD
         # save gravity
         gravity_zone=gravity_zone.tolist()
         gravity_zone.insert(0,float(img_time_str))
@@ -251,6 +281,50 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo(dpt_array.shape)
     rospy.loginfo(rgb_array.shape)
     rospy.loginfo("####### debug ROI end #######")
+=======
+        # publish gravity
+        t = geometry_msgs.msg.TransformStamped()
+        # t.header.frame_id = "zed_left"
+        t.header.frame_id = "zed_left_optical"
+        t.header.stamp = rospy.Time.now()
+        t.child_frame_id = "hmn"
+        if not np.isnan(gravity_zone[0]):
+            print(gravity_zone)
+            # t.transform.translation.x = gravity_zone[2]/1000
+            # t.transform.translation.y = -gravity_zone[0]/1000
+            # t.transform.translation.z = gravity_zone[1]/1000
+            # if not np.isnan(gravity_zone[0]):
+            t.transform.translation.x = gravity_zone[0]/1000
+            t.transform.translation.y = gravity_zone[1]/1000
+            t.transform.translation.z = gravity_zone[2]/1000
+            t.transform.rotation.x = 0.0
+            t.transform.rotation.y = 0.0
+            t.transform.rotation.z = 0.0
+            t.transform.rotation.w = 1.0
+            tfm = tf2_msgs.msg.TFMessage([t])
+            pub_tf.publish(tfm)
+            # save gravity
+            gravity_zone=gravity_zone.tolist()
+            gravity_zone.insert(0,float(img_time_str))
+            gravity_zone.append(float(odm_time_str))
+            gravity_zone.append(_odom_x)
+            gravity_zone.append(_odom_y)
+            gravity_zone.append(_odom_theta)
+            gravity_zone.append(pan)
+            gravity_history.append(gravity_zone)
+            np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+            np.savetxt(csv_path,gravity_history,delimiter=",")
+        else:
+            print("!!!!!!!!!!!!!!!!!!!!!nan!!!!!!!!!!!!!!!!!!!!!")
+    # rospy.loginfo("####### debug ROI #######")
+    # rospy.loginfo(rgb_array.shape)
+    # rospy.loginfo(dpt_array.shape)
+    # rospy.loginfo("####### debug ROI end #######")
+    # rospy.loginfo(time.time()-start)
+
+
+
+>>>>>>> 9cf279c93e106257d2b33a0df4a292d21732af88
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
@@ -336,12 +410,15 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
 # topicName_dpt="/hsrb/realsense/camera/aligned_depth_to_color/image_raw"
 # topicName_camInfo="/hsrb/realsense/camera/color/camera_info"
 
-# topicName_rgb="/hsrb/head_l_stereo_camera/image_rect_color" # hsrd zed
-topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed
-topicName_dpt="/stereo/depth"
-topicName_camInfo="/hsrb/zed2_stereo/left/camera_info"
-
-topicName_odm="/hsrb/odom"
+# topicName_rgb="/hsrb/head_l_stereo_camera/image_raw" # hsrd zed (960, 1280, 3)
+# topicName_rgb="/hsrb/head_l_stereo_camera/image_rect_color" # hsrd zed (960, 1280, 3)
+# topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed (1080, 1920, 3) -> (1024, 1920, 1) 
+# topicName_rgb="/stereo/left/image_color"
+topicName_rgb="/stereo/left/image_rect"
+topicName_dpt="/stereo/depth" # (1024, 1920, 1) 
+# topicName_camInfo="/hsrb/zed2_stereo/left/camera_info"
+topicName_camInfo="/stereo/left/camera_info"
+topicName_odm="/hsrb/wheel_odom"
 topicName_joi="/hsrb/joint_states"
 results_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results"
 
@@ -356,6 +433,8 @@ rospy.loginfo(mf)
 # mf.registerCallback(ImageCallback_realsense)
 mf.registerCallback(ImageCallback_realsense)
 rospy.spin()
+
+
 
 
 
