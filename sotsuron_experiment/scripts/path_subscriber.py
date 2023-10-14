@@ -248,7 +248,8 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
         # np.savetxt(csv_path,gravity_history,delimiter=",")
     rospy.loginfo("####### debug ROI #######")
-    rospy.loginfo(np.min(dpt_array))
+    rospy.loginfo(dpt_array.shape)
+    rospy.loginfo(rgb_array.shape)
     rospy.loginfo("####### debug ROI end #######")
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
