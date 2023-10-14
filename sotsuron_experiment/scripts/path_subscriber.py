@@ -265,6 +265,23 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # gravity
         gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
 
+<<<<<<< HEAD
+        # save gravity
+        gravity_zone=gravity_zone.tolist()
+        gravity_zone.insert(0,float(img_time_str))
+        gravity_zone.append(float(odm_time_str))
+        gravity_zone.append(_odom_x)
+        gravity_zone.append(_odom_y)
+        gravity_zone.append(_odom_theta)
+        gravity_zone.append(pan)
+        gravity_history.append(gravity_zone)
+        # np.savetxt(csv_path[:-4]+"_kp.csv",keypoints_history,delimiter=",")
+        # np.savetxt(csv_path,gravity_history,delimiter=",")
+    rospy.loginfo("####### debug ROI #######")
+    rospy.loginfo(dpt_array.shape)
+    rospy.loginfo(rgb_array.shape)
+    rospy.loginfo("####### debug ROI end #######")
+=======
         # publish gravity
         t = geometry_msgs.msg.TransformStamped()
         # t.header.frame_id = "zed_left"
@@ -307,6 +324,7 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
 
 
 
+>>>>>>> 9cf279c93e106257d2b33a0df4a292d21732af88
 
 def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
     rospy.loginfo("####### debug ROI #######")
