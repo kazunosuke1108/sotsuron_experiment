@@ -5,8 +5,8 @@
     <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0108/yoshinari/$(arg bag_basename).bag"/>
     <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
     <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
-    <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/>
-    <arg name="fps" default="11"/>
+    <arg name="topic_name" default="/stereo/left/image_rect"/>
+    <arg name="fps" default="6"/>
     <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/>
     <node
         pkg="rosbag" 
@@ -24,7 +24,7 @@
         args="$(arg csv_path)"
     />
 
-    <node
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="odom_subscriber" 
         type="odom_subscriber.py" 
@@ -38,5 +38,5 @@
         type="video_recorder" 
         output="screen" 
         args="image:='$(arg topic_name)' _fps:='$(arg fps)' _filename:='$(arg save_path)'"
-    />
+    /> -->
 </launch>

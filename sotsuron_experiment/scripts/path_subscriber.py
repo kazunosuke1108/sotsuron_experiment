@@ -48,8 +48,10 @@ KP: keypoint detection
 rospy.init_node('detectron2_subscriber')
 
 pub_tf=rospy.Publisher("/tf",tf2_msgs.msg.TFMessage,queue_size=1)
-
-csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/1006_wheel_odom_zgzg.csv"
+try:
+    csv_path=sys.argv[1]
+except Exception:
+    csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/1006_wheel_odom_zgzg.csv"
 args=sys.argv
 # csv_path=str(args[1])
 # rospy.loginfo(f"## writing: {csv_path} ##")
