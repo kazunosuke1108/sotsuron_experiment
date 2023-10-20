@@ -1,11 +1,11 @@
 <launch>
-    <arg name="bag_basename" default="_2023-10-14-19-43-12.bag"/>
+    <arg name="bag_name" default="03_03_00__2023-10-20-17-24-31"/>
     <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
 
-    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_basename)"/>
-    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231014/csv/$(arg bag_basename)_001.csv"/>
-    <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231014/csv/$(arg bag_basename)_001_tf.csv"/>
-    <!-- <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_basename).csv"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
+    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name).csv"/>
+    <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name)_tf.csv"/>
+    <!-- <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_name).csv"/>
     <arg name="topic_name" default="/stereo/left/image_rect"/>
     <arg name="fps" default="6"/>
     <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/> -->
@@ -15,7 +15,8 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="-r 0.01 -s 20 $(arg bag_path) --clock"
+        args="-r 0.1 $(arg bag_path) --clock"
+        required="True"
     />    
         <!-- args="-r 0.05 $(arg bag_path)" -->
 
