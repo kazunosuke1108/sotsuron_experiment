@@ -46,12 +46,12 @@ KP: keypoint detection
 """
 
 rospy.init_node('detectron2_subscriber')
-
+start_time=time.time()
 pub_tf=rospy.Publisher("/tf",tf2_msgs.msg.TFMessage,queue_size=1)
 try:
     csv_path=sys.argv[1]
 except Exception:
-    csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/1006_wheel_odom_zgzg.csv"
+    csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/gaits/20231020_test.csv"
 args=sys.argv
 # csv_path=str(args[1])
 # rospy.loginfo(f"## writing: {csv_path} ##")
@@ -206,7 +206,33 @@ def savefig(rgb_array,np_pred_keypoints):
 
     cv2.imwrite(remap_img,img)
 
+def prepare_tf(np_pred_keypoints_3D,rgb_data_header_stamp):
+    tf_kp_list=[]
+    for i,kp_3d in enumerate(np_pred_keypoints_3D):
+        tf_name=f"hmn_joint_{str(i+1).zfill(2)}"
+        t = geometry_msgs.msg.TransformStamped()
+        # t.header.frame_id = "zed_left"
+        t.header.frame_id = "zed_left_optical"
+        t.header.stamp = rgb_data_header_stamp#rospy.Time.now()
+        t.child_frame_id = tf_name
+        if not np.isnan(kp_3d[0]):
+            # t.transform.translation.x = gravity_zone[2]/1000
+            # t.transform.translation.y = -gravity_zone[0]/1000
+            # t.transform.translation.z = gravity_zone[1]/1000
+            # if not np.isnan(gravity_zone[0]):
+            t.transform.translation.x = kp_3d[0]/1000
+            t.transform.translation.y = kp_3d[1]/1000
+            t.transform.translation.z = kp_3d[2]/1000
+            t.transform.rotation.x = 0.0
+            t.transform.rotation.y = 0.0
+            t.transform.rotation.z = 0.0
+            t.transform.rotation.w = 1.0
+            tf_kp_list.append(t)
+    return tf_kp_list
+
 def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
+    # if time.time()-start_time>10:
+    #     rospy.signal_shutdown("timeout from path_subscriber_raw.py")
     start=time.time()
     img_time=rgb_data.header.stamp
     img_time_str=str(img_time.secs) + '.' + str(img_time.nsecs)
@@ -259,15 +285,15 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # modified_rgb_array_size=(400,600)
         # rgb_array=cv2.resize(rgb_array,dsize=(modified_rgb_array_size[1],modified_rgb_array_size[0]))
         np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
+        rospy.loginfo("####### debug ROI #######")
+        tf_kp_list=prepare_tf(np_pred_keypoints_3D,rgb_data.header.stamp)
+        print(np_pred_keypoints_3D.shape)
+        rospy.loginfo("####### debug ROI end #######")
         keypoints_history.append(np_pred_keypoints_3D.reshape(-1).tolist())
         
         # gravity
         gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
 
-        rospy.loginfo("####### debug ROI #######")
-        rospy.loginfo(dpt_array.shape)
-        rospy.loginfo(rgb_array.shape)
-        rospy.loginfo("####### debug ROI end #######")
         # publish gravity
         t = geometry_msgs.msg.TransformStamped()
         # t.header.frame_id = "zed_left"
@@ -287,7 +313,7 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
             t.transform.rotation.y = 0.0
             t.transform.rotation.z = 0.0
             t.transform.rotation.w = 1.0
-            tfm = tf2_msgs.msg.TFMessage([t])
+            tfm = tf2_msgs.msg.TFMessage([t]+tf_kp_list)
             pub_tf.publish(tfm)
             # save gravity
             gravity_zone=gravity_zone.tolist()
