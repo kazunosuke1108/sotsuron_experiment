@@ -2,10 +2,11 @@
     <arg name="bag_name" default="03_03_00__2023-10-20-17-24-31"/>
     <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
 
-    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231020/$(arg bag_name).bag"/>
     <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name).csv"/>
     <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name)_tf.csv"/>
-    <!-- <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_name).csv"/>
+    <!-- <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_name).csv"/> -->
+    <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
     <arg name="topic_name" default="/stereo/left/image_rect"/>
     <arg name="fps" default="6"/>
     <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/> -->
