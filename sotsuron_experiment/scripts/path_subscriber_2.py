@@ -98,7 +98,7 @@ def detect_kp(rgb_array):
 
         return np_pred_keypoints
     except IndexError:
-        return [None]
+        return np.full((17,3),np.nan)
 
 def get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx):
     # size translation
@@ -287,7 +287,7 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     # rospy.loginfo(np_pred_keypoints)
 
     # 2D to 3D
-    if len(np_pred_keypoints)>1:
+    if not np.isnan(np_pred_keypoints[0,0]):
         # original_rgb_array_size=rgb_array.shape
         # modified_rgb_array_size=(400,600)
         # rgb_array=cv2.resize(rgb_array,dsize=(modified_rgb_array_size[1],modified_rgb_array_size[0]))
