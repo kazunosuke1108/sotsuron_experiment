@@ -1,16 +1,27 @@
-# import matplotlib.pyplot as plt
-# import pandas as pd
+import os
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-# data=pd.read_csv("/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231014/csv/_2023-10-14-19-43-12.bag_001_tf.csv",names=["t","x","y","z"])
+# import time
+# while True:
+csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231020/csv/03_00_00__2023-10-20-17-09-06_tf.csv"
+data=pd.read_csv(csvpath)#,names=["tH","x","y","z","0","tR","xR","yR","thR","panR"])
+data=data.to_numpy()
+sort_idx=np.argsort(data,axis=0)[:,0]
+print(np.argsort(data,axis=0)[:,0])
+data=data[sort_idx,:]
+# data=np.sort(data,axis=0)
+# data.sort(axis=0)
+# data=data[::-1]
+# print(data["tH"])
 
-# plt.plot(data["t"],data["x"],label="x")
-# plt.plot(data["t"],data["y"],label="y")
-# plt.plot(data["t"],data["z"],label="z")
-# plt.legend()
-# plt.show()
-
-a=["t"]
-
-b=["a","b","c"]
-
-print((a+b))
+plt.plot(data[:,0],data[:,-3],label="x")#,s=3)
+plt.plot(data[:,0],data[:,-3-3],label="y")#,s=3)
+# plt.scatter(data[:,0],data[:,3],label="z",s=3)
+plt.legend()
+plt.grid()
+plt.savefig(csvpath[:-4]+".png")
+plt.show()
+# plt.cla()
+# time.sleep(1)
