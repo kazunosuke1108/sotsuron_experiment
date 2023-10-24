@@ -1,14 +1,19 @@
 <launch>
-    <arg name="bag_basename" default="20230220_d_090_30_shingo"/>
-    <arg name="avi_basename" default="20230220_d_090_30_shingo_ZED"/>
-
-    <!-- <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/$(arg bag_basename).bag"/> -->
     <arg name="bag_path" default="/media/hayashide/KIOXIA/hayashide/rosbag/0220/20230220_d_090_30_shingo.bag"/>
-    <!-- <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/> -->
-    <arg name="topic_name" default="/zed/zed_node/rgb/image_rect_color"/>
-    <arg name="fps" default="15"/>
-    <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0220/movie/$(arg avi_basename).avi"/>
+    <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/videos/avi/01_00_00__2023-10-19-10-48-46.avi"/>
 
+    <!-- <arg name="topic_name" default="/hsrb/realsense/camera/color/image_raw"/> -->
+    <!-- <arg name="topic_name" default="/zed/zed_node/rgb/image_rect_color"/> -->
+    <arg name="topic_name" default="/stereo/left/image_rect"/>
+    <arg name="fps" default="6"/>
+
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path)"
+        required="True"
+    />    
 
     <node
         pkg="image_view" 
@@ -17,10 +22,4 @@
         output="screen" 
         args="image:='$(arg topic_name)' _fps:='$(arg fps)' _filename:='$(arg save_path)'"
     />
-    <node
-        pkg="rosbag" 
-        name="play" 
-        type="play" 
-        args="$(arg bag_path)"
-    />    
 </launch>

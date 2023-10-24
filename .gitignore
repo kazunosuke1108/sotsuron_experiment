@@ -3,3 +3,4 @@ docker/ros_workspace/devel/*
 *.mp4
 *.avi
 sotsuron_experiment/heavy/*
+sotsuron_experiment/images/save.jpg
