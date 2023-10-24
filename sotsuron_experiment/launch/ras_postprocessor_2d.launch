@@ -1,0 +1,55 @@
+<launch>
+    <arg name="bag_name" default="03_03_00__2023-10-20-17-24-31"/>
+    <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
+
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
+    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name).csv"/>
+    <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name)_tf.csv"/>
+    <!-- <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_name).csv"/> -->
+    <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
+    <arg name="topic_name" default="/stereo/left/image_rect"/>
+    <arg name="fps" default="6"/>
+    <arg name="save_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/images/results/$(arg avi_basename).avi"/> -->
+    
+    <rosparam param="/use_sim_time">true</rosparam>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="-r 0.1 $(arg bag_path) --clock"
+        required="True"
+    />    
+        <!-- args="-r 0.05 $(arg bag_path)" -->
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="path_subscriber_2d" 
+        type="path_subscriber_2d.py" 
+        output="screen" 
+        args="$(arg csv_path)"
+    />
+
+    <!-- <node
+        pkg="ytlab_nlpmp_modules" 
+        name="analysis_tf_listener" 
+        type="analysis_tf_listener.py" 
+        output="screen" 
+        args="$(arg tfcsv_path)"
+    /> -->
+
+    <!-- <node
+        pkg="sotsuron_experiment" 
+        name="odom_subscriber" 
+        type="odom_subscriber.py" 
+        output="screen" 
+        args="$(arg odom_csv_path)"
+    />
+
+    <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg topic_name)' _fps:='$(arg fps)' _filename:='$(arg save_path)'"
+    /> -->
+</launch>
