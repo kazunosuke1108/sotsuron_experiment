@@ -63,7 +63,7 @@ class Detector:
             MetadataCatalog.get(self.cfg.DATASETS.TRAIN[0]))
             output=viz.draw_panoptic_seg_predictions(predictions.to("cpu"),segmentInfo)
         
-        cv2.imwrite(savePath,output.get_image()[:,:,::-1])
+        # cv2.imwrite(savePath,output.get_image()[:,:,::-1])
         if self.model_type=="OD":
             print(predictions["instances"])
             """
