@@ -11,7 +11,7 @@ import subprocess
 # pprint(bags)
 # bags=["/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231020/03_00_00__2023-10-20-17-09-06.bag"]
 # bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/13*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/14*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/15*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/16*"))
-bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/0*_00_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/0*_01_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/0*_03_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/0*_06_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/0*_08_0*"))
+bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_00_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_01_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_03_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_06_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_08_0*"))
 bags=sorted(bags)
 pprint(bags)
 for bag in bags:
