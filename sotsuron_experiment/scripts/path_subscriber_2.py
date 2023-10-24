@@ -277,12 +277,12 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     
     # keypoint detection
     np_pred_keypoints=detect_kp(rgb_array)
-    np_pred_keypoints=np_pred_keypoints.flatten()
-    np_pred_keypoints=list(np_pred_keypoints)
-    np_pred_keypoints.insert(0,float(img_time_str))
-    print(np_pred_keypoints)
-    print(len(np_pred_keypoints))
-    np_pred_keypoints_history.append(np_pred_keypoints)
+    np_pred_keypoints_2d=np_pred_keypoints.flatten()
+    np_pred_keypoints_2d=list(np_pred_keypoints_2d)
+    np_pred_keypoints_2d.insert(0,float(img_time_str))
+    print(np_pred_keypoints_2d)
+    print(len(np_pred_keypoints_2d))
+    np_pred_keypoints_history.append(np_pred_keypoints_2d)
     np.savetxt(csv_path[:-4]+"_2d.csv",np_pred_keypoints_history,delimiter=",")
     # rospy.loginfo(np_pred_keypoints)
 
