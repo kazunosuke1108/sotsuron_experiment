@@ -14,7 +14,7 @@ import subprocess
 bags=sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_00_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_01_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_03_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_06_0*"))+sorted(glob("/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/1*_08_0*"))
 bags=sorted(bags)
 pprint(bags)
-for bag in bags[1:]:
+for bag in bags:
     launch_command = f"roslaunch sotsuron_experiment ras_postprocessor_2.launch bag_name:={os.path.basename(bag)[:-4]} bag_path:={bag}"
     subprocess.run(launch_command, shell=True, check=True)
 # print("ok")
