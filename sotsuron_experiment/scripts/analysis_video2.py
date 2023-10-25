@@ -2,7 +2,7 @@ from glob import glob
 from pprint import pprint
 import os
 import subprocess
-from git_auto_push import git_auto_push
+# from git_auto_push import git_auto_push
 import time
 
 # # bag -> avi
