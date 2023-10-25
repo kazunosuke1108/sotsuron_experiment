@@ -1,4 +1,4 @@
 import numpy as np
 
-a=np.array([[1,2,3,4],[4,5,6,7],[5,6,7,8]])
-print(a.flatten())
+a=np.array([[1,2,1,1],[2,np.nan,2,2],[1,2,1,1]])
+print(np.nanmedian(a))

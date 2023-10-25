@@ -108,12 +108,12 @@ def get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx):
     pred_keypoints_3D=[]
 
     for i, kp in enumerate(np_pred_keypoints):
-        kp_0=kp[0]*y_rgb2dpt
-        kp_1=kp[1]*x_rgb2dpt
-        size_bdbox=30
+        kp_0=kp[0]#*y_rgb2dpt
+        kp_1=kp[1]#*x_rgb2dpt
+        size_bdbox=5 # ここ小さくする？
         dpt=np.nanmedian(dpt_array[int(kp_1)-size_bdbox:int(kp_1)+size_bdbox,int(kp_0)-size_bdbox:int(kp_0)+size_bdbox])
-        # rospy.loginfo(f"{kp_0},{kp_1},{dpt}")
-        # rospy.loginfo(dpt_array[int(kp_0)-size_bdbox:int(kp_0)+size_bdbox,int(kp_1)-size_bdbox:int(kp_1)+size_bdbox])
+        rospy.loginfo(f"{kp_0},{kp_1},{dpt}")
+        rospy.loginfo(dpt_array[int(kp_0)-size_bdbox:int(kp_0)+size_bdbox,int(kp_1)-size_bdbox:int(kp_1)+size_bdbox])
         kp_3d=dpt*np.dot(np.linalg.pinv(proj_mtx),np.array([kp_0,kp_1,1]).T)
         # rospy.loginfo(dpt)
         pred_keypoints_3D.append(kp_3d.tolist())
