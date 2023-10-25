@@ -112,11 +112,14 @@ def get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx):
         kp_1=kp[1]#*x_rgb2dpt
         size_bdbox=5 # ここ小さくする？
         dpt=np.nanmedian(dpt_array[int(kp_1)-size_bdbox:int(kp_1)+size_bdbox,int(kp_0)-size_bdbox:int(kp_0)+size_bdbox])
-        rospy.loginfo(f"{kp_0},{kp_1},{dpt}")
-        rospy.loginfo(dpt_array[int(kp_0)-size_bdbox:int(kp_0)+size_bdbox,int(kp_1)-size_bdbox:int(kp_1)+size_bdbox])
+        # rospy.loginfo(dpt_array[int(kp_0)-size_bdbox:int(kp_0)+size_bdbox,int(kp_1)-size_bdbox:int(kp_1)+size_bdbox])
         kp_3d=dpt*np.dot(np.linalg.pinv(proj_mtx),np.array([kp_0,kp_1,1]).T)
         # rospy.loginfo(dpt)
         pred_keypoints_3D.append(kp_3d.tolist())
+        rospy.loginfo(f"{kp_0},{kp_1},{dpt},{pred_keypoints_3D}")
+
+
+
     np_pred_keypoints_3D=np.array(pred_keypoints_3D)
     return np_pred_keypoints_3D
 
@@ -213,21 +216,24 @@ def prepare_tf(np_pred_keypoints_3D,rgb_data_header_stamp):
         t = geometry_msgs.msg.TransformStamped()
         # t.header.frame_id = "zed_left"
         t.header.frame_id = "zed_left_optical"
-        t.header.stamp = rgb_data_header_stamp#rospy.Time.now()
+        t.header.stamp = rospy.Time.now()#rgb_data_header_stamp#rospy.Time.now()
         t.child_frame_id = tf_name
-        if not np.isnan(kp_3d[0]):
+        # if not np.isnan(kp_3d[0]):
             # t.transform.translation.x = gravity_zone[2]/1000
             # t.transform.translation.y = -gravity_zone[0]/1000
             # t.transform.translation.z = gravity_zone[1]/1000
             # if not np.isnan(gravity_zone[0]):
-            t.transform.translation.x = kp_3d[0]/1000
-            t.transform.translation.y = kp_3d[1]/1000
-            t.transform.translation.z = kp_3d[2]/1000
-            t.transform.rotation.x = 0.0
-            t.transform.rotation.y = 0.0
-            t.transform.rotation.z = 0.0
-            t.transform.rotation.w = 1.0
-            tf_kp_list.append(t)
+        t.transform.translation.x = kp_3d[0]/1000
+        t.transform.translation.y = kp_3d[1]/1000
+        t.transform.translation.z = kp_3d[2]/1000
+        t.transform.rotation.x = 0.0
+        t.transform.rotation.y = 0.0
+        t.transform.rotation.z = 0.0
+        t.transform.rotation.w = 1.0
+        tfm = tf2_msgs.msg.TFMessage([t])
+        pub_tf.publish(tfm)
+        time.sleep(0.01)
+        tf_kp_list.append(t)
     return tf_kp_list
 
 def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
@@ -320,7 +326,7 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         t.transform.rotation.y = 0.0
         t.transform.rotation.z = 0.0
         t.transform.rotation.w = 1.0
-        tfm = tf2_msgs.msg.TFMessage([t]+tf_kp_list)
+        tfm = tf2_msgs.msg.TFMessage([t])#+tf_kp_list)
         pub_tf.publish(tfm)
         # save gravity
         gravity_zone=gravity_zone.tolist()
