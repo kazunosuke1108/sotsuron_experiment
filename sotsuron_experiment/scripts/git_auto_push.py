@@ -4,7 +4,7 @@ import time
 import subprocess
 
 def git_auto_push(msg="AutoPush"):
-    subprocess.run("git add sotsuron_experiment/results", shell=True, check=True)
+    subprocess.run("git add sotsuron_experiment/results*", shell=True, check=True)
     subprocess.run(f"git commit -m \"{msg}\"", shell=True, check=True)
     subprocess.run("git pull origin devel/ras", shell=True, check=True)
     subprocess.run("git push origin devel/ras", shell=True, check=True)
