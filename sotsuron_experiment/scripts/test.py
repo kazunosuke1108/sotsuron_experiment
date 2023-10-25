@@ -18,8 +18,10 @@ data=data[sort_idx,:]
 # data=data[::-1]
 # print(data["tH"])
 
-plt.scatter(data[:,0],data[:,-3],label="x",s=3)
-plt.scatter(data[:,0],data[:,-3-3],label="y",s=3)
+# plt.plot(data[:,0],data[:,1],label="x",lw=0.25)#,s=3)
+# plt.plot(data[:,0],data[:,2],label="y",lw=0.25)#,s=3)
+plt.plot(data[:,1],data[:,2])
+# plt.ylim([0,2])
 # plt.scatter(data[:,0],data[:,3],label="z",s=3)
 plt.legend()
 plt.grid()
