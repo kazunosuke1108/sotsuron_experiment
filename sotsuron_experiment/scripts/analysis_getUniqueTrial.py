@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from git_auto_push import *
 
 color_dict={"00":"r",
            "01":"r",
@@ -195,6 +196,7 @@ get_unique_trials()
 ## 各試行の時系列plot
 # plt_individual_trial()
 plt_individual_trial_2joint()
+git_auto_push()
 
 
 # 重心軌跡が取得できたx座標を横軸，試行IDを縦軸？

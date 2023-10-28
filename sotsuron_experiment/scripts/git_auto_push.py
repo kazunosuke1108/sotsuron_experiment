@@ -9,7 +9,7 @@ def git_auto_push(msg="AutoPush"):
     subprocess.run("git pull origin devel/ras", shell=True, check=True)
     subprocess.run("git push origin devel/ras", shell=True, check=True)
 
-git_auto_push()
+# git_auto_push()
 # interval_sec=60*60*1
 # num_iter=10
 # for i in range(num_iter):
