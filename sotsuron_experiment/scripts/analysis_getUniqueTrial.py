@@ -50,21 +50,23 @@ def initial_processor(data):
     data['timestamp'] = pd.to_datetime(data['timestamp'], unit='s')
     data.set_index('timestamp', inplace=True)
     # 0<x<5を抽出する
+    # print(len(data))
     data=data.query("0 < gravity_x < 5")
-    # data.to_csv(path_management["debug_csv_path"])
+    data.to_csv(path_management["debug_csv_path"])
     # 次のフレームと重心のx軌跡が1m以上空いているデータを削除する
     gravity_x_diff=data["gravity_x"].diff()
-    print(gravity_x_diff)
-    gravity_x_diff.to_csv(path_management["debug_csv_path"])
+    # gravity_x_diff.to_csv(path_management["debug_csv_path"])
+    # print(len(data))
     data=data[gravity_x_diff<0.3]
+    # print(len(data))
     data=data[-0.3<gravity_x_diff]
+    # print(len(data))
     # # 次のフレームと10秒以上間が空いているフレームを削除する
     # nblank=100
     # while nblank>=0:
-    #     time_diff = data.index.to_series().diff().dt.total_seconds()
-    #     print(time_diff)
-    #     filtered_df = data[time_diff <= 1000]
-    #     data=filtered_df
+    time_diff = data.index.to_series().diff().dt.total_seconds()
+    filtered_df = data[time_diff <= 5]
+    data=filtered_df
     #     nblank=len(filtered_df)
     return data
 
@@ -99,7 +101,10 @@ def calc_dt():
 def plt_individual_trial():
     for i, trialpath in enumerate(path_management["ras_csv_dir_path_unique"]):
         data=pd.read_csv(trialpath,names=csv_labels["detectron2_joint_3d"])
+        print(trialpath)
+        print(len(data))
         data=initial_processor(data)
+        print(len(data["gravity_x"]))
         ax.scatter(data.index,data["gravity_x"],c=color_dict[os.path.basename(trialpath)[3:5]],s=1)
         plt.xlabel("timestamp [s]")
         plt.ylabel("position x of the gravity [m]")
@@ -107,7 +112,7 @@ def plt_individual_trial():
     # plt.ylim([0,10])
     # plt.savefig(path_management["png_dir_path"]+"/gravity_compare_closeup.png")
         plt.savefig(path_management["png_dir_path"]+f"/{os.path.basename(trialpath)}.png")
-        plt.pause(0.1)
+        # plt.pause(0.1)
         plt.cla()
 
 ## 保存
@@ -132,4 +137,3 @@ plt_individual_trial()
 
 
 # 重心軌跡が取得できたx座標を横軸，試行IDを縦軸？
-trialname=[]
