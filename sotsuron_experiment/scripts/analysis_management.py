@@ -10,8 +10,15 @@ def management_initial():
     path_management["png_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png"
     path_management["debug_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/debug.csv"
     path_management["result_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/result.csv"
+    path_management["table_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/table.csv"
+    path_management["table_pie_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png/pie_why_partialout.png"
     path_management["ras_tf_csv_dir_path"]=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*_tf.csv"))
     path_management["ras_2d_csv_dir_path"]=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*_2d.csv"))
+    path_management["ras_od_csv_dir_path"]=[]
+    path_management["ras_od_csv_dir_path_temp"]=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*.csv"))
+    for ras_od_csv_candidate in path_management["ras_od_csv_dir_path_temp"]:
+        if ("_tf" not in ras_od_csv_candidate) and ("_2d" not in ras_od_csv_candidate) and ("_kp" not in ras_od_csv_candidate):
+                        path_management["ras_od_csv_dir_path"].append(ras_od_csv_candidate)
     path_management["denoise_tf_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_tf"
     path_management["denoise_2d_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_2d"
     
@@ -22,6 +29,7 @@ def management_initial():
             same_trial=sorted(glob(os.path.split(trial)[0]+"/"+os.path.split(trial)[1][:6]+"*_tf.csv"))
             if same_trial[-1] not in path_management["ras_tf_csv_dir_path_unique"]:
                 path_management["ras_tf_csv_dir_path_unique"].append(same_trial[-1])
+
     path_management["ras_2d_csv_dir_path_unique"]=[]
     for trial in path_management["ras_2d_csv_dir_path"]:
         if trial not in path_management["ras_2d_csv_dir_path_unique"]:
@@ -29,6 +37,17 @@ def management_initial():
             if same_trial[-1] not in path_management["ras_2d_csv_dir_path_unique"]:
                 path_management["ras_2d_csv_dir_path_unique"].append(same_trial[-1])
 
+    path_management["ras_od_csv_dir_path_unique"]=[]
+    for trial in path_management["ras_od_csv_dir_path"]:
+        if trial not in path_management["ras_od_csv_dir_path_unique"]:
+            same_trial=sorted(glob(os.path.split(trial)[0]+"/"+os.path.split(trial)[1][:6]+"*.csv"))
+            same_trial2=[]
+            for same_trial_candidate in same_trial:
+                 if ("_tf" not in same_trial_candidate) and ("_kp" not in same_trial_candidate) and ("_2d" not in same_trial_candidate):
+                      same_trial2.append(same_trial_candidate)
+            # print(same_trial)
+            if same_trial2[-1] not in path_management["ras_od_csv_dir_path_unique"]:
+                path_management["ras_od_csv_dir_path_unique"].append(same_trial2[-1])
     # csvのnames作成
     csv_labels={}
     csv_labels["detectron2_joint"]=["gravity","nose","l_eye","r_eye","l_ear","r_ear","l_shoulder","r_shoulder","l_elbow","r_elbow","l_hand","r_hand","l_base","r_base","l_knee","r_knee","l_foot","r_foot"]
