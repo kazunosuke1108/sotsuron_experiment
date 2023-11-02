@@ -16,27 +16,35 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="-r 0.1 $(arg bag_path) --clock"
+        args="$(arg bag_path) --clock"
         required="True"
     />    
         <!-- args="-r 0.05 $(arg bag_path)" -->
+        <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
 
-    <node
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="path_subscriber_2" 
         type="path_subscriber_2.py" 
         output="screen" 
         args="$(arg csv_path)"
-    />
+    /> -->
 
-    <node
+    <!-- <node
         pkg="ytlab_nlpmp_modules" 
         name="analysis_tf_listener" 
         type="analysis_tf_listener.py" 
         output="screen" 
         args="$(arg tfcsv_path)"
-    />
+    /> -->
 
+    <node
+        pkg="ytlab_nlpmp_modules" 
+        name="exp_odom_subscriber_atokaiseki" 
+        type="exp_odom_subscriber_atokaiseki.py" 
+        output="screen" 
+        args="$(arg bag_name)"
+    />
     <!-- <node
         pkg="sotsuron_experiment" 
         name="odom_subscriber" 
