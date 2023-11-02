@@ -138,3 +138,8 @@ plt.ylim([0,11])
 plt.title("right (n=11/person)")
 plt.savefig(path_management["table_pie_path"][:-4]+"_right.png")
 plt.cla()
+
+patient_data=pd.read_csv(path_management["patient_csv_path"])
+patient_data["total_height"]=patient_data["height"]+patient_data["shoes"]
+print(patient_data)
+patient_data.to_csv(path_management["patient_csv_path"])

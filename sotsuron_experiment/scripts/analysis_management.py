@@ -9,6 +9,7 @@ def management_initial():
     path_management["json_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/json"
     path_management["png_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png"
     path_management["debug_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/debug.csv"
+    path_management["patient_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/patient_data.csv"
     path_management["result_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/result.csv"
     path_management["table_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/table.csv"
     path_management["comparefiles_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/comparefiles.csv"
