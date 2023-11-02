@@ -38,6 +38,7 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"]):
             plt.scatter(data_np[:,0],data_np[:,i],c="r",s=1)
             under_idx=np.argwhere(data_np[:,i]<10)
             over_idx=np.argwhere(data_np[:,i]>1910)
+            plt.scatter(data_np[under_idx.flatten(),0],data_np[under_idx.flatten(),i],c="g",s=4)
             frameout_accum_left=np.append(frameout_accum_left,under_idx)
             frameout_accum_right=np.append(frameout_accum_right,over_idx)
         if i%3==2: #y

@@ -82,24 +82,24 @@ for index, row in pathdata.iterrows():
         continue
     simdata_dict={}
     simdata_dict["t"]=pickledata["solution"]["t"]
-    if index>1:
-        simdata_dict["t"]*=5
+    # if index>1:
+    #     simdata_dict["t"]*=5
     simdata_dict["x"]=pickledata["solution"]["zR"][0,:]
     simdata_dict["y"]=pickledata["solution"]["zR"][1,:]
     simdata_dict["theta"]=pickledata["solution"]["zR"][2,:]
     simdata=pd.DataFrame(simdata_dict)
     print(simdata_dict["t"])
 
-    odomdata=odomdata[odomdata["x"]>1e-2]
-    simdata=simdata[simdata["x"]>1e-2]
-    try:
-        odomdata["t"]=odomdata["t"]-odomdata["t"].iat[0]
-        simdata["t"]=simdata["t"]-simdata["t"].iat[0]
-        err=""
-    except IndexError:
-        err="_error"
-        pass
-
+    odomdata=odomdata[odomdata["x"]>1e-1]
+    simdata=simdata[simdata["x"]>1e-1]
+    # try:
+    #     odomdata["t"]=odomdata["t"]-odomdata["t"].iat[0]
+    #     simdata["t"]=simdata["t"]-simdata["t"].iat[0]
+    #     err=""
+    # except IndexError:
+    #     err="_error"
+    #     pass
+    err=""  
     g=plt.subplot(221)
     g.plot(simdata["x"],simdata["y"],"c",label="plan")
     g.plot(odomdata["x"],odomdata["y"],"b",label="odom")
