@@ -1,14 +1,6 @@
-import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 
-positions=np.array([[1,0],[3,4],[5,6]])
-previous_positions=np.array([[1,2],[0,1],[5,5]])
-print(positions)
-print(previous_positions)
-roi_row=np.unique(np.argwhere(abs(positions-previous_positions)>0.3/31)[:,0])
-
-print(roi_row)
-
-a=[]
-b=[1,2,3]
-a=a+b
-print(a)
+data=pd.read_csv("/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/dev_lrf/predictions_history.csv",names=["t","x","y"])
+plt.plot(data["t"],data["x"])
+plt.show()

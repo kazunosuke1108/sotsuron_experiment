@@ -7,7 +7,7 @@
     pkg="rosbag" 
     name="play" 
     type="play" 
-    args="-s 15 -l /home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg play_bag_name).bag --clock"
+    args="-r 1 -s 15 -l /home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg play_bag_name).bag --clock"
     required="True"
     />
     <!-- launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' " -->
