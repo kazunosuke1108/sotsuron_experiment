@@ -1,14 +1,14 @@
 <launch>
-    <!-- <arg name="play_bag_name" default="_2022-12-08-18-13-41"/> -->
-    <!-- <arg name="play_bag_name" default="_2022-12-11-18-54-07"/> -->
-    <!-- <arg name="play_bag_name" default="_2022-12-16-13-17-47_1m"/> -->
-    <arg name="play_bag_name" default="20230220_d_090_30_shingo"/>
+    <!-- <arg name="play_bag_name" default="_2023-11-02-13-40-34"/> -->
+    <arg name="play_bag_name" default="_2023-11-02-13-47-41"/>
 
+    <rosparam param="/use_sim_time">true</rosparam>
     <node
     pkg="rosbag" 
     name="play" 
     type="play" 
-    args="/home/hayashide/catkin_ws/src/ytlab_hsr/ytlab_hsr_modules/rosbag/$(arg play_bag_name).bag"
+    args="-s 15 -l /home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg play_bag_name).bag --clock"
+    required="True"
     />
     <!-- launch-prefix="bash -c 'sleep $(arg rosbag_start_delay); $0 $@' " -->
     <!-- args="//media/hayashide/KIOXIA/hayashide/rosbag/$(arg play_bag_name).bag" -->
@@ -18,6 +18,13 @@
         type="lrf_subscriber.py" 
         output="screen" 
     />
+
+    <node pkg="rviz" 
+        type="rviz" 
+        name="rviz_lrf_2023" 
+        args="-d $(find sotsuron_experiment)/rviz/rviz_lrf_2023.rviz"
+    />
+
 
 	<!-- <node pkg="rviz" type="rviz" name="my_rviz" args="-d $(find sotsuron_experiment)/rviz/my_rviz.rviz" /> -->
         <!-- launch-prefix="bash -c 'sleep $(arg python_start_delay); $0 $@' " -->

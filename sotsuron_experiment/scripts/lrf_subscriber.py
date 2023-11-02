@@ -5,109 +5,153 @@ import matplotlib.pyplot as plt
 import rospy 
 import os
 from nav_msgs.msg import Odometry   
-import tf
-from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
-from geometry_msgs.msg import PointStamped
 import message_filters
-img_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.png"
-ranges_csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/sources/ranges.csv"
 
-_odom_x, _odom_y, _odom_theta = 0.0, 0.0, 0.0
+import tf
+import tf2_msgs.msg
+import geometry_msgs.msg
+from tf.transformations import euler_from_quaternion
+import time
 
-def get_positions(msg_scan,x,y,th):
-    idx=np.arange(len(msg_scan.ranges))
-    rad=msg_scan.angle_min+msg_scan.angle_increment*idx
-    xR=x+msg_scan.ranges*np.cos(rad+th)
-    yR=y+msg_scan.ranges*np.sin(rad+th)
-    return np.array([xR,yR]).T
+class LrfSubscriber():
+    def __init__(self):
+        rospy.init_node("lrf_subscriber")
+        self.mf=self.pub_sub()
 
-def get_walls(msg_scan,positions):
-    idx=np.arange(len(msg_scan.ranges))
-    rad=np.array(msg_scan.angle_min+msg_scan.angle_increment*idx)
-    r_idx=np.where((rad>-np.pi/2) & (rad<-np.arctan(2/30)) & (np.array(msg_scan.ranges)<30))
-    l_idx=np.where((rad<np.pi/2) & (rad>np.arctan(2/30)) & (np.array(msg_scan.ranges)<30))
-    plt.scatter(positions[r_idx,0],positions[r_idx,1],s=0.5,c='r')
-    plt.scatter(positions[l_idx,0],positions[l_idx,1],s=0.5,c='r')
-    print(positions[r_idx,0][0])
-    r_a,r_b=np.polyfit(positions[r_idx,0][0],positions[r_idx,1][0],1)
-    l_a,l_b=np.polyfit(positions[l_idx,0][0],positions[l_idx,1][0],1)
-    plt.plot([0,30],[r_b,r_a*30+r_b],color="r")
-    plt.plot([0,30],[l_b,l_a*30+l_b],color="r")
+        self.img_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/scripts/monitor/lrf.png"
+        self.ranges_csv_path=os.environ['HOME']+"/catkin_ws/src/sotsuron_experiment/dev_lrf/positions_history.csv"
 
-# def idx_to_dist(msg_scan,idx1,idx2):
-#     pos1=get_positions(msg_scan,idx1)
-#     pos2=get_positions(msg_scan,idx2)
-#     dist=np.sqrt((pos1[0]-pos2[0])**2+(pos1[1]-pos2[1])**2)
-#     return dist
+        self._odom_x, self._odom_y, self._odom_theta = 0.0, 0.0, 0.0
+        self.flag_first=True
+        self.scan_count=0
+        self.black_list_candidate=np.array([])
+        self.black_list=np.array([])
+        self.positions_history=[]
 
-def pub_sub():
-    global rgb_sub,dpt_sub,info_sub,pub_PointStamped
-    # subscriber
-    sub_list=[]
-    odom_sub = message_filters.Subscriber('/hsrb/odom', Odometry)
-    sub_list.append(odom_sub)
-    scan_sub = message_filters.Subscriber('/hsrb/base_scan', LaserScan)
-    sub_list.append(scan_sub)
 
-    mf=message_filters.ApproximateTimeSynchronizer(sub_list,10,0.5)
-    
-    # publisher
-    # pub_PointStamped=rospy.Publisher("publisher_point",PointStamped,queue_size=1)
+    def get_positions(self,msg_scan,x,y,th):
+        idx=np.arange(len(msg_scan.ranges))
+        rad=msg_scan.angle_min+msg_scan.angle_increment*idx
+        xR=x+msg_scan.ranges*np.cos(rad+th)
+        yR=y+msg_scan.ranges*np.sin(rad+th)
+        return np.array([xR,yR]).T
 
-    # listener
-    # broadcaster
-    return mf
+    def get_walls(self,msg_scan,positions):
+        idx=np.arange(len(msg_scan.ranges))
+        rad=np.array(msg_scan.angle_min+msg_scan.angle_increment*idx)
+        r_idx=np.where((rad>-np.pi/2) & (rad<-np.arctan(2/30)) & (np.array(msg_scan.ranges)<30))
+        l_idx=np.where((rad<np.pi/2) & (rad>np.arctan(2/30)) & (np.array(msg_scan.ranges)<30))
+        plt.scatter(positions[r_idx,0],positions[r_idx,1],s=0.5,c='r')
+        plt.scatter(positions[l_idx,0],positions[l_idx,1],s=0.5,c='r')
+        print(positions[r_idx,0][0])
+        r_a,r_b=np.polyfit(positions[r_idx,0][0],positions[r_idx,1][0],1)
+        l_a,l_b=np.polyfit(positions[l_idx,0][0],positions[l_idx,1][0],1)
+        plt.plot([0,30],[r_b,r_a*30+r_b],color="r")
+        plt.plot([0,30],[l_b,l_a*30+l_b],color="r")
 
-def Callback(msg_odom,msg_scan):
-    # Odometory
-    global _odom_x, _odom_y, _odon_theta 
-    _odom_x = msg_odom.pose.pose.position.x  
-    _odom_y = msg_odom.pose.pose.position.y  
-    qx = msg_odom.pose.pose.orientation.x
-    qy = msg_odom.pose.pose.orientation.y
-    qz = msg_odom.pose.pose.orientation.z
-    qw = msg_odom.pose.pose.orientation.w
-    q = (qx, qy, qz, qw)
-    e = euler_from_quaternion(q)
-    _odom_theta = e[2] 
-    # rospy.loginfo("Odomery: x=%s y=%s theta=%s", _odom_x, _odom_y, _odom_theta)
+    # def idx_to_dist(msg_scan,idx1,idx2):
+    #     pos1=get_positions(msg_scan,idx1)
+    #     pos2=get_positions(msg_scan,idx2)
+    #     dist=np.sqrt((pos1[0]-pos2[0])**2+(pos1[1]-pos2[1])**2)
+    #     return dist
 
-    # Scan
-    ranges=msg_scan.ranges
-    print(np.array(ranges).shape)
-    positions=get_positions(msg_scan,_odom_x,_odom_y,_odom_theta)
-    walls=get_walls(msg_scan,positions)
+    def pub_sub(self):
+        # subscriber
+        self.sub_list=[]
+        self.odom_sub = message_filters.Subscriber('/hsrb/odom', Odometry)
+        self.sub_list.append(self.odom_sub)
+        self.scan_sub = message_filters.Subscriber('/teleop_scenario/merged_scan', LaserScan)
+        self.sub_list.append(self.scan_sub)
 
-    plt.plot(positions[:,0],positions[:,1])
-    plt.xlim([-10,40])
-    plt.ylim([-1,4])
-    plt.savefig(img_path)
-    plt.cla()
+        self.mf=message_filters.ApproximateTimeSynchronizer(self.sub_list,10,0.5)
+        self.pub_tf=rospy.Publisher("/tf",tf2_msgs.msg.TFMessage,queue_size=1)
+        
+        # publisher
+        # pub_PointStamped=rospy.Publisher("publisher_point",PointStamped,queue_size=1)
 
-    # np.savetxt(ranges_csv_path,ranges,delimiter=",")
+        # listener
+        # broadcaster
+        return self.mf
 
-    # point=PointStamped()
-    # point.header.stamp=rospy.Time.now()
-    # point.header.frame_id="base_link"
-    # # pos=get_positions(msg_scan,idx-1)
-    # point.point.x=0
-    # point.point.y=0
-    # point.point.z=0
-    # # rospy.loginfo(point)
-    # pub_PointStamped.publish(point)
+    def Callback(self,msg_odom,msg_scan):
+        # self._odom_x = msg_odom.pose.pose.position.x  
+        # self._odom_y = msg_odom.pose.pose.position.y  
+        # self.qx = msg_odom.pose.pose.orientation.x
+        # self.qy = msg_odom.pose.pose.orientation.y
+        # self.qz = msg_odom.pose.pose.orientation.z
+        # self.qw = msg_odom.pose.pose.orientation.w
+        # self.q = (self.qx, self.qy, self.qz, self.qw)
+        # self.e = euler_from_quaternion(self.q)
+        # self._odom_theta = self.e[2] 
+        # rospy.loginfo("Odomery: x=%s y=%s theta=%s", _odom_x, _odom_y, _odom_theta)
 
-    edge_list=[]
-    a_list=[]
-    b_list=[]
-    candidate_list=[]
+        # Scan
 
-    
-rospy.init_node("lrf_subscriber")
-mf=pub_sub()
-mf.registerCallback(Callback)
-rospy.spin()
+            
 
+        self.ranges=msg_scan.ranges
+        self.positions=self.get_positions(msg_scan,0,0,0)#_odom_x,_odom_y,_odom_theta)
+        
+        if self.flag_first:
+            self.previous_positions=self.positions
+            self.first_positions=self.positions
+            self.flag_first=False
+
+        roi_row=np.unique(np.argwhere((abs(self.positions-self.previous_positions)>0.3) & (abs(self.positions-self.first_positions)>0.3))[:,0])
+        
+        if self.scan_count%200==0:
+            self.scan_count=0
+            self.black_list_candidate=np.array([])
+
+        if self.scan_count<100:
+            self.black_list_candidate=np.append(self.black_list_candidate,roi_row)
+        elif self.scan_count==100:
+            black_list_candidate_unique=np.unique(self.black_list_candidate)
+            for candidate in black_list_candidate_unique:
+                count=np.count_nonzero(self.black_list_candidate==candidate)
+                print(count)
+                if count>3:
+                    self.black_list=np.append(self.black_list,int(candidate))
+                    print(self.black_list)
+            rospy.loginfo("###### black list determined ######")
+            rospy.loginfo("###### black list determined ######")
+            rospy.loginfo(self.black_list)
+            rospy.loginfo("###### black list determined ######")
+            rospy.loginfo("###### black list determined ######")
+        
+        t_list=[]
+        rospy.loginfo(len(roi_row))
+        for idx in roi_row:
+            if abs(self.positions[idx][1])>20 or idx in self.black_list:
+                continue
+            pos=self.positions[idx]
+            tf_name=f"foot_candidate_{str(idx+1).zfill(3)}"
+            t = geometry_msgs.msg.TransformStamped()
+            # t.header.frame_id = "zed_left"
+            t.header.frame_id = "base_range_sensor_link"
+            t.header.stamp = msg_scan.header.stamp#rospy.Time.now()#rgb_data_header_stamp#rospy.Time.now()
+            t.child_frame_id = tf_name
+            t.transform.translation.x = pos[0]
+            t.transform.translation.y = pos[1]
+            t.transform.translation.z = 0
+            t.transform.rotation.x = 0.0
+            t.transform.rotation.y = 0.0
+            t.transform.rotation.z = 0.0
+            t.transform.rotation.w = 1.0
+            t_list.append(t)
+        tfm = tf2_msgs.msg.TFMessage(t_list)
+        self.pub_tf.publish(tfm)
+        self.previous_positions=self.positions
+
+        self.scan_count+=1
+
+    def main(self):    
+        self.mf.registerCallback(self.Callback)
+        rospy.spin()
+
+lrfsub=LrfSubscriber()
+lrfsub.main()
 """
 /action_manager_state
 /action_state
