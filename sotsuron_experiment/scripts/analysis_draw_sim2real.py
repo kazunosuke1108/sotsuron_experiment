@@ -8,6 +8,7 @@ import pickle
 
 from analysis_management import *
 from analysis_initial_processor import *
+from noise_processor import *
 
 sys.path.append(r'C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts')
 from getFootprint import *
@@ -37,7 +38,12 @@ for path in sorted(usabledata["sim_path"].values):
     print(path)
     tf_paths.append(glob(os.path.split(path[:-4])[0]+"/*_tf.csv")[0])
 
-print(len(tf_paths))
+angle_paths=[]
+for path in sorted(usabledata["odom_path"].values):
+    angle_paths.append(path[:-4]+"_2d.csv")
+    pprint(os.path.isfile(path[:-4]+"_2d.csv"))
+
+print(len(angle_paths))
 
 for pickle_path,odom_path,tf_path in zip(pickle_paths,odom_paths,tf_paths):
     fig, ax = plt.subplots()
@@ -50,14 +56,18 @@ for pickle_path,odom_path,tf_path in zip(pickle_paths,odom_paths,tf_paths):
     odom_data=pd.read_csv(odom_path,header=0,names=csv_labels["odometry"])
     odom_data=odom_data[odom_data["t"]>0]
     tf_data=pd.read_csv(tf_path,header=0,names=csv_labels["odometry"][:-1])
+    tf_data_prcd=interp_processor(tf_data,fps=5)
+    tf_data_prcd=outlier_processor(tf_data_prcd)
+    tf_data_prcd=mean_processor(tf_data_prcd)
 
     zH=pickle_data["solution"]["zH"]
     footprint=getFootprint(pickle_data["solution"]["t"], pickle_data["solution"]["zR"], pickle_data["solution"]["uR"], pickle_data["env"], pickle_data["rbt"], pickle_data["hmn"], pickle_data["sns"], hmn_path=zH)
     
     plt.subplot(gs[0,:])
-    plt.plot(odom_data["x"],odom_data["y"],"b",label="odom zR")
+    plt.plot(odom_data["x"],odom_data["y"],"b",linewidth=2,label="odom zR")
     plt.plot(pickle_data["solution"]["zR"][0,:],pickle_data["solution"]["zR"][1,:],"c",label="plan zR")
-    plt.plot(tf_data["x"],tf_data["y"],"r",label="measured zH")
+    plt.plot(tf_data["x"],tf_data["y"],color="gray",linewidth=0.5,label="raw zH")
+    plt.plot(tf_data_prcd["x"],tf_data_prcd["y"],"r",label="measured zH")
     plt.plot(pickle_data["solution"]["zH"][0,:],pickle_data["solution"]["zH"][1,:],"m",label="estimated zH")
     plt.legend()
     plt.xlabel("Hallway direction $\it{x}$ [m]")
@@ -68,18 +78,20 @@ for pickle_path,odom_path,tf_path in zip(pickle_paths,odom_paths,tf_paths):
     plt.gca().set_aspect('equal', adjustable='box')
 
     plt.subplot(gs[1,0])
-    plt.plot(odom_data["t"],odom_data["x"],"b",label="odom zR")
+    plt.plot(odom_data["t"],odom_data["x"],"b",linewidth=2,label="odom zR")
     plt.plot(pickle_data["solution"]["t"],pickle_data["solution"]["zR"][0,:],"c",label="plan zR")
-    plt.plot(tf_data["t"],tf_data["x"],"r",label="measured zH")
+    plt.plot(tf_data["t"],tf_data["x"],color="gray",linewidth=0.5,label="raw zH")
+    plt.plot(tf_data_prcd["t"],tf_data_prcd["x"],"r",label="measured zH")
     plt.plot(pickle_data["solution"]["t"],pickle_data["solution"]["zH"][0,:],"m",label="estimated zH")
     plt.ylim([-5,15])
     plt.legend()
     plt.ylabel("Hallway direction $\it{x}$ [m]")
     
     plt.subplot(gs[1,1])
-    plt.plot(odom_data["t"],odom_data["y"],"b",label="odom zR")
+    plt.plot(odom_data["t"],odom_data["y"],"b",linewidth=2,label="odom zR")
     plt.plot(pickle_data["solution"]["t"],pickle_data["solution"]["zR"][1,:],"c",label="plan zR")
-    plt.plot(tf_data["t"],tf_data["y"],"r",label="measured zH")
+    plt.plot(tf_data["t"],tf_data["y"],color="gray",linewidth=0.5,label="raw zH")
+    plt.plot(tf_data_prcd["t"],tf_data_prcd["y"],"r",label="measured zH")
     plt.plot(pickle_data["solution"]["t"],pickle_data["solution"]["zH"][1,:],"m",label="estimated zH")
     plt.ylim([-2,2])
     plt.legend()
@@ -87,7 +99,7 @@ for pickle_path,odom_path,tf_path in zip(pickle_paths,odom_paths,tf_paths):
     plt.ylabel("Width direction $\it{y}$ [m]")
     
     plt.subplot(gs[1,2])
-    plt.plot(odom_data["t"],odom_data["theta"]+odom_data["pan"],"b",label="odom zR")
+    plt.plot(odom_data["t"],odom_data["theta"]+odom_data["pan"],"b",linewidth=2,label="odom zR")
     plt.plot(pickle_data["solution"]["t"],pickle_data["solution"]["zR"][2,:],"c",label="plan zR")
     # plt.plot(tf_data["t"],tf_data["y"],"r",label="measured zH")
     # plt.plot(pickle_data["solution"]["t"],pickle_data["solution"]["zH"][1,:],"m",label="estimated zH")
@@ -95,7 +107,7 @@ for pickle_path,odom_path,tf_path in zip(pickle_paths,odom_paths,tf_paths):
     plt.legend()
     plt.xlabel("time $\it{t}$ [s]")
     plt.ylabel(r"angle $\theta$' [m]")
-    # plt.plot(odom_data["x"],odom_data["y"],"b")
+    # plt.plot(odom_data["x"],odom_data["y"],"b",linewidth=2)
     # plt.plot(pickle_data["solution"]["zR"][0,:],pickle_data["solution"]["zR"][1,:],"c")
     
     plt.savefig(path_management["png_dir_path"]+"/sim2real_gap/"+os.path.basename(odom_path)[:-7]+".png")
