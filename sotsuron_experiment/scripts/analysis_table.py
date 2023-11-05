@@ -7,7 +7,8 @@ import numpy as np
 
 path_management,csv_labels,color_dict=management_initial()
 
-data=pd.read_csv(path_management["result_csv_path"],header=0)#,names=csv_labels["result_chart"])
+# data=pd.read_csv(path_management["result_csv_path"],header=0)#,names=csv_labels["result_chart"])
+data=pd.read_csv(path_management["result_csv_path"][:-4]+"_5to0.csv",header=0)#,names=csv_labels["result_chart"])
 convert_headers=["n_frames","n_partialout_head","n_partialout_foot","n_partialout_left","n_partialout_right","n_totalout","time_partialout_head","time_partialout_foot","time_partialout_left","time_partialout_right","time_totalout",]
 for header in convert_headers:
     data[header]=pd.to_numeric(data[header],errors="coerce")
@@ -139,7 +140,10 @@ plt.title("right (n=11/person)")
 plt.savefig(path_management["table_pie_path"][:-4]+"_right.png")
 plt.cla()
 
-patient_data=pd.read_csv(path_management["patient_csv_path"])
-patient_data["total_height"]=patient_data["height"]+patient_data["shoes"]
-print(patient_data)
-patient_data.to_csv(path_management["patient_csv_path"])
+# patient_data=pd.read_csv(path_management["patient_csv_path"])
+# patient_data["total_height"]=patient_data["height"]+patient_data["shoes"]
+# print(patient_data)
+# patient_data.to_csv(path_management["patient_csv_path"],index=False)
+# print(patient_data["total_height"].mean())
+# print(patient_data["total_height"].max()-patient_data["total_height"].mean())
+# print(patient_data["total_height"].min()-patient_data["total_height"].mean())

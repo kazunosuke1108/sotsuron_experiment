@@ -12,7 +12,7 @@ plt.rcParams['font.family'] = 'Times New Roman'
 fig, ax = plt.subplots() 
 # pprint(path_management["ras_2d_csv_dir_path_unique"])
 
-path_management["png_dir_path"]=path_management["png_dir_path"]+"/"+"2d_denoise"
+path_management["png_dir_path"]=path_management["png_dir_path"]+"/"+"2d_denoise_5to0"
 os.makedirs(path_management["png_dir_path"],exist_ok=True)
 
 result_chart=[]
@@ -22,8 +22,15 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
     # 2dデータに対応するtfのpathを取得
     print(trialpath)
     tfdata=pd.read_csv(path_management["denoise_3d_csv_path"]+"/"+os.path.basename(trialpath)[:-6]+"tf_denoise.csv")
-    timestamp_x5_closest=tfdata.iloc[(tfdata["gravity_x"]-5).abs().idxmin()]["timestamp"]
-    timestamp_x0_closest=tfdata.iloc[(tfdata["gravity_x"]-0).abs().idxmin()]["timestamp"]
+    try:
+        timestamp_x5_closest_idx=(tfdata["gravity_x"]-5).abs().idxmin()
+        timestamp_x5_closest=tfdata.iloc[timestamp_x5_closest_idx]["timestamp"]
+        x_x5_closest=tfdata.iloc[timestamp_x5_closest_idx]["gravity_x"]
+        timestamp_x0_closest_idx=(tfdata[tfdata["timestamp"]>timestamp_x5_closest]["gravity_x"]-0).abs().idxmin()
+        timestamp_x0_closest=tfdata.iloc[timestamp_x0_closest_idx]["timestamp"]
+        x_x0_closest=tfdata.iloc[timestamp_x0_closest_idx]["gravity_x"]
+    except (TypeError,ValueError):
+        continue
     # x=5,0を通過するtimestampを取得
     data_judge=data[data["timestamp"]>timestamp_x5_closest]
     data_judge=data_judge[data_judge["timestamp"]<timestamp_x0_closest]
@@ -41,6 +48,26 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
     time_partialout_left=0
     time_partialout_right=0
     time_totalout=0
+    try:
+        if abs(x_x5_closest-5)<0.3:
+            plt.plot([data_judge_np[0,0],data_judge_np[0,0]],[0,2000],"k")
+        else:
+            plt.plot([data_judge_np[0,0],data_judge_np[0,0]],[0,2000],"r")
+        if abs(x_x0_closest)<0.3:
+            plt.plot([data_judge_np[-1,0],data_judge_np[-1,0]],[0,2000],"k")
+        else:
+            plt.plot([data_judge_np[-1,0],data_judge_np[-1,0]],[0,2000],"r")
+
+    except IndexError:
+        continue
+        timestamp_x0_closest=tfdata.iloc[(tfdata["gravity_x"]-0).abs().idxmin()]["timestamp"]
+        timestamp_x5_closest=tfdata.iloc[(tfdata[tfdata["timestamp"]<timestamp_x0_closest]["gravity_x"]-5).abs().idxmin()]["timestamp"]
+        data_judge=data[data["timestamp"]>timestamp_x5_closest]
+        data_judge=data_judge[data_judge["timestamp"]<timestamp_x0_closest]
+        data_judge_np=data_judge.to_numpy()
+        plt.plot([data_judge_np[0,0],data_judge_np[0,0]],[0,2000],"k")
+        plt.plot([data_judge_np[-1,0],data_judge_np[-1,0]],[0,2000],"k")
+
     for i in range(data_np.shape[1]):
         if i%3==0:
             continue
@@ -161,7 +188,7 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
     ]
     result_chart.append(result_list)
     result_df=pd.DataFrame(result_chart,columns=csv_labels["result_chart"])
-    result_df.to_csv(path_management["result_csv_path"], index=False)
+    result_df.to_csv(path_management["result_csv_path"][:-4]+"_5to0.csv", index=False)
     print(result_df)
     
     plt.xlabel("timestamp [s]")
@@ -169,7 +196,7 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
     plt.ylim([0,2000])
     plt.title(os.path.basename(trialpath))
     plt.legend()
-    plt.savefig(path_management["png_dir_path"]+"/"+os.path.basename(trialpath)[:8]+"_denoise.png")
+    plt.savefig(path_management["png_dir_path"]+"/"+os.path.basename(trialpath)[:8]+"_denoise_5to0.png")
     plt.pause(0.01)
     plt.cla()
 json_saver(path_management,csv_labels,color_dict)
