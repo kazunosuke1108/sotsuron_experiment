@@ -43,6 +43,7 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
     frameout_accum_foot=np.array([])
     frameout_accum_left=np.array([])
     frameout_accum_right=np.array([])
+    allout_idx=np.array([])
     time_partialout_head=0
     time_partialout_foot=0
     time_partialout_left=0
@@ -53,10 +54,12 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
             plt.plot([data_judge_np[0,0],data_judge_np[0,0]],[0,2000],"k")
         else:
             plt.plot([data_judge_np[0,0],data_judge_np[0,0]],[0,2000],"r")
+            allout_idx=np.append(allout_idx,timestamp_x5_closest_idx)
         if abs(x_x0_closest)<0.3:
             plt.plot([data_judge_np[-1,0],data_judge_np[-1,0]],[0,2000],"k")
         else:
             plt.plot([data_judge_np[-1,0],data_judge_np[-1,0]],[0,2000],"r")
+            allout_idx=np.append(allout_idx,timestamp_x0_closest_idx)
 
     except IndexError:
         continue
@@ -160,7 +163,6 @@ for i, trialpath in enumerate(path_management["ras_2d_csv_dir_path_unique"][1:])
     # frameout_accum=np.unique(frameout_accum)
     all_idx=np.arange(data_judge_np.shape[0])
     # 完全欠損
-    allout_idx=np.array([])
     for i, frameidx in enumerate(all_idx[:-1]):
         frameidx=int(frameidx)
         if (data_judge_np[int(all_idx[i+1]),0]-data_judge_np[frameidx,0]>3) & (data_judge_np[-1,0]-data_judge_np[int(all_idx[i+1]),0]>2):

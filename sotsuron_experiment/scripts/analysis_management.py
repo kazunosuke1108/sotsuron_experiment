@@ -13,6 +13,7 @@ def management_initial():
     path_management["patient_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/patient_data.csv"
     path_management["result_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/result.csv"
     path_management["table_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/table.csv"
+    path_management["table_hight_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/table_height.csv"
     path_management["comparefiles_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/comparefiles.csv"
     path_management["usabledata_csv_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/usabledata.csv"
     path_management["table_pie_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png/pie_why_partialout.png"
