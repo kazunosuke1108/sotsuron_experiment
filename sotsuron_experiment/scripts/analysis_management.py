@@ -24,7 +24,7 @@ def management_initial():
     for ras_od_csv_candidate in path_management["ras_od_csv_dir_path_temp"]:
         if ("_tf" not in ras_od_csv_candidate) and ("_2d" not in ras_od_csv_candidate) and ("_kp" not in ras_od_csv_candidate):
                         path_management["ras_od_csv_dir_path"].append(ras_od_csv_candidate)
-    path_management["denoise_tf_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_tf"
+    path_management["denoise_3d_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_3d"
     path_management["denoise_2d_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_2d"
     
     ### 重複のない試行を取得

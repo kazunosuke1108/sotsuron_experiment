@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from noise_processor import *
 
 from analysis_management import *
 
@@ -16,15 +18,18 @@ def initial_processor(csvpath,denoise=True):
         data=data.dropna(how="any",subset=csv_labels["detectron2_joint_3d"][1:])
     else:
         raise Exception("csv filetype not prepared.")
+    data=data.sort_values("timestamp")
     data.reset_index(inplace=True,drop=True)
+    # plt.plot(data["timestamp"],data["gravity_x"])
+    # plt.show()
 
     if denoise:
         # 外れ値除去
-        roi_joint="l_base_x"
+        roi_joint="gravity_x"
         if "_2d" in csvpath:
             threshold_vel=500#[pixel/s]
         elif "_tf" in csvpath:
-            threshold_vel=1.5#[m/s]
+            threshold_vel=1.2#[m/s]
         while True:
             droplist=[]
             for i in range(1,len(data)):
@@ -35,7 +40,7 @@ def initial_processor(csvpath,denoise=True):
             data=data.drop(droplist)
             data.reset_index(inplace=True,drop=True)
             # print(len(data))
-            if len(droplist)<10:
+            if len(droplist)<1:
                 break
     average = np.mean(data["timestamp"].values)
     std=np.std(data["timestamp"].values)
@@ -44,5 +49,5 @@ def initial_processor(csvpath,denoise=True):
     outlier_max=average+(std)*num_sgm
     data=data[data["timestamp"]>outlier_min]
     data=data[data["timestamp"]<outlier_max]
-    
+    data=mean_processor(data,span=10)
     return data

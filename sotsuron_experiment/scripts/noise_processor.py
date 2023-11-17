@@ -28,8 +28,8 @@ def outlier_processor(data):
         data.reset_index(inplace=True,drop=True)
     return data
 
-def mean_processor(data):
-    data=data.ewm(span=5).mean()# 指数加重移動平均
+def mean_processor(data,span=5):
+    data=data.ewm(span=span).mean()# 指数加重移動平均
     data.reset_index(inplace=True,drop=True)
     return data
 
