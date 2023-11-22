@@ -21,7 +21,7 @@ roi_joint2="r_foot_x"
 path_management["png_dir_path"]=path_management["png_dir_path"]+"/new_"+roi_joint1+"_AND_"+roi_joint2
 os.makedirs(path_management["png_dir_path"],exist_ok=True)
 for i, trialpath in enumerate(path_management["ras_tf_csv_dir_path_unique"]):
-    if "03_00_00" not in trialpath:
+    if "12_00_00" not in trialpath:
         continue
     # data=pd.read_csv(trialpath,names=csv_labels["detectron2_joint_3d"])
     # print(trialpath)
@@ -35,7 +35,7 @@ for i, trialpath in enumerate(path_management["ras_tf_csv_dir_path_unique"]):
     # data.to_csv(path_management["denoise_csv_dir_path"]+"/"+os.path.basename(trialpath)[:-4]+"_denoise.csv")
 
     plt.scatter(data["timestamp"],data[roi_joint1],c="r",s=1,label=roi_joint1)
-    plt.scatter(data["timestamp"],data[roi_joint2],c="b",s=1,label=roi_joint2)
+    # plt.scatter(data["timestamp"],data[roi_joint2],c="b",s=1,label=roi_joint2)
     plt.xlabel("timestamp [s]")
     plt.ylabel("position x of the gravity [m]")
     plt.title(os.path.basename(trialpath))
