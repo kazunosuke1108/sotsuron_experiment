@@ -91,21 +91,21 @@ class LrfSubscriber():
 
         self.ranges=msg_scan.ranges
         self.positions=self.get_positions(msg_scan,self._odom_x,self._odom_y,self._odom_theta)
-        self.positions[np.isnan(self.positions)]=999
-        self.positions[np.isposinf(self.positions)]=999
-        self.positions[np.isneginf(self.positions)]=999
+        # self.positions[np.isnan(self.positions)]=999
+        # self.positions[np.isposinf(self.positions)]=999
+        # self.positions[np.isneginf(self.positions)]=999
     
         if self.flag_first:
             self.previous_positions=self.positions
             self.first_positions=self.positions
-            self.previous_positions[np.isnan(self.previous_positions)]=999
-            self.previous_positions[np.isposinf(self.previous_positions)]=999
-            self.previous_positions[np.isneginf(self.previous_positions)]=999
-            self.first_positions[np.isnan(self.first_positions)]=999
-            self.first_positions[np.isposinf(self.first_positions)]=999
-            self.first_positions[np.isneginf(self.first_positions)]=999
+            # self.previous_positions[np.isnan(self.previous_positions)]=999
+            # self.previous_positions[np.isposinf(self.previous_positions)]=999
+            # self.previous_positions[np.isneginf(self.previous_positions)]=999
+            # self.first_positions[np.isnan(self.first_positions)]=999
+            # self.first_positions[np.isposinf(self.first_positions)]=999
+            # self.first_positions[np.isneginf(self.first_positions)]=999
             self.flag_first=False
-        print(self.positions-self.previous_positions)
+        # print(self.positions-self.previous_positions)
         roi_row=np.unique(np.argwhere((abs(self.positions-self.previous_positions)>0.3) & (abs(self.positions-self.first_positions)>0.3))[:,0])
         
         if self.scan_count%200==0:
@@ -133,8 +133,8 @@ class LrfSubscriber():
         for idx in roi_row:
             if abs(self.positions[idx][0])>20 or abs(self.positions[idx][1])>20 or (idx in self.black_list):
                 continue
-            else:
-                t_list_idx.append(idx)
+            # else:
+            #     t_list_idx.append(idx)
             pos=self.positions[idx]
             tf_name=f"foot_candidate_{str(idx+1).zfill(3)}"
             t = geometry_msgs.msg.TransformStamped()
@@ -183,7 +183,7 @@ class LrfSubscriber():
             np.savetxt(self.prediction_csv_path,self.prediction_history,delimiter=",")
             print(self.prediction_history)
             print(mean_idx,self.positions[mean_idx])
-            self.scan_count+=1
+        self.scan_count+=1
 
     def main(self):    
         self.mf.registerCallback(self.Callback)

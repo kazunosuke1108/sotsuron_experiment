@@ -1,0 +1,16 @@
+<launch>
+    <node
+        pkg="sotsuron_experiment" 
+        name="exp_calib_zed_tf_publisher" 
+        type="exp_calib_zed_tf_publisher.py" 
+        output="screen" 
+        args="$(arg csv_path)"
+    />
+    <node
+        pkg="sotsuron_experiment" 
+        name="path_subscriber" 
+        type="path_subscriber.py" 
+        output="screen" 
+        args="$(arg csv_path)"
+    />
+</launch>
