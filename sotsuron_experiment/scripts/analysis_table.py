@@ -7,7 +7,8 @@ import numpy as np
 
 path_management,csv_labels,color_dict=management_initial()
 
-data=pd.read_csv(path_management["result_csv_path"],header=0)#,names=csv_labels["result_chart"])
+# data=pd.read_csv(path_management["result_csv_path"],header=0)#,names=csv_labels["result_chart"])
+data=pd.read_csv(path_management["result_csv_path"][:-4]+"_5to0.csv",header=0)#,names=csv_labels["result_chart"])
 convert_headers=["n_frames","n_partialout_head","n_partialout_foot","n_partialout_left","n_partialout_right","n_totalout","time_partialout_head","time_partialout_foot","time_partialout_left","time_partialout_right","time_totalout",]
 for header in convert_headers:
     data[header]=pd.to_numeric(data[header],errors="coerce")
@@ -36,25 +37,25 @@ for idx in index:
             roi_data=data[data["type_id"]==column]
         if idx=="perfect":
             try:
-                ratio=len(roi_data[roi_data["time_totalout"]==0][roi_data["time_partialout_head"]==0][roi_data["time_partialout_foot"]==0][roi_data["time_partialout_left"]==0][roi_data["time_partialout_right"]==0])/len(roi_data)
+                ratio=len(roi_data[roi_data["n_totalout"]==0][roi_data["n_partialout_head"]==0][roi_data["n_partialout_foot"]==0][roi_data["n_partialout_left"]==0][roi_data["n_partialout_right"]==0])/len(roi_data)
                 table[column][idx]=ratio
             except ZeroDivisionError:
                 pass
         elif idx=="only_partial":
             try:
-                ratio=len(roi_data[roi_data["time_totalout"]==0][(roi_data["time_partialout_head"]!=0) |(roi_data["time_partialout_foot"]!=0) |(roi_data["time_partialout_left"]!=0) |(roi_data["time_partialout_right"]!=0)])/len(roi_data)
+                ratio=len(roi_data[roi_data["n_totalout"]==0][(roi_data["n_partialout_head"]!=0) |(roi_data["n_partialout_foot"]!=0) |(roi_data["n_partialout_left"]!=0) |(roi_data["n_partialout_right"]!=0)])/len(roi_data)
                 table[column][idx]=ratio
             except ZeroDivisionError:
                 pass
         elif idx=="only_total":
             try:
-                ratio=len(roi_data[roi_data["time_totalout"]!=0][roi_data["time_partialout_head"]==0][roi_data["time_partialout_foot"]==0][roi_data["time_partialout_left"]==0][roi_data["time_partialout_right"]==0])/len(roi_data)
+                ratio=len(roi_data[roi_data["n_totalout"]!=0][roi_data["n_partialout_head"]==0][roi_data["n_partialout_foot"]==0][roi_data["n_partialout_left"]==0][roi_data["n_partialout_right"]==0])/len(roi_data)
                 table[column][idx]=ratio
             except ZeroDivisionError:
                 pass
         elif idx=="others":
             try:
-                ratio=len(roi_data[roi_data["time_totalout"]!=0][(roi_data["time_partialout_head"]!=0) |(roi_data["time_partialout_foot"]!=0) |(roi_data["time_partialout_left"]!=0) |(roi_data["time_partialout_right"]!=0)])/len(roi_data)
+                ratio=len(roi_data[roi_data["n_totalout"]!=0][(roi_data["n_partialout_head"]!=0) |(roi_data["n_partialout_foot"]!=0) |(roi_data["n_partialout_left"]!=0) |(roi_data["n_partialout_right"]!=0)])/len(roi_data)
                 table[column][idx]=ratio
             except ZeroDivisionError:
                 pass
@@ -63,10 +64,10 @@ table.to_csv(path_management["table_csv_path"])
 
 # なぜ部分欠損が生じたのか
 partialout_parts=["head","foot","left","right"]
-partialout_head=len(data[data["time_partialout_head"]!=0])
-partialout_foot=len(data[data["time_partialout_foot"]!=0])
-partialout_left=len(data[data["time_partialout_left"]!=0])
-partialout_right=len(data[data["time_partialout_right"]!=0])
+partialout_head=len(data[data["n_partialout_head"]!=0])
+partialout_foot=len(data[data["n_partialout_foot"]!=0])
+partialout_left=len(data[data["n_partialout_left"]!=0])
+partialout_right=len(data[data["n_partialout_right"]!=0])
 print(partialout_head,partialout_foot,partialout_left,partialout_right)
 # plt.bar([1,2,3,4],[partialout_head/len(data)*100,partialout_foot/len(data)*100,partialout_left/len(data)*100,partialout_right/len(data)*100],tick_label=["partialout_head","partialout_foot","partialout_left","partialout_right"])
 # plt.xlabel("lost parts")
@@ -78,28 +79,28 @@ print(partialout_head,partialout_foot,partialout_left,partialout_right)
 how_many_times_lost={}
 how_many_times_lost["head"]={3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:0,15:0,16:0}
 for idx,row in data.iterrows():
-    if row["time_partialout_head"]!=0:
+    if row["n_partialout_head"]!=0:
         if row["patient_id"] in how_many_times_lost["head"].keys():
             how_many_times_lost["head"][row["patient_id"]]+=1
         else:
             how_many_times_lost["head"][row["patient_id"]]=1
 how_many_times_lost["foot"]={3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:0,15:0,16:0}
 for idx,row in data.iterrows():
-    if row["time_partialout_foot"]!=0:
+    if row["n_partialout_foot"]!=0:
         if row["patient_id"] in how_many_times_lost["foot"].keys():
             how_many_times_lost["foot"][row["patient_id"]]+=1
         else:
             how_many_times_lost["foot"][row["patient_id"]]=1
 how_many_times_lost["left"]={3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:0,15:0,16:0}
 for idx,row in data.iterrows():
-    if row["time_partialout_left"]!=0:
+    if row["n_partialout_left"]!=0:
         if row["patient_id"] in how_many_times_lost["left"].keys():
             how_many_times_lost["left"][row["patient_id"]]+=1
         else:
             how_many_times_lost["left"][row["patient_id"]]=1
 how_many_times_lost["right"]={3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:0,15:0,16:0}
 for idx,row in data.iterrows():
-    if row["time_partialout_right"]!=0:
+    if row["n_partialout_right"]!=0:
         if row["patient_id"] in how_many_times_lost["right"].keys():
             how_many_times_lost["right"][row["patient_id"]]+=1
         else:
@@ -139,7 +140,10 @@ plt.title("right (n=11/person)")
 plt.savefig(path_management["table_pie_path"][:-4]+"_right.png")
 plt.cla()
 
-patient_data=pd.read_csv(path_management["patient_csv_path"])
-patient_data["total_height"]=patient_data["height"]+patient_data["shoes"]
-print(patient_data)
-patient_data.to_csv(path_management["patient_csv_path"])
+# patient_data=pd.read_csv(path_management["patient_csv_path"])
+# patient_data["total_height"]=patient_data["height"]+patient_data["shoes"]
+# print(patient_data)
+# patient_data.to_csv(path_management["patient_csv_path"],index=False)
+# print(patient_data["total_height"].mean())
+# print(patient_data["total_height"].max()-patient_data["total_height"].mean())
+# print(patient_data["total_height"].min()-patient_data["total_height"].mean())
