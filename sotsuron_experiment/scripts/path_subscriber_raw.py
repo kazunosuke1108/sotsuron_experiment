@@ -96,14 +96,14 @@ def detect_kp(rgb_array):
         # np_pred_keypoints_t[:,0]=np_pred_keypoints_t[:,0]/compress_rate # ここ
         # np_pred_keypoints_t[:,1]=np_pred_keypoints_t[:,1]/compress_rate # ここ
         np_pred_keypoints_t=np_pred_keypoints_t.astype('int32')
-        print(rgb_array_t.shape)
-        print(np_pred_keypoints_t)
+        # print(rgb_array_t.shape)
+        # print(np_pred_keypoints_t)
 
         np_pred_keypoints=np.zeros_like(np_pred_keypoints_t)
         np_pred_keypoints[:,1]=np_pred_keypoints_t[:,0]
         np_pred_keypoints[:,0]=original_size[1]-np_pred_keypoints_t[:,1]
-        print(rgb_array.shape)
-        print(np_pred_keypoints)
+        # print(rgb_array.shape)
+        # print(np_pred_keypoints)
         return np_pred_keypoints
     except IndexError:
         return [None]
@@ -118,7 +118,7 @@ def get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx):
     for i, kp in enumerate(np_pred_keypoints):
         kp_0=int(kp[0]*y_rgb2dpt)
         kp_1=int(kp[1]*x_rgb2dpt)
-        size_bdbox=30
+        size_bdbox=20
         dpt=np.nanmedian(dpt_array[int(kp_1)-size_bdbox:int(kp_1)+size_bdbox,int(kp_0)-size_bdbox:int(kp_0)+size_bdbox])
         # rospy.loginfo(f"{kp_0},{kp_1},{dpt}")
         # rospy.loginfo(dpt_array[int(kp_0)-size_bdbox:int(kp_0)+size_bdbox,int(kp_1)-size_bdbox:int(kp_1)+size_bdbox])
@@ -293,7 +293,9 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     
     
     # keypoint detection
+    start=time.time()
     np_pred_keypoints=detect_kp(rgb_array)
+    print(time.time()-start)
     # rospy.loginfo(np_pred_keypoints)
 
     # 2D to 3D
@@ -302,9 +304,10 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # modified_rgb_array_size=(400,600)
         # rgb_array=cv2.resize(rgb_array,dsize=(modified_rgb_array_size[1],modified_rgb_array_size[0]))
         np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
+        
         rospy.loginfo("####### debug ROI #######")
         tf_kp_list=prepare_tf(np_pred_keypoints_3D,rgb_data.header.stamp)
-        print(np_pred_keypoints_3D.shape)
+        # print(np_pred_keypoints_3D.shape)
         rospy.loginfo("####### debug ROI end #######")
         keypoints_history.append(np_pred_keypoints_3D.reshape(-1).tolist())
         
@@ -318,7 +321,7 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         t.header.stamp = rgb_data.header.stamp#rospy.Time.now()
         t.child_frame_id = "hmn"
         if not np.isnan(gravity_zone[0]):
-            print(gravity_zone)
+            # print(gravity_zone)
             # t.transform.translation.x = gravity_zone[2]/1000
             # t.transform.translation.y = -gravity_zone[0]/1000
             # t.transform.translation.z = gravity_zone[1]/1000
