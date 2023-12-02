@@ -19,7 +19,6 @@ class bdboxDetector():
     def __init__(self):
         # ROS
         rospy.init_node('ras_fast_detector')
-        
         # parameters
         self.rotation=True
         self.model_type="KP"
@@ -114,7 +113,7 @@ class bdboxDetector():
             for i, kp in enumerate(np_pred_keypoints):
                 kp_0=int(kp[0]*y_rgb2dpt)
                 kp_1=int(kp[1]*x_rgb2dpt)
-                size_bdbox=20
+                size_bdbox=5
                 bdbox_0_min=np.max([0,int(kp_1)-size_bdbox])
                 bdbox_0_max=np.min([dpt_array.shape[0],int(kp_1)+size_bdbox])
                 bdbox_1_min=np.max([0,int(kp_0)-size_bdbox])
@@ -170,12 +169,20 @@ class bdboxDetector():
             gravity_zone=1/total_mass*(part_gravity["head"]+part_gravity["neck"]+part_gravity["body"]+part_gravity["upper_arm"]+part_gravity["lower_arm"]+part_gravity["hand"]+part_gravity["upper_leg"]+part_gravity["lower_leg"]+part_gravity["foot"])
             return gravity_zone
         
+        def get_trunk(np_pred_keypoints_3D):
+            shoulder=np.average(np_pred_keypoints_3D[5:7,:],axis=0)
+            base=np.average(np_pred_keypoints_3D[11:13,:],axis=0)
+            trunk=np.average(np.vstack([shoulder,base]),axis=0)
+            print(trunk)
+            return trunk
+        
         if self.model_type=="KP":
             np_pred_keypoints=detect_kp(rgb_array)
             if len(np_pred_keypoints)>1:
                 np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
                 gravity_zone=get_gravity_zone(np_pred_keypoints_3D)
-                output_data=np.vstack([gravity_zone,np_pred_keypoints_3D]).flatten()
+                trunk=get_trunk(np_pred_keypoints_3D)
+                output_data=np.vstack([gravity_zone,trunk,np_pred_keypoints_3D]).flatten()
                 output_data=np.insert(output_data,0,self.get_time())
                 return output_data
 
@@ -193,6 +200,8 @@ class bdboxDetector():
         for i,kp_3d in enumerate(np_pred_keypoints_3D):
             if i==0:
                 tf_name=f"hmn"
+            elif i==1:
+                tf_name=f"hmn_trunk"
             else:
                 tf_name=f"hmn_joint_{str(i).zfill(2)}"
             t = geometry_msgs.msg.TransformStamped()

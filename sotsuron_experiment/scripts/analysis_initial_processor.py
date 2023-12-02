@@ -17,7 +17,8 @@ def initial_processor(csvpath,denoise=True):
         data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d"])
         data=data.dropna(how="any",subset=csv_labels["detectron2_joint_3d"][1:])
     else:
-        raise Exception("csv filetype not prepared.")
+        data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d_4"])
+        data=data.dropna(how="any",subset=csv_labels["detectron2_joint_3d_4"][1:])
     data=data.sort_values("timestamp")
     data.reset_index(inplace=True,drop=True)
     # plt.plot(data["timestamp"],data["gravity_x"])
@@ -30,6 +31,8 @@ def initial_processor(csvpath,denoise=True):
             threshold_vel=500#[pixel/s]
         elif "_tf" in csvpath:
             threshold_vel=1.2#[m/s]
+        else:
+            threshold_vel=1.2
         while True:
             droplist=[]
             for i in range(1,len(data)):
