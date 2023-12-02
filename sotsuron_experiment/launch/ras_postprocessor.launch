@@ -16,23 +16,23 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="-r 0.1 $(arg bag_path) --clock"
+        args="-r 0.05 $(arg bag_path) --clock"
         required="True"
     />    
         <!-- args="-r 0.05 $(arg bag_path)" -->
 
     <node
         pkg="sotsuron_experiment" 
-        name="path_subscriber_raw" 
-        type="path_subscriber_raw.py" 
+        name="ras_fast_detector" 
+        type="ras_fast_detector.py" 
         output="screen" 
         args="$(arg csv_path)"
     />
 
     <node
         pkg="ytlab_nlpmp_modules" 
-        name="analysis_tf_listener" 
-        type="analysis_tf_listener.py" 
+        name="analysis_tf_listener3" 
+        type="analysis_tf_listener3.py" 
         output="screen" 
         args="$(arg tfcsv_path)"
     />

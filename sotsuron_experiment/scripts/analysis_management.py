@@ -58,6 +58,7 @@ def management_initial():
     csv_labels={}
     csv_labels["odometry"]=["t","x","y","theta","pan"]
     csv_labels["detectron2_joint"]=["gravity","nose","l_eye","r_eye","l_ear","r_ear","l_shoulder","r_shoulder","l_elbow","r_elbow","l_hand","r_hand","l_base","r_base","l_knee","r_knee","l_foot","r_foot"]
+    csv_labels["detectron2_joint_trunk"]=["gravity","trunk","nose","l_eye","r_eye","l_ear","r_ear","l_shoulder","r_shoulder","l_elbow","r_elbow","l_hand","r_hand","l_base","r_base","l_knee","r_knee","l_foot","r_foot"]
     csv_labels["detectron2_joint_2d"]=["timestamp"]
     csv_labels["detectron2_joint_3d"]=["timestamp"]
     csv_labels["detectron2_joint_3d_4"]=["timestamp"]
@@ -71,7 +72,7 @@ def management_initial():
         for suffix in suffixes:
             csv_labels["detectron2_joint_3d"].append(joint_name+suffix)
     
-    for joint_name in csv_labels["detectron2_joint"]:
+    for joint_name in csv_labels["detectron2_joint_trunk"]:
         suffixes=["_x","_y","_z","_0"]
         for suffix in suffixes:
             csv_labels["detectron2_joint_3d_4"].append(joint_name+suffix)
