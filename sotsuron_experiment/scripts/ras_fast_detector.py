@@ -170,9 +170,9 @@ class bdboxDetector():
             return gravity_zone
         
         def get_trunk(np_pred_keypoints_3D):
-            shoulder=np.average(np_pred_keypoints_3D[5:7,:],axis=0)
-            base=np.average(np_pred_keypoints_3D[11:13,:],axis=0)
-            trunk=np.average(np.vstack([shoulder,base]),axis=0)
+            shoulder=np.nanmedian(np_pred_keypoints_3D[5:7,:],axis=0)
+            base=np.nanmedian(np_pred_keypoints_3D[11:13,:],axis=0)
+            trunk=np.nanmedian(np.vstack([shoulder,base]),axis=0)
             print(trunk)
             return trunk
         

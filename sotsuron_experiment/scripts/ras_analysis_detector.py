@@ -15,12 +15,12 @@ from analysis_management import *
 from analysis_initial_processor import *
 path_management,csv_labels,color_dict=management_initial()
 
-csvpath=sorted(glob("/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/exp_log/fast_detector"+"/*.csv"))[-1]
+csvpath=sorted(glob("/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/exp_log/fast_detector"+"/*163219.csv"))[-1]
 
 #import data
-# data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d_4"])
+data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d_4"])
 start=time.time()
-data=initial_processor(csvpath=csvpath,denoise=True)
+# data=initial_processor(csvpath=csvpath,denoise=True)
 print(time.time()-start)
 
 # integrate
@@ -89,6 +89,6 @@ g4.set_xlabel("Time [s]")
 g4.set_ylabel("Position z [m]")
 g4.legend()
 g4.grid()
-plt.savefig(os.path.split(csvpath)[0]+"/"+os.path.basename(csvpath)[:-4]+".png")
+plt.savefig(os.path.split(csvpath)[0]+"/"+os.path.basename(csvpath)[:-4]+"_raw.png")
 # plt.show()
 # print(data)
