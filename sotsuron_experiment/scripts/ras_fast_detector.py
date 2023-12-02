@@ -5,6 +5,7 @@ from datetime import datetime
 import numpy as np
 import cv2
 from cv_bridge import CvBridge
+import sys
 
 import rospy
 import message_filters
@@ -24,7 +25,10 @@ class bdboxDetector():
         self.model_type="KP"
 
         # path
-        self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
+        try:
+            self.logcsvpath=sys.argv[1]
+        except Exception:
+            self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
         
 
         # Detectron2

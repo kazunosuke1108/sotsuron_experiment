@@ -1,10 +1,10 @@
 <launch>
-    <arg name="bag_name" default="03_03_00__2023-10-20-17-24-31"/>
+    <arg name="bag_name" default="_2023-12-02-21-52-57"/>
     <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
 
-    <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
-    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name).csv"/>
-    <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231020/csv/$(arg bag_name)_tf.csv"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231202/$(arg bag_name).bag"/>
+    <arg name="csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/20231202/$(arg bag_name).csv"/>
+    <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/20231202/$(arg bag_name)_tf.csv"/>
     <!-- <arg name="odom_csv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/0108/csv/$(arg bag_name).csv"/> -->
     <!-- <arg name="bag_path" default="/home/hayashide/catkin_ws/src/ytlab_rosbag/rosbag/$(arg bag_name).bag"/>
     <arg name="topic_name" default="/stereo/left/image_rect"/>
@@ -16,26 +16,34 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="-r 0.05 $(arg bag_path) --clock"
+        args="-s 60 -u 30 -r 0.1 $(arg bag_path) --clock"
         required="True"
     />    
         <!-- args="-r 0.05 $(arg bag_path)" -->
 
-    <node
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="ras_fast_detector" 
         type="ras_fast_detector.py" 
         output="screen" 
         args="$(arg csv_path)"
-    />
+    /> -->
 
     <node
+        pkg="ytlab_nlpmp_modules" 
+        name="exp_calib_zed_tf_publisher" 
+        type="exp_calib_zed_tf_publisher.py" 
+        output="screen" 
+    />
+
+    <!-- <node
         pkg="ytlab_nlpmp_modules" 
         name="analysis_tf_listener3" 
         type="analysis_tf_listener3.py" 
         output="screen" 
         args="$(arg tfcsv_path)"
-    />
+    /> -->
+
 
     <!-- <node
         pkg="sotsuron_experiment" 
