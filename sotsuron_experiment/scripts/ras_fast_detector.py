@@ -115,7 +115,11 @@ class bdboxDetector():
                 kp_0=int(kp[0]*y_rgb2dpt)
                 kp_1=int(kp[1]*x_rgb2dpt)
                 size_bdbox=20
-                dpt=np.nanmedian(dpt_array[int(kp_1)-size_bdbox:int(kp_1)+size_bdbox,int(kp_0)-size_bdbox:int(kp_0)+size_bdbox])
+                bdbox_0_min=np.max([0,int(kp_1)-size_bdbox])
+                bdbox_0_max=np.min([dpt_array.shape[0],int(kp_1)+size_bdbox])
+                bdbox_1_min=np.max([0,int(kp_0)-size_bdbox])
+                bdbox_1_max=np.min([dpt_array.shape[1],int(kp_0)+size_bdbox])
+                dpt=np.nanmin(dpt_array[bdbox_0_min:bdbox_0_max,bdbox_1_min:bdbox_1_max])
                 kp_3d=dpt*np.dot(np.linalg.pinv(proj_mtx),np.array([kp_0,kp_1,1]).T)
                 pred_keypoints_3D.append(kp_3d.tolist())
             np_pred_keypoints_3D=np.array(pred_keypoints_3D)
@@ -183,7 +187,7 @@ class bdboxDetector():
             np.savetxt(self.logcsvpath,[output_data],delimiter=",")
         pass            
 
-    def prepare_tf(self,output_data):
+    def publish_tf(self,output_data):
         tf_kp_list=[]
         np_pred_keypoints_3D=output_data[1:].reshape(-1,4)
         for i,kp_3d in enumerate(np_pred_keypoints_3D):
@@ -196,7 +200,7 @@ class bdboxDetector():
             t.header.frame_id = "zed_left_camera_optical_frame_tate"
             t.header.stamp = rospy.Time.now()
             t.child_frame_id = tf_name
-            if not np.isnan(kp_3d[0]):
+            if not np.isnan(kp_3d).any():
                 # t.transform.translation.x = gravity_zone[2]/1000
                 # t.transform.translation.y = -gravity_zone[0]/1000
                 # t.transform.translation.z = gravity_zone[1]/1000
@@ -211,6 +215,7 @@ class bdboxDetector():
                 tf_kp_list.append(t)
         tfm = tf2_msgs.msg.TFMessage(tf_kp_list)
         self.pub_tf.publish(tfm)
+        rospy.loginfo("timestamp: "+str(time.time()))
 
 
     def ImageCallback(self,rgb_data,dpt_data,info_data):
@@ -221,11 +226,13 @@ class bdboxDetector():
 
         # keypoint detection
         output_data=self.get_position(rgb_array,dpt_array,proj_mtx)
+        # rospy.loginfo(output_data)
 
-        # log (csv)
-        self.write_log(output_data)
-
-        # tf
-        rospy.loginfo(self.prepare_tf(output_data))
-
+        try:
+            # log (csv)
+            self.write_log(output_data)
+            # tf
+            self.publish_tf(output_data)
+        except TypeError:# output_dataがない（get_positionがreturnされずNoneの場合）
+            pass
 detector=bdboxDetector()
