@@ -1,0 +1,317 @@
+2023-12-09 18:22:33,997 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,129 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,246 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,362 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,481 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,595 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,722 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,848 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:34,971 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,087 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,202 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,317 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,437 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,555 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,673 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,789 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:35,905 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,022 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,143 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,260 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,374 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,487 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,604 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,831 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:36,944 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,059 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,172 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,284 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,398 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,511 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,622 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,732 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,845 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:37,960 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,076 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,189 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,300 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,411 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,523 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,638 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,746 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,859 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:38,985 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,107 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,224 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,342 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,459 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,577 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,694 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,816 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:39,929 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,046 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,170 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,287 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,406 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,520 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,637 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,826 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:40,937 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,061 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,174 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,286 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,399 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,515 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,629 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,743 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,859 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:41,975 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,093 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,211 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,370 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,485 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,602 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,717 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,842 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:42,960 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,075 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,196 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,317 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,437 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,557 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,669 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,795 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:43,924 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,044 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,160 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,275 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,390 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,505 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,628 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,791 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:44,905 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:45,046 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:45,181 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:45,318 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:45,455 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:45,585 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:45,698 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:45,815 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:45,931 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:46,048 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:46,183 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:46,315 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:46,432 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:46,549 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:46,666 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:46,784 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:46,908 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:47,030 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:47,150 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:47,270 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:47,407 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:47,549 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:47,689 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:47,833 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:47,959 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,083 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,203 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,326 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,451 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,572 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,690 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,814 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:48,939 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,057 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,182 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,300 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,421 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,545 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,667 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,786 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:49,907 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,034 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,156 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,272 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,389 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,504 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,625 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,748 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,867 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:50,989 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,101 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,214 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,336 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,456 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,574 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,688 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,802 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:51,920 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,034 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,151 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,267 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,387 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,508 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,624 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,753 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,871 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:52,995 [ras_fast_detector.py:bdboxDetector.ImageCallback:281] WARNING    Mismatch between array dtype ('object') and format specifier ('%.18e')
+2023-12-09 18:22:53,132 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:53,277 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:53,421 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:53,565 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:53,710 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:53,855 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:53,998 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:54,194 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:54,342 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:54,481 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:54,620 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:54,762 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:54,905 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,042 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,181 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,322 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,464 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,601 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,736 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:55,871 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,007 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,145 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,283 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,424 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,560 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,708 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:56,859 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,005 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,147 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,293 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,439 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,582 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,725 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:57,866 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,012 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,155 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,299 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,480 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,617 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,755 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:58,892 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,085 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,228 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,362 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,497 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,629 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,766 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:22:59,900 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,037 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,173 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,308 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,445 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,577 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,712 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,857 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:00,997 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:01,144 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:01,291 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:01,439 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:01,580 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:01,727 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:01,873 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,068 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,217 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,357 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,492 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,626 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,764 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:02,910 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,051 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,191 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,334 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,485 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,626 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,758 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:03,903 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,041 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,179 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,315 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,454 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,598 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,742 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:04,887 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,032 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,172 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,316 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,465 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,608 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,747 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:05,937 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,087 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,220 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,362 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,501 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,636 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,779 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:06,924 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,070 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,211 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,352 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,500 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,636 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,775 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:07,911 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,043 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,179 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,318 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,452 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,590 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,725 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:08,873 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,011 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,154 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,292 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,431 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,576 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,759 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:09,905 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,052 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,190 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,332 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,469 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,609 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,745 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:10,885 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,104 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,242 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,373 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,504 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,638 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,771 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:11,911 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,044 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,175 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,308 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,444 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,575 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,711 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:12,859 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,001 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,143 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,289 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,427 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,570 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,755 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:13,904 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,045 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,186 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,325 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,463 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,598 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,742 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:14,877 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:15,021 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:15,193 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:15,324 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:15,458 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:15,593 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully
+2023-12-09 18:23:15,733 [ras_fast_detector.py:bdboxDetector.ImageCallback:279] INFO       processed successfully

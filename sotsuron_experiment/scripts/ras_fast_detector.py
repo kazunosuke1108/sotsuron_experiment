@@ -18,6 +18,7 @@ from detectron2_core import *
 
 class bdboxDetector():
     def __init__(self):
+        self.logger=self.prepare_log()
         # ROS
         rospy.init_node('ras_fast_detector')
         # parameters
@@ -59,6 +60,33 @@ class bdboxDetector():
         ans=float(str(rostime.secs)+"."+format(rostime.nsecs,'09'))
         # ans=time.time()
         return ans
+
+    def prepare_log(self):
+        import os
+        from datetime import datetime
+        import logging
+
+        # logdir=os.path.split(os.path.split(__file__)[0])[0]+"/log"
+        logdir = "/home/hayashide/catkin_ws/src/sotsuron_experiment/log"
+        logdaydir=logdir+"/"+datetime.now().strftime('%Y%m%d')
+        os.makedirs(logdaydir,exist_ok=True)
+
+        logger = logging.getLogger(os.path.basename(__file__))
+        logger.setLevel(logging.DEBUG)
+        format = "%(asctime)s [%(filename)s:%(funcName)s:%(lineno)d] %(levelname)-9s  %(message)s"
+        st_handler = logging.StreamHandler()
+        st_handler.setLevel(logging.DEBUG)
+        # StreamHandlerによる出力フォーマットを先で定義した'format'に設定
+        st_handler.setFormatter(logging.Formatter(format))
+
+        fl_handler = logging.FileHandler(filename=logdaydir+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".log", encoding="utf-8")
+        fl_handler.setLevel(logging.INFO)
+        # FileHandlerによる出力フォーマットを先で定義した'format'に設定
+        fl_handler.setFormatter(logging.Formatter(format))
+
+        logger.addHandler(st_handler)
+        logger.addHandler(fl_handler)
+        return logger
     
     def pub_sub(self):
         sub_list=[]
@@ -232,6 +260,7 @@ class bdboxDetector():
 
 
     def ImageCallback(self,rgb_data,dpt_data,info_data):
+        self.logger.debug("ImageCallback start")
         # extract image
         rgb_array=self.get_image(rgb_data,datatype="rgb_ZED")
         dpt_array=self.get_image(dpt_data,datatype="dpt")
@@ -239,6 +268,7 @@ class bdboxDetector():
 
         # keypoint detection
         output_data=self.get_position(rgb_array,dpt_array,proj_mtx)
+        self.logger.debug(output_data)
         # rospy.loginfo(output_data)
 
         try:
@@ -246,6 +276,8 @@ class bdboxDetector():
             self.write_log(output_data)
             # tf
             self.publish_tf(output_data)
-        except TypeError:# output_dataがない（get_positionがreturnされずNoneの場合）
+            self.logger.info("processed successfully")
+        except TypeError as e:# output_dataがない（get_positionがreturnされずNoneの場合）
+            self.logger.warning(e)
             pass
 detector=bdboxDetector()
