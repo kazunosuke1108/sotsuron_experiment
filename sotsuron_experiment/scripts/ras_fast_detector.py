@@ -241,7 +241,7 @@ class bdboxDetector():
             t.header.frame_id = "zed_left_camera_optical_frame_tate"
             t.header.stamp = rospy.Time.now()
             t.child_frame_id = tf_name
-            if not np.isnan(kp_3d).any():
+            if not np.isnan(kp_3d[0]):
                 # t.transform.translation.x = gravity_zone[2]/1000
                 # t.transform.translation.y = -gravity_zone[0]/1000
                 # t.transform.translation.z = gravity_zone[1]/1000
