@@ -2,6 +2,7 @@ docker/ros_workspace/build/*
 docker/ros_workspace/devel/*
 *.mp4
 *.avi
+*_raw.csv
 sotsuron_experiment/heavy/*
 sotsuron_experiment/images/save.jpg
 *_ignore/*

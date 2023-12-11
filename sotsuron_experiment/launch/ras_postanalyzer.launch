@@ -1,0 +1,34 @@
+<launch>
+    <!-- 歩行速度 -->
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_ras_ras_velocity" 
+        type="analysis_ras_ras_velocity.py" 
+        output="screen" 
+    />
+
+    <!-- ストライド長 -->
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_ras_r_foot" 
+        type="analysis_ras_r_foot.py" 
+        output="screen" 
+    />
+
+    <!-- 円背 -->
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_ras_r_humpback" 
+        type="analysis_ras_r_humpback.py" 
+        output="screen" 
+    />
+
+    <!-- mp4動画 -->
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_ras_r_humpback" 
+        type="analysis_ras_r_humpback.py" 
+        output="screen" 
+    />
+    analysis_ras_conv_avi_mp4
+</launch>

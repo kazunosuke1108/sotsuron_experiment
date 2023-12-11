@@ -1,3 +1,6 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from glob import glob
 import json
 import os
@@ -67,7 +70,7 @@ def management_initial():
         for suffix in suffixes:
             csv_labels["detectron2_joint_2d"].append(joint_name+suffix)
     
-    for joint_name in csv_labels["detectron2_joint"]:
+    for joint_name in csv_labels["detectron2_joint_trunk"]:
         suffixes=["_x","_y","_z"]
         for suffix in suffixes:
             csv_labels["detectron2_joint_3d"].append(joint_name+suffix)

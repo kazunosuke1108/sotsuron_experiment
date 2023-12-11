@@ -1,3 +1,6 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,14 +16,17 @@ def initial_processor(csvpath,denoise=True):
     if "_2d" in csvpath:
         data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_2d"])
         data=data.dropna(how="any",subset=csv_labels["detectron2_joint_2d"][1:])
-    elif "_tf" in csvpath:
+    elif ("_tf" in csvpath) or ("_tf_raw" in csvpath):
+    #     data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d"])
+    #     data=data.dropna(how="any",subset=csv_labels["detectron2_joint_3d"][1:])
+    # else:
         data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d"])
-        data=data.dropna(how="any",subset=csv_labels["detectron2_joint_3d"][1:])
-    else:
-        data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d_4"])
-        data=data.dropna(how="any",subset=csv_labels["detectron2_joint_3d_4"][1:])
+        data=data.dropna(how="all",subset=csv_labels["detectron2_joint_3d"][1:])
     data=data.sort_values("timestamp")
     data.reset_index(inplace=True,drop=True)
+    data=data.drop_duplicates(subset="timestamp")
+    data.reset_index(inplace=True,drop=True)
+
     # plt.plot(data["timestamp"],data["gravity_x"])
     # plt.show()
 
@@ -29,10 +35,10 @@ def initial_processor(csvpath,denoise=True):
         roi_joint="gravity_x"
         if "_2d" in csvpath:
             threshold_vel=500#[pixel/s]
-        elif "_tf" in csvpath:
+        elif ("_tf" in csvpath) or ("_tf_raw" in csvpath):
             threshold_vel=1.2#[m/s]
-        else:
-            threshold_vel=1.2
+        # else:
+        #     threshold_vel=1.2
         while True:
             droplist=[]
             for i in range(1,len(data)):
@@ -42,7 +48,7 @@ def initial_processor(csvpath,denoise=True):
             # print(len(data))
             data=data.drop(droplist)
             data.reset_index(inplace=True,drop=True)
-            # print(len(data))
+            print(len(data))
             if len(droplist)<1:
                 break
     average = np.mean(data["timestamp"].values)

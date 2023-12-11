@@ -1,9 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 
-#! /usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import os
 import sys
 from glob import glob
@@ -21,8 +18,8 @@ import torch
 import cv2
 from glob import glob
 
-videoPaths=["/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46.mp4"]
-skeletonVideoPaths=["/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_skeleton.mp4"]
+videoPaths=["/home/hayashide/catkin_ws/src/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46.mp4"]
+skeletonVideoPaths=["/home/hayashide/catkin_ws/src/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_skeleton.mp4"]
 
 
 for i, videoPath in enumerate(videoPaths):
@@ -35,23 +32,25 @@ for i, videoPath in enumerate(videoPaths):
     fourcc = cv2.VideoWriter_fourcc('m','p','4', 'v')
     writer = cv2.VideoWriter(skeletonVideoPaths[i],fourcc, fps, (width, height))
     detector=Detector(model_type="KP")
-
-
-    while True:
+    print(width)
+    print(height)
+    print(fps)
+    totalframecount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    for i in range(totalframecount):
         ret,frame=cap.read()
         if ret:
-            cv2.imshow("source",frame)
+            # cv2.imshow("source",frame)
             [pred_keypoints,output_img]=detector.onImage(image_mat=frame,return_skeleton=True)
-            cv2.imshow("result",output_img)
+            # cv2.imshow("result",output_img)
             writer.write(output_img)
 
-        key =cv2.waitKey(10)
-        if key == 27:
-            break
+        # key =cv2.waitKey(10)
+        # if key == 27:
+        #     break
 
     writer.release()
     cap.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 
 # detector=Detector(model_type="KP")
 

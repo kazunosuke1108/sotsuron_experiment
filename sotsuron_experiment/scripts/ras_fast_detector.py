@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
+
 import time
 from datetime import datetime
 import numpy as np
@@ -280,4 +281,5 @@ class bdboxDetector():
         except TypeError as e:# output_dataがない（get_positionがreturnされずNoneの場合）
             self.logger.warning(e)
             pass
+        
 detector=bdboxDetector()
