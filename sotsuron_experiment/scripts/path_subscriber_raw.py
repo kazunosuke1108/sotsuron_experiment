@@ -88,14 +88,22 @@ def detect_kp(rgb_array):
     compress_rate=0.1
     # rgb_array_cprsd=cv2.resize(rgb_array,[int(original_size[1]*compress_rate),int(original_size[0]*compress_rate)]) # ここ
     # print(rgb_array_cprsd.shape)
-    pred_keypoints=detector.onImage(image_mat=rgb_array)
+    rgb_array_t=cv2.rotate(rgb_array,cv2.ROTATE_90_COUNTERCLOCKWISE)
+    pred_keypoints_t=detector.onImage(image_mat=rgb_array_t)
     try:
-        np_pred_keypoints=pred_keypoints.to(torch.device('cpu')).detach().clone().numpy()[0]
-        # print(np_pred_keypoints)
-        # np_pred_keypoints[:,0]=np_pred_keypoints[:,0]/compress_rate # ここ
-        # np_pred_keypoints[:,1]=np_pred_keypoints[:,1]/compress_rate # ここ
-        np_pred_keypoints=np_pred_keypoints.astype('int32')
+        np_pred_keypoints_t=pred_keypoints_t.to(torch.device('cpu')).detach().clone().numpy()[0]
+        # print(np_pred_keypoints_t)
+        # np_pred_keypoints_t[:,0]=np_pred_keypoints_t[:,0]/compress_rate # ここ
+        # np_pred_keypoints_t[:,1]=np_pred_keypoints_t[:,1]/compress_rate # ここ
+        np_pred_keypoints_t=np_pred_keypoints_t.astype('int32')
+        # print(rgb_array_t.shape)
+        # print(np_pred_keypoints_t)
 
+        np_pred_keypoints=np.zeros_like(np_pred_keypoints_t)
+        np_pred_keypoints[:,1]=np_pred_keypoints_t[:,0]
+        np_pred_keypoints[:,0]=original_size[1]-np_pred_keypoints_t[:,1]
+        # print(rgb_array.shape)
+        # print(np_pred_keypoints)
         return np_pred_keypoints
     except IndexError:
         return [None]
@@ -108,9 +116,9 @@ def get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx):
     pred_keypoints_3D=[]
 
     for i, kp in enumerate(np_pred_keypoints):
-        kp_0=kp[0]*y_rgb2dpt
-        kp_1=kp[1]*x_rgb2dpt
-        size_bdbox=30
+        kp_0=int(kp[0]*y_rgb2dpt)
+        kp_1=int(kp[1]*x_rgb2dpt)
+        size_bdbox=20
         dpt=np.nanmedian(dpt_array[int(kp_1)-size_bdbox:int(kp_1)+size_bdbox,int(kp_0)-size_bdbox:int(kp_0)+size_bdbox])
         # rospy.loginfo(f"{kp_0},{kp_1},{dpt}")
         # rospy.loginfo(dpt_array[int(kp_0)-size_bdbox:int(kp_0)+size_bdbox,int(kp_1)-size_bdbox:int(kp_1)+size_bdbox])
@@ -212,7 +220,7 @@ def prepare_tf(np_pred_keypoints_3D,rgb_data_header_stamp):
         tf_name=f"hmn_joint_{str(i+1).zfill(2)}"
         t = geometry_msgs.msg.TransformStamped()
         # t.header.frame_id = "zed_left"
-        t.header.frame_id = "zed_left_optical"
+        t.header.frame_id = "zed_left_camera_optical_frame_tate"
         t.header.stamp = rgb_data_header_stamp#rospy.Time.now()
         t.child_frame_id = tf_name
         if not np.isnan(kp_3d[0]):
@@ -220,9 +228,9 @@ def prepare_tf(np_pred_keypoints_3D,rgb_data_header_stamp):
             # t.transform.translation.y = -gravity_zone[0]/1000
             # t.transform.translation.z = gravity_zone[1]/1000
             # if not np.isnan(gravity_zone[0]):
-            t.transform.translation.x = kp_3d[0]/1000
-            t.transform.translation.y = kp_3d[1]/1000
-            t.transform.translation.z = kp_3d[2]/1000
+            t.transform.translation.x = kp_3d[0]
+            t.transform.translation.y = kp_3d[1]
+            t.transform.translation.z = kp_3d[2]
             t.transform.rotation.x = 0.0
             t.transform.rotation.y = 0.0
             t.transform.rotation.z = 0.0
@@ -241,13 +249,20 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     # rospy.loginfo(str(img_time.secs) + '.' + str(img_time.nsecs))
     # rospy.loginfo(img_time)
     now=rospy.get_time()
+    # rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
+    # rgb_array=np.nan_to_num(rgb_array)
+    # rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
     rgb_array = np.frombuffer(rgb_data.data, dtype=np.uint8).reshape(rgb_data.height, rgb_data.width, -1)
-    rgb_array=np.nan_to_num(rgb_array)
+    rgb_array=np.nan_to_num(rgb_array, copy=False)
     rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
+    # rgb_array=cv2.rotate(rgb_array,cv2.ROTATE_90_COUNTERCLOCKWISE)
     # rgb_array=np.delete(rgb_array,np.arange(0,28),0)
     # rgb_array=np.delete(rgb_array,np.arange(rgb_array.shape[0]-28,rgb_array.shape[0]),0)
-    dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)
-    dpt_array=np.nan_to_num(dpt_array) #(1024,1920,1)
+    # dpt_array = np.frombuffer(dpt_data.data, dtype=np.uint16).reshape(dpt_data.height, dpt_data.width, -1)/1000
+    # dpt_array=np.nan_to_num(dpt_array) #(1024,1920,1)
+    dpt_array=CvBridge().imgmsg_to_cv2(dpt_data)
+    dpt_array=np.array(dpt_array,dtype=np.float32)
+    # dpt_array=cv2.rotate(dpt_array,cv2.ROTATE_90_COUNTERCLOCKWISE)
     # dpt_array=np.where(dpt_array>40,0,dpt_array)
     # dpt_array=np.where(dpt_array<0,0,dpt_array)
     # rospy.loginfo(dpt_array)
@@ -258,6 +273,8 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
 
 
     proj_mtx=np.array(info_data.P).reshape(3,4)
+    # proj_mtx[0,:],proj_mtx[1,:]=proj_mtx[1,:],proj_mtx[0,:]
+    # proj_mtx[:,0],proj_mtx[:,1]=proj_mtx[:,1],proj_mtx[:,0]
 
     # odom
     _odom_x = odm_data.pose.pose.position.x  
@@ -276,7 +293,9 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
     
     
     # keypoint detection
+    start=time.time()
     np_pred_keypoints=detect_kp(rgb_array)
+    print(time.time()-start)
     # rospy.loginfo(np_pred_keypoints)
 
     # 2D to 3D
@@ -285,9 +304,10 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # modified_rgb_array_size=(400,600)
         # rgb_array=cv2.resize(rgb_array,dsize=(modified_rgb_array_size[1],modified_rgb_array_size[0]))
         np_pred_keypoints_3D=get_position_kp(rgb_array,dpt_array,np_pred_keypoints,proj_mtx)
+        
         rospy.loginfo("####### debug ROI #######")
         tf_kp_list=prepare_tf(np_pred_keypoints_3D,rgb_data.header.stamp)
-        print(np_pred_keypoints_3D.shape)
+        # print(np_pred_keypoints_3D.shape)
         rospy.loginfo("####### debug ROI end #######")
         keypoints_history.append(np_pred_keypoints_3D.reshape(-1).tolist())
         
@@ -297,18 +317,18 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # publish gravity
         t = geometry_msgs.msg.TransformStamped()
         # t.header.frame_id = "zed_left"
-        t.header.frame_id = "zed_left_optical"
+        t.header.frame_id = "zed_left_camera_optical_frame_tate"
         t.header.stamp = rgb_data.header.stamp#rospy.Time.now()
         t.child_frame_id = "hmn"
         if not np.isnan(gravity_zone[0]):
-            print(gravity_zone)
+            # print(gravity_zone)
             # t.transform.translation.x = gravity_zone[2]/1000
             # t.transform.translation.y = -gravity_zone[0]/1000
             # t.transform.translation.z = gravity_zone[1]/1000
             # if not np.isnan(gravity_zone[0]):
-            t.transform.translation.x = gravity_zone[0]/1000
-            t.transform.translation.y = gravity_zone[1]/1000
-            t.transform.translation.z = gravity_zone[2]/1000
+            t.transform.translation.x = gravity_zone[0]
+            t.transform.translation.y = gravity_zone[1]
+            t.transform.translation.z = gravity_zone[2]
             t.transform.rotation.x = 0.0
             t.transform.rotation.y = 0.0
             t.transform.rotation.z = 0.0
@@ -425,11 +445,15 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
 # topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed (1080, 1920, 3)
 # topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed (1080, 1920, 3)
 # topicName_rgb="/stereo/left/image_mono" # hsrd zed (1080, 1920, 3) 20hz弱
-topicName_rgb="/stereo/left/image_rect" # hsrd zed (1080, 1920, 3) 2-hz弱（17)
+# 10月実験の組み合わせ
+# topicName_rgb="/stereo/left/image_rect" # hsrd zed (1080, 1920, 3) 2-hz弱（17)
+# topicName_dpt="/stereo/depth" # (1024, 1920, 1)
+# topicName_camInfo="/stereo/left/camera_info"
 
-
-topicName_dpt="/stereo/depth" # (1024, 1920, 1)
-topicName_camInfo="/stereo/left/camera_info"
+# 12月実験の組み合わせ
+topicName_rgb="/zed/zed_node/rgb/image_rect_color"
+topicName_dpt="/zed/zed_node/depth/depth_registered"
+topicName_camInfo="/zed/zed_node/rgb/camera_info"
 
 topicName_odm="/hsrb/odom"
 topicName_joi="/hsrb/joint_states"

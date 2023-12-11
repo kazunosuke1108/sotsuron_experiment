@@ -6,11 +6,25 @@ source ~/catkin_ws/devel/setup.bash
 ipv4addr=$(/sbin/ifconfig -a                                 |
             grep inet[^6]                                     |
             sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' |
-            grep '^192\.168\.1.5'                                )
-if [ "$TARGET_IP" = "" ] ; then
-    ipv4addr="localhost"
+            grep '^192\.168\.1.'                                )
+
+echo $ipv4addr
+ipv4addr_length=${#ipv4addr}
+if [ "$ipv4addr_length" -eq 26 ]; then
+    echo "========== CUSTOMISED BY HAYASHIDE =========="
+    echo "multiple IP was extracted. Default was: $ipv4addr"
+    ipv4addr=${ipv4addr:0:12}
+    echo "Fixed IP is: $ipv4addr"
+    echo "============================================="
 fi
-## get joy path
+if [ "$ipv4addr_length" -eq 27 ]; then
+    echo "========== CUSTOMISED BY HAYASHIDE =========="
+    echo "multiple IP was extracted. Default was: $ipv4addr"
+    ipv4addr=${ipv4addr:0:13}
+    echo "Fixed IP is: $ipv4addr"
+    echo "============================================="
+fi
+
 joy_name=Logicool
 get_joy_name=$(ls /dev/input/by-id |
             grep $joy_name     |

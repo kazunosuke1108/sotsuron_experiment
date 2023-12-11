@@ -271,7 +271,8 @@ def ImageCallback_realsense(rgb_data,dpt_data,info_data,odm_data,joi_data):
         # publish gravity
         t = geometry_msgs.msg.TransformStamped()
         # t.header.frame_id = "zed_left"
-        t.header.frame_id = "zed_left_optical"
+
+        t.header.frame_id = "zed_left_camera_optical_frame_tate"
         t.header.stamp = rgb_data.header.stamp#rospy.Time.now()
         t.child_frame_id = "hmn"
         if not np.isnan(gravity_zone[0]):
@@ -399,11 +400,17 @@ def ImageCallback_ZED(rgb_data,dpt_data,info_data,odm_data,joi_data):
 # topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed (1080, 1920, 3)
 # topicName_rgb="/hsrb/zed2_stereo/left/image_raw" # hsrd zed (1080, 1920, 3)
 # topicName_rgb="/stereo/left/image_mono" # hsrd zed (1080, 1920, 3) 20hz弱
+
+# 10月実験の組み合わせ
 topicName_rgb="/stereo/left/image_rect" # hsrd zed (1080, 1920, 3) 2-hz弱（17)
-
-
 topicName_dpt="/stereo/depth" # (1024, 1920, 1)
 topicName_camInfo="/stereo/left/camera_info"
+
+# 12月実験の組み合わせ
+topicName_rgb="/zed/zed_node/rgb/image_rect_color"
+topicName_dpt="/zed/zed_node/depth/depth_registered"
+topicName_camInfo="/zed/zed_node/rgb/camera_info"
+
 
 topicName_odm="/hsrb/odom"
 topicName_joi="/hsrb/joint_states"
