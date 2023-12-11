@@ -59,13 +59,43 @@ for csvpath in csvs:
     ax2.set_ylabel("Velocity $\it{v_x} {v_y}$ [m]")
     plt.legend()
     plt.grid()
+    plt.show()
+
+    # リサンプリング
+    resample_dt_str="0.01S"
+    resample_dt_float=float(resample_dt_str[:-1])
+    data["timestamp_datetime"]=pd.to_datetime(data["timestamp"], unit='s',utc=True).dt.tz_convert('Asia/Tokyo')
+    data["timestamp_datetime"]=data["timestamp_datetime"].dt.round(resample_dt_str)
+    data=data.set_index("timestamp_datetime")
+    # data=data.resample(resample_dt_str).interpolate('time')
+    print(data)
+
+    vx=(data["gravity_x"].values[1:]-data["gravity_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    vy=(data["gravity_y"].values[1:]-data["gravity_y"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    data["gravity_vx"]=0
+    data["gravity_vy"]=0
+    data["gravity_vx"].iloc[:-1]=vx
+    data["gravity_vy"].iloc[:-1]=vy
+
+    data.to_csv("temp.csv")
+    fig, ax1 = plt.subplots()
+    # vx=(data["gravity_x"].values[1:]-data["gravity_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    ax1.scatter(data["timestamp"],data["gravity_vx"],color="m",s=1,label="vel_g_x")
+    plt.show()
+
 
     # FFT for velocity
     N=len(data)
-    dt=(data["timestamp"].values[-1]-data["timestamp"].values[0])/N
+    dt=resample_dt_float
+    # dt=resample_dt_float#(data["timestamp"].values[-1]-data["timestamp"].values[0])/N
+    # dt=(data["timestamp"].values[-1]-data["timestamp"].values[0])/N
     fs=1/dt # サンプリング周波数（標本点の間隔^-1）
     fn=fs/2 # ナイキスト周波数（再現可能な周波数の上限値）
     freq=np.fft.rfftfreq(N,d=dt)
+    print(N)
+    print(dt)
+    print(len(freq))
+    # raise TimeoutError
 
     # from scipy import signal
     # window = signal.hann(N)  # ハニング窓関数(開始・終了地点にずれが生じてしまう場合の解消法．トレンド除去済みのデータになら適用できるかも)
@@ -86,6 +116,7 @@ for csvpath in csvs:
     ax.set_ylabel("Amplitude")
     ax.legend()
     ax.grid()
+    # plt.show()
     plt.savefig(path_management["png_dir_path"]+"/12_00_00_fft_pos.png")
 
     # denoise using FFT
@@ -110,8 +141,12 @@ for csvpath in csvs:
 
     data["gravity_x_filtered"]=0
     data["gravity_y_filtered"]=0
+    print(len(data["gravity_x_filtered"]))
+    print(len(np.real(np.fft.irfft(F_x))))
     data["gravity_x_filtered"][:-1]=np.real(np.fft.irfft(F_x))*N
+    # data["gravity_x_filtered"]=np.real(np.fft.irfft(F_x))*N
     data["gravity_y_filtered"][:-1]=np.real(np.fft.irfft(F_y))*N
+    # data["gravity_y_filtered"]=np.real(np.fft.irfft(F_y))*N
     data=data.iloc[:-1]
 
     fig, ax1 = plt.subplots()
@@ -138,7 +173,8 @@ for csvpath in csvs:
     plt.legend()
     plt.grid()
 
-    plt.savefig(path_management["png_dir_path"]+"/12_00_00_filtered_pos.png")
+    plt.show()
+    # plt.savefig(path_management["png_dir_path"]+"/12_00_00_filtered_pos.png")
 
 
 
