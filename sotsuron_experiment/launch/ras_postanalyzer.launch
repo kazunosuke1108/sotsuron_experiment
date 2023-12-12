@@ -1,4 +1,9 @@
 <launch>
+
+    <arg name="tfcsv_path" default="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"/>
+    <arg name="odomcsv_path" default="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_od_raw.csv"/>
+    
+
     <!-- 歩行速度 -->
     <node
         pkg="sotsuron_experiment" 
@@ -26,9 +31,19 @@
     <!-- mp4動画 -->
     <node
         pkg="sotsuron_experiment" 
-        name="analysis_ras_r_humpback" 
-        type="analysis_ras_r_humpback.py" 
+        name="analysis_ras_conv_avi_mp4" 
+        type="analysis_ras_conv_avi_mp4.py" 
         output="screen" 
     />
-    analysis_ras_conv_avi_mp4
+    
+    <!-- 全身評価 -->
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_ras_wholebody" 
+        type="analysis_ras_wholebody.py" 
+        output="screen" 
+        args="$(arg tfcsv_path) $(arg odomcsv_path)"
+    />
+
+    
 </launch>
