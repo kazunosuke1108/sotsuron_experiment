@@ -51,22 +51,64 @@ class wholeBody():
         plt.plot(self.tf_data["timestamp"],self.tf_data["gravity_x"],"o-",markersize=3,label="gravity_x")
         plt.plot(self.odom_data["t"],self.odom_data["x"],"^-",markersize=3,label="robot_x")
         plt.legend()
-        plt.xlabel("time $\it{t}$ [s]")
+        plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Hallway direction $\it{x}$ [m]")
         plt.subplot(gs[1,1])    
         plt.plot(self.tf_data["timestamp"],self.tf_data["gravity_y"],"o-",markersize=3,label="gravity_y")
         plt.plot(self.odom_data["t"],self.odom_data["y"],"^-",markersize=3,label="robot_y")
         plt.legend()
-        plt.xlabel("time $\it{t}$ [s]")
+        plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Hallway direction $\it{y}$ [m]")
         plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_gravity")
+        plt.cla()
     
     def plot_hip(self):
+        """
+        股関節の前後進展角度を求める
+        """
+        self.tf_data["r_hip_angle_x"]=0
+        self.tf_data["r_hip_angle_y"]=0
+        self.tf_data["r_hip_angle_z"]=0
+        self.tf_data["l_hip_angle_x"]=0
+        self.tf_data["l_hip_angle_y"]=0
+        self.tf_data["l_hip_angle_z"]=0
+        self.tf_data["r_hip_angle_x"]=np.rad2deg(np.arctan((self.tf_data["r_knee_y"]-self.tf_data["r_base_y"])/(self.tf_data["r_knee_z"]-self.tf_data["r_base_z"])))
+        self.tf_data["r_hip_angle_y"]=np.rad2deg(np.arctan((self.tf_data["r_knee_x"]-self.tf_data["r_base_x"])/(self.tf_data["r_knee_z"]-self.tf_data["r_base_z"])))
+        self.tf_data["r_hip_angle_z"]=np.rad2deg(np.arctan((self.tf_data["r_knee_y"]-self.tf_data["r_base_y"])/(self.tf_data["r_knee_x"]-self.tf_data["r_base_x"])))
+        self.tf_data["l_hip_angle_x"]=np.rad2deg(np.arctan((self.tf_data["l_knee_y"]-self.tf_data["l_base_y"])/(self.tf_data["l_knee_z"]-self.tf_data["l_base_z"])))
+        self.tf_data["l_hip_angle_y"]=np.rad2deg(np.arctan((self.tf_data["l_knee_x"]-self.tf_data["l_base_x"])/(self.tf_data["l_knee_z"]-self.tf_data["l_base_z"])))
+        self.tf_data["l_hip_angle_z"]=np.rad2deg(np.arctan((self.tf_data["l_knee_y"]-self.tf_data["l_base_y"])/(self.tf_data["l_knee_x"]-self.tf_data["l_base_x"])))
+
+        gs = GridSpec(3, 1)
+        plt.subplot(gs[0])    
+        plt.plot(self.tf_data["timestamp"],self.tf_data["r_hip_angle_x"],"o-",markersize=3,label="r_hip_angle_x")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["l_hip_angle_x"],"o-",markersize=3,label="l_hip_angle_x")
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Hip angle in (hallway width direction) th_x [deg]")
+        plt.legend()
+        plt.grid()
+        plt.subplot(gs[1])   
+        plt.plot(self.tf_data["timestamp"],self.tf_data["r_hip_angle_y"],"o-",markersize=3,label="r_hip_angle_y")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["l_hip_angle_y"],"o-",markersize=3,label="l_hip_angle_y")
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Hip angle in (hallway direction) th_y [deg]")
+        plt.legend()
+        plt.grid()
+        plt.subplot(gs[2])   
+        plt.plot(self.tf_data["timestamp"],self.tf_data["r_hip_angle_z"],"o-",markersize=3,label="r_hip_angle_z")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["l_hip_angle_z"],"o-",markersize=3,label="l_hip_angle_z")
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Hip angle in (yaw direction) th_z [deg]")
+        plt.legend()
+        plt.grid()
+        plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_hip")
+        plt.cla()
         pass
 
 
     def main(self):
-        self.plot_gravity()
+        # self.plot_gravity()
+        self.plot_hip()
 
 wb=wholeBody()
 wb.main()
