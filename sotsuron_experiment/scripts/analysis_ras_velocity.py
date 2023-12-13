@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import sys
 from glob import glob
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -16,7 +17,10 @@ plt.rcParams["figure.figsize"] = (10,8)
 plt.rcParams["figure.autolayout"] = True
 plt.rcParams['font.family'] = 'Times New Roman'
 
-csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
+try:
+    csvpath=sys.argv[1]
+except Exception:
+    csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
 
 data=initial_processor(csvpath,True)
 # data=mean_processor(data)
@@ -130,6 +134,7 @@ data["gravity_vx_filtered"]=data["gravity_vx_filtered"]+data["gravity_vx_trend"]
 data["gravity_vy_filtered"]=data["gravity_vy_filtered"]+data["gravity_vy_trend"]
 # plot
 fig, ax1 = plt.subplots()
+print(data)
 ax1.plot(data["timestamp"],data["gravity_x"],"r-",label="gravity_x")
 ax1.plot(data["timestamp"],data["gravity_y"],"b-",label="gravity_y")
 ax1.set_xlabel("Time $\it{t}$ [s]")

@@ -1,9 +1,10 @@
 <launch>
-    <arg name="bag_name" default="_2023-12-11-11-55-46"/>
-    <arg name="skip" default="33"/>
+    <arg name="bag_name" default="_2023-12-13-14-06-23"/>
+    <arg name="skip" default="0"/>
+    <arg name="duration" default="45"/>
     <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
 
-    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231211/$(arg bag_name).bag"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231213/$(arg bag_name).bag"/>
 
     <arg name="video_topic" default="/zed/zed_node/rgb/image_rect_color"/>
     <arg name="fps" default="30.0"/>
@@ -19,26 +20,26 @@
         pkg="rosbag" 
         name="play" 
         type="play" 
-        args="$(arg bag_path) -s $(arg skip)  --clock -r 1"
+        args="$(arg bag_path) -s $(arg skip) -u $(arg duration) --clock -r 0.1"
         required="True"
     />    
         <!-- args="-r 0.05 $(arg bag_path)" -->
         <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
 
-    <!-- <node
+    <node
         pkg="sotsuron_experiment" 
         name="ras_fast_detector" 
         type="ras_fast_detector.py" 
         output="screen" 
-    /> -->
+    />
 
-    <!-- <node
+    <node
         pkg="ytlab_nlpmp_modules" 
         name="analysis_tf_listener3" 
         type="analysis_tf_listener3.py" 
         output="screen" 
         args="$(arg tfcsv_path)"
-    /> -->
+    />
 
     <node
         pkg="ytlab_nlpmp_modules" 
@@ -64,11 +65,11 @@
         args="$(arg odom_csv_path)"
     /> -->
 
-    <!-- <node
+    <node
         pkg="image_view" 
         name="video_recorder" 
         type="video_recorder" 
         output="screen" 
         args="image:='$(arg video_topic)' _fps:='$(arg fps)' _filename:='$(arg video_path)'"
-    /> -->
+    />
 </launch>

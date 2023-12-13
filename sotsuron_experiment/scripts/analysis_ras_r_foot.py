@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import sys
 from glob import glob
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -15,7 +16,10 @@ plt.rcParams["figure.figsize"] = (7,7)
 plt.rcParams["figure.autolayout"] = True
 plt.rcParams['font.family'] = 'Times New Roman'
 
-csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
+try:
+    csvpath=sys.argv[1]
+except Exception:
+    csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
 
 data=initial_processor(csvpath,True)
 # data=mean_processor(data)

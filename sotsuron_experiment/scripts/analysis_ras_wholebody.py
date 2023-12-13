@@ -40,7 +40,7 @@ class wholeBody():
 
         # oddata
         try:
-            self.odomcsvpath=sys.argv[1]
+            self.odomcsvpath=sys.argv[2]
         except Exception:
             self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_od_raw.csv"
         odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
