@@ -41,7 +41,11 @@ data=data[data["timestamp"]>timestamp_x5_closest]
 data=data[data["timestamp"]<timestamp_x0_closest]
 
 data["r_foot_vx"]=0
-data["r_foot_vx"].iloc[:-1]=(data["r_foot_x"].values[1:]-data["r_foot_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+try:
+    data["r_foot_vx"].iloc[:-1]=(data["r_foot_x"].values[1:]-data["r_foot_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+except ValueError:
+    data["r_foot_vx"]=(data["r_foot_x"].values[1:]-data["r_foot_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+
 maybe_truth_vel_x=(data["gravity_x"].values[-1]-data["gravity_x"].values[0])/(data["timestamp"].values[-1]-data["timestamp"].values[0])
 velocity_threshold=abs(maybe_truth_vel_x)
 print(maybe_truth_vel_x)

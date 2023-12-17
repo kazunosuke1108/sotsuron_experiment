@@ -49,9 +49,13 @@ data["timestamp_datetime"]=data["timestamp_datetime"].dt.round(resample_dt_str)
 data=data.set_index("timestamp_datetime")
 
 data["gravity_vx"]=0
-data["gravity_vx"].iloc[:-1]=(data["gravity_x"].values[1:]-data["gravity_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
 data["gravity_vy"]=0
-data["gravity_vy"].iloc[:-1]=(data["gravity_y"].values[1:]-data["gravity_y"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+try:
+    data["gravity_vx"].iloc[:-1]=(data["gravity_x"].values[1:]-data["gravity_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    data["gravity_vy"].iloc[:-1]=(data["gravity_y"].values[1:]-data["gravity_y"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+except ValueError:
+    data["gravity_vx"]=(data["gravity_x"].values[1:]-data["gravity_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    data["gravity_vy"]=(data["gravity_y"].values[1:]-data["gravity_y"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
 
 # fig,ax=plt.subplots()
 # for label in ["gravity"]:
@@ -72,6 +76,8 @@ data["gravity_vx_trend"]=0
 data["gravity_vy_trend"]=0
 data["gravity_vx_detrend"]=0
 data["gravity_vy_detrend"]=0
+
+print(data["gravity_x"])
 
 data["gravity_vx_detrend"]=signal.detrend(data["gravity_vx"])
 data["gravity_vx_trend"]=data["gravity_vx"]-data["gravity_vx_detrend"]
@@ -154,6 +160,6 @@ ax2.set_xlabel("Time $\it{t}$ [s]")
 ax2.set_ylabel("Velocity $\it{v_x} {v_y}$ [m]")
 ax2.legend(loc='upper right', borderaxespad=0)
 ax2.grid()
-
-plt.show()
+plt.savefig(os.path.split(csvpath)[0]+"/"+os.path.basename(csvpath)[:-8]+"_vel.png",dpi=300)
+# plt.show()
 # print(data["gravity_vx_filtered"])

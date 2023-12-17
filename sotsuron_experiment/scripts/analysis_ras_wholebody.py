@@ -120,6 +120,7 @@ class wholeBody():
         plt.grid()
         plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_head_angle")
         plt.cla()
+        
         pass
 
     def plot_trunk_angle(self):
@@ -223,7 +224,7 @@ class wholeBody():
         plt.ylabel("Hip angle in (yaw direction) th_z [deg]")
         plt.legend()
         plt.grid()
-        plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_knee_angle")
+        plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_knee_angle.png")
         plt.cla()
         pass
 
@@ -239,11 +240,11 @@ class wholeBody():
 
 
     def main(self):
-        self.plot_gravity()
+        # self.plot_gravity()
         self.plot_knee_angle()
-        self.plot_base_elevation()
-        self.plot_trunk_angle()
-        self.plot_head_angle()
+        # self.plot_base_elevation()
+        # self.plot_trunk_angle()
+        # self.plot_head_angle()
 
 wb=wholeBody()
 wb.main()
