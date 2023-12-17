@@ -16,4 +16,3 @@ for rosbagpath in rosbagpaths:
     os.system(f"roslaunch sotsuron_experiment ras_postprocessor_3.launch bag_name:={bag_name} bag_path:={bag_path} result_path:={result_path}")
 
 
-    
