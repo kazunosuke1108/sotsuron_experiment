@@ -6,7 +6,7 @@ resultsdir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results"
 daydir=sorted(glob(rosbag_dir+"/*"))
 daydir=daydir[-2]
 
-rosbagpaths=sorted(glob(daydir+"/*"))
+rosbagpaths=sorted(glob(daydir+"/02_otayu/*"))
 for rosbagpath in rosbagpaths:
     bag_name=os.path.basename(rosbagpath)[:-4]
     bag_path=rosbagpath
