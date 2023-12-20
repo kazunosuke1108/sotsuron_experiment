@@ -25,7 +25,7 @@ class wholeBody():
         try:
             self.tfcsvpath=sys.argv[1]
         except Exception:
-            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-16-35-09/_2023-12-19-16-35-09_tf_raw.csv"
+            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-10-31/_2023-12-19-20-10-31_tf_raw.csv"
         self.savedirpath=os.path.split(self.tfcsvpath)[0]
         tf_data=initial_processor(self.tfcsvpath,False)
         timestamp_xm5_closest_idx=(tf_data["gravity_x"]-(-5)).abs().idxmin()
@@ -43,7 +43,7 @@ class wholeBody():
         try:
             self.odomcsvpath=sys.argv[2]
         except Exception:
-            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-16-35-09/_2023-12-19-16-35-09_od_raw.csv"
+            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-10-31/_2023-12-19-20-10-31_od_raw.csv"
         # odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
         odom_data=initial_processor(self.odomcsvpath,False)
         self.odom_data=odom_data
@@ -104,6 +104,126 @@ class wholeBody():
                 best_end_t=end_t
         self.write_log([os.path.basename(self.tfcsvpath),(best_end_x-best_start_x)/(best_end_t-best_start_t),best_err,best_start_x,best_start_t,best_end_x,best_end_t],path_management["velocity_csv_path"], fmt="%s")
         print(os.path.basename(self.tfcsvpath),(best_end_x-best_start_x)/(best_end_t-best_start_t),best_err,best_start_x,best_start_t,best_end_x,best_end_t)
+
+    def get_stride(self):
+        data=self.tf_data
+        data["r_foot_vx"]=0
+        try:
+            data["r_foot_vx"].iloc[:-1]=(data["r_foot_x"].values[1:]-data["r_foot_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+        except ValueError:
+            data["r_foot_vx"]=(data["r_foot_x"].values[1:]-data["r_foot_x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+
+        maybe_truth_vel_x=(data["gravity_x"].values[-1]-data["gravity_x"].values[0])/(data["timestamp"].values[-1]-data["timestamp"].values[0])
+        velocity_threshold=abs(maybe_truth_vel_x)
+        print(maybe_truth_vel_x)
+        binary_movestop=(data["r_foot_vx"]<velocity_threshold) & (data["r_foot_vx"]>-velocity_threshold)
+        data["r_foot_stop"]=False
+        data["r_foot_stop"]=binary_movestop
+        # print(len(data))
+        # print(np.sum(binary_movestop))
+        # raise TimeoutError
+
+        # クラスタリング
+        data=data.reset_index()
+        clusterdata=pd.DataFrame({"start_timestamp":[],
+                                    "end_timestamp":[],
+                                    "mean_timestamp":[],
+                                    "cluster_size":[],
+                                    "mean_x":[],
+                                    "mean_y":[]})
+        cluster_idx=0
+        temp_x=[]
+        temp_y=[]
+        for idx,row in data.iterrows():
+            print(f"{idx} / {len(data)}")
+            if idx==0:
+                if (data["r_foot_stop"].iat[idx]) & (data["r_foot_stop"].iat[idx+1]):
+                    print("クラスターの最初")
+                    clusterdata.loc[cluster_idx]=0
+                    clusterdata["start_timestamp"].iat[cluster_idx]=row["timestamp"]
+                    clusterdata["cluster_size"].iat[cluster_idx]+=1
+                    temp_x.append(row["r_foot_x"])
+                    temp_y.append(row["r_foot_y"])
+                else:
+                    continue
+            elif idx==len(data)-1:
+                if (data["r_foot_stop"].iat[idx-1]) & (data["r_foot_stop"].iat[idx]):
+                    print("クラスターの最後")
+                    clusterdata["end_timestamp"].iat[cluster_idx]=row["timestamp"]
+                    clusterdata["mean_timestamp"]=(clusterdata["start_timestamp"]+clusterdata["end_timestamp"])/2
+                    clusterdata["cluster_size"].iat[cluster_idx]+=1
+                    temp_x.append(row["r_foot_x"])
+                    temp_y.append(row["r_foot_y"])
+                    clusterdata["mean_x"].iat[cluster_idx]=np.mean(np.array(temp_x))
+                    clusterdata["mean_y"].iat[cluster_idx]=np.mean(np.array(temp_y))
+                    cluster_idx+=1
+                    temp_x=[]
+                    temp_y=[]
+                    continue
+                else:
+                    continue
+            if (not(data["r_foot_stop"].iat[idx-1])) & (data["r_foot_stop"].iat[idx]) & (data["r_foot_stop"].iat[idx+1]):
+                print("クラスターの最初")
+                clusterdata.loc[cluster_idx]=0
+                clusterdata["start_timestamp"].iat[cluster_idx]=row["timestamp"]
+                clusterdata["cluster_size"].iat[cluster_idx]+=1
+                temp_x.append(row["r_foot_x"])
+                temp_y.append(row["r_foot_y"])
+            elif (data["r_foot_stop"].iat[idx-1]) & (data["r_foot_stop"].iat[idx]) & (data["r_foot_stop"].iat[idx+1]):
+                print("クラスターの中心")
+                clusterdata["cluster_size"].iat[cluster_idx]+=1
+                temp_x.append(row["r_foot_x"])
+                temp_y.append(row["r_foot_y"])
+            elif (data["r_foot_stop"].iat[idx-1]) & (data["r_foot_stop"].iat[idx]) & (not(data["r_foot_stop"].iat[idx+1])):
+                print("クラスターの最後")
+                clusterdata["end_timestamp"].iat[cluster_idx]=row["timestamp"]
+                clusterdata["mean_timestamp"]=(clusterdata["start_timestamp"]+clusterdata["end_timestamp"])/2
+                clusterdata["cluster_size"].iat[cluster_idx]+=1
+                temp_x.append(row["r_foot_x"])
+                temp_y.append(row["r_foot_y"])
+                clusterdata["mean_x"].iat[cluster_idx]=np.mean(np.array(temp_x))
+                clusterdata["mean_y"].iat[cluster_idx]=np.mean(np.array(temp_y))
+                cluster_idx+=1
+                temp_x=[]
+                temp_y=[]
+                pass
+
+
+        # クラスターの絞り込み
+        clusterdata=clusterdata[clusterdata["cluster_size"]>10]
+        clusterdata["adjacent_vel_x"]=0
+        clusterdata["adjacent_vel_x"].iloc[1:]=(clusterdata["mean_x"].values[1:]-clusterdata["mean_x"].values[:-1])/(clusterdata["start_timestamp"].values[1:]-clusterdata["end_timestamp"].values[:-1])
+        clusterdata=clusterdata[(clusterdata["adjacent_vel_x"]>1.5*abs(maybe_truth_vel_x)) | (clusterdata["adjacent_vel_x"]<-1.5*abs(maybe_truth_vel_x))]
+        # raise TimeoutError
+
+        # 歩幅の算出
+        clusterdata["stride"]=0
+        clusterdata["stride"].iloc[1:]=abs(clusterdata["mean_x"].values[1:]-clusterdata["mean_x"].values[:-1])
+        print(clusterdata)
+
+
+        plt.subplot(211)
+        plt.plot(data["timestamp"],data["r_foot_x"],"m",label="left foot $\it{x}$")
+        plt.scatter(data["timestamp"][data["r_foot_stop"]],data["r_foot_x"][data["r_foot_stop"]],color="m",marker="x",alpha=0.25,label="stop moment")
+        plt.scatter(clusterdata["mean_timestamp"],clusterdata["mean_x"],color="k",marker="o",label="mean stoppoint")
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Position of the left ancle in $\it{x}$-direction $\it{x}$ [m]")
+        plt.grid()
+        plt.legend()
+        plt.subplot(212)
+        plt.plot(data["timestamp"],data["r_foot_vx"],"m",label="left foot $\it{v_x}$")
+        plt.scatter(data["timestamp"][data["r_foot_stop"]],data["r_foot_vx"][data["r_foot_stop"]],color="m",marker="x",alpha=0.25,label="stop moment")
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Velocity of the left ancle in $\it{x}$-direction $\it{v_x}$ [m/s]")
+        plt.grid()
+        plt.legend()
+        plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-8]+"_stride.png")
+        # plt.show()
+        print(clusterdata["stride"].iloc[1:].mean())
+        print(clusterdata["stride"].iloc[1:].median())
+        print(clusterdata["stride"].iloc[1:].std())
+        self.write_log([os.path.basename(self.tfcsvpath),clusterdata["stride"].iloc[1:].mean(),clusterdata["stride"].iloc[1:].median(),clusterdata["stride"].iloc[1:].std(),clusterdata["stride"].iloc[1:].min(),clusterdata["stride"].iloc[1:].max()],path_management["stride_csv_path"],fmt="%s")
+        clusterdata.to_csv(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-8]+"_stride.csv",index=False)
 
     def plot_head_angle(self):
         """
@@ -275,7 +395,8 @@ class wholeBody():
 
     def main(self):
         # self.plot_gravity()
-        self.get_velocity()
+        # self.get_velocity()
+        self.get_stride()
         # self.plot_knee_angle()
         # self.plot_base_elevation()
         # self.plot_trunk_angle()
