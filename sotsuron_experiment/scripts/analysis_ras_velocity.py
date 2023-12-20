@@ -20,26 +20,18 @@ plt.rcParams['font.family'] = 'Times New Roman'
 try:
     csvpath=sys.argv[1]
 except Exception:
-    csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
+    csvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-10-31/_2023-12-19-20-10-31_tf_raw.csv"
 
-data=initial_processor(csvpath,True)
-# data=mean_processor(data)
-
-# リアルタイム処理
-pass
-# 後解析処理
-# try:
-timestamp_x5_closest_idx=(data["gravity_x"]-5).abs().idxmin()
-timestamp_x5_closest=data.iloc[timestamp_x5_closest_idx]["timestamp"]
-x_x5_closest=data.iloc[timestamp_x5_closest_idx]["gravity_x"]
-timestamp_x0_closest_idx=(data[data["timestamp"]>timestamp_x5_closest]["gravity_x"]-0).abs().idxmin()
-timestamp_x0_closest=data.iloc[timestamp_x0_closest_idx]["timestamp"]
-x_x0_closest=data.iloc[timestamp_x0_closest_idx]["gravity_x"]
-# except (TypeError,ValueError):
-#     continue
-# x=5,0を通過するtimestampを取得
-data=data[data["timestamp"]>timestamp_x5_closest]
-data=data[data["timestamp"]<timestamp_x0_closest]
+data=initial_processor(csvpath,False)
+timestamp_xm5_closest_idx=(data["gravity_x"]-(-5)).abs().idxmin()
+timestamp_xm5_closest=data.iloc[timestamp_xm5_closest_idx]["timestamp"]
+# x_x0_closest=data.iloc[timestamp_x0_closest_idx]["gravity_x"]
+data=data[data["timestamp"]<timestamp_xm5_closest]
+timestamp_x8_closest_idx=(data["gravity_x"]-8).abs().idxmin()
+timestamp_x8_closest=data.iloc[timestamp_x8_closest_idx]["timestamp"]
+# x_x8_closest=data.iloc[timestamp_x8_closest_idx]["gravity_x"]
+data=data[data["timestamp"]>timestamp_x8_closest]
+data=data
 
 # リサンプリング
 resample_dt_str="0.01S"

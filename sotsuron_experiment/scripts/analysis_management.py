@@ -9,6 +9,7 @@ def management_initial():
 
     ## パス管理dict作成
     path_management={}
+    path_management["velocity_csv_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity.csv"
     path_management["json_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/json"
     path_management["png_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png"
     path_management["csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv"

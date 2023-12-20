@@ -25,25 +25,27 @@ class wholeBody():
         try:
             self.tfcsvpath=sys.argv[1]
         except Exception:
-            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
+            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-16-35-09/_2023-12-19-16-35-09_tf_raw.csv"
         self.savedirpath=os.path.split(self.tfcsvpath)[0]
-        tf_data=initial_processor(self.tfcsvpath,True)
-        timestamp_x5_closest_idx=(tf_data["gravity_x"]-5).abs().idxmin()
-        timestamp_x5_closest=tf_data.iloc[timestamp_x5_closest_idx]["timestamp"]
-        x_x5_closest=tf_data.iloc[timestamp_x5_closest_idx]["gravity_x"]
-        timestamp_x0_closest_idx=(tf_data[tf_data["timestamp"]>timestamp_x5_closest]["gravity_x"]-0).abs().idxmin()
-        timestamp_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["timestamp"]
-        x_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["gravity_x"]
-        tf_data=tf_data[tf_data["timestamp"]>timestamp_x5_closest]
-        tf_data=tf_data[tf_data["timestamp"]<timestamp_x0_closest]
+        tf_data=initial_processor(self.tfcsvpath,False)
+        timestamp_xm5_closest_idx=(tf_data["gravity_x"]-(-5)).abs().idxmin()
+        timestamp_xm5_closest=tf_data.iloc[timestamp_xm5_closest_idx]["timestamp"]
+        # x_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["gravity_x"]
+        tf_data=tf_data[tf_data["timestamp"]<timestamp_xm5_closest]
+        timestamp_x8_closest_idx=(tf_data["gravity_x"]-8).abs().idxmin()
+        timestamp_x8_closest=tf_data.iloc[timestamp_x8_closest_idx]["timestamp"]
+        # x_x8_closest=tf_data.iloc[timestamp_x8_closest_idx]["gravity_x"]
+        tf_data=tf_data[tf_data["timestamp"]>timestamp_x8_closest]
+        tf_data=tf_data.reset_index()
         self.tf_data=tf_data
 
         # oddata
         try:
             self.odomcsvpath=sys.argv[2]
         except Exception:
-            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_od_raw.csv"
-        odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
+            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-16-35-09/_2023-12-19-16-35-09_od_raw.csv"
+        # odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
+        odom_data=initial_processor(self.odomcsvpath,False)
         self.odom_data=odom_data
 
     def plot_gravity(self):
@@ -67,9 +69,41 @@ class wholeBody():
         plt.legend()
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Hallway direction $\it{y}$ [m]")
-        plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_gravity")
+        plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_gravity_trim")
         plt.cla()
 
+    def write_log(self,output_data,csvpath,fmt="%s"):
+        try:
+            with open(csvpath, 'a') as f_handle:
+                np.savetxt(f_handle,[output_data],delimiter=",")
+        except TypeError:
+            with open(csvpath, 'a') as f_handle:
+                np.savetxt(f_handle,[output_data],delimiter=",",fmt=fmt)    
+        except FileNotFoundError:
+            np.savetxt(csvpath,[output_data],delimiter=",")
+        pass            
+
+    def get_velocity(self):
+        best_err=100
+        best_start_x=0
+        best_start_t=0
+        best_end_x=0
+        best_end_t=0
+        for idx,row in self.tf_data.iterrows():
+            start_x=row["gravity_x"]
+            start_t=row["timestamp"]
+            end_idx=((start_x-self.tf_data["gravity_x"])-(5)).abs().idxmin()
+            end_x=self.tf_data.iloc[end_idx]["gravity_x"]
+            end_t=self.tf_data.iloc[end_idx]["timestamp"]
+            # print(start_x,end_x)
+            if abs(start_x-end_x-5)<best_err:
+                best_err=abs(start_x-end_x-5)
+                best_start_x=start_x
+                best_start_t=start_t
+                best_end_x=end_x
+                best_end_t=end_t
+        self.write_log([os.path.basename(self.tfcsvpath),(best_end_x-best_start_x)/(best_end_t-best_start_t),best_err,best_start_x,best_start_t,best_end_x,best_end_t],path_management["velocity_csv_path"], fmt="%s")
+        print(os.path.basename(self.tfcsvpath),(best_end_x-best_start_x)/(best_end_t-best_start_t),best_err,best_start_x,best_start_t,best_end_x,best_end_t)
 
     def plot_head_angle(self):
         """
@@ -241,7 +275,8 @@ class wholeBody():
 
     def main(self):
         # self.plot_gravity()
-        self.plot_knee_angle()
+        self.get_velocity()
+        # self.plot_knee_angle()
         # self.plot_base_elevation()
         # self.plot_trunk_angle()
         # self.plot_head_angle()
