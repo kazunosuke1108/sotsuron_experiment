@@ -9,6 +9,10 @@ def management_initial():
 
     ## パス管理dict作成
     path_management={}
+    path_management["exp_memo_csv_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/exp_memo.csv"
+    path_management["velocity_table_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_table.csv"
+    path_management["stride_table_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/stride_table.csv"
+    path_management["humpback_table_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/humpback_table.csv"
     path_management["velocity_csv_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity.csv"
     path_management["stride_csv_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/stride.csv"
     path_management["humpback_csv_path"]="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/humpback.csv"

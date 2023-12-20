@@ -1,7 +1,7 @@
 <launch>
     <arg name="bag_name" default="_2023-12-13-14-06-23"/>
     <arg name="skip" default="0"/>
-    <arg name="duration" default="180"/>
+    <arg name="duration" default="120"/>
     <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
 
     <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231213/$(arg bag_name).bag"/>
