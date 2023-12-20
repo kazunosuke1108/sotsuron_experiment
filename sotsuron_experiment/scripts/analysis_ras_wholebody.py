@@ -337,6 +337,8 @@ class wholeBody():
         plt.grid()
         plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_trunk_angle")
         plt.cla()
+
+        self.write_log([os.path.basename(self.tfcsvpath),self.tf_data["c_trunk_angle_y"].mean(),self.tf_data["c_trunk_angle_y"].median(),self.tf_data["c_trunk_angle_y"].std(),self.tf_data["c_trunk_angle_y"].min(),self.tf_data["c_trunk_angle_y"].max()],path_management["humpback_csv_path"],fmt="%s")
         pass
 
     def plot_knee_angle(self):
@@ -396,10 +398,10 @@ class wholeBody():
     def main(self):
         # self.plot_gravity()
         # self.get_velocity()
-        self.get_stride()
+        # self.get_stride()
         # self.plot_knee_angle()
         # self.plot_base_elevation()
-        # self.plot_trunk_angle()
+        self.plot_trunk_angle()
         # self.plot_head_angle()
 
 wb=wholeBody()
