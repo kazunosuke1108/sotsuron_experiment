@@ -396,9 +396,9 @@ class wholeBody():
 
 
     def main(self):
-        # self.plot_gravity()
-        # self.get_velocity()
-        # self.get_stride()
+        self.plot_gravity()
+        self.get_velocity()
+        self.get_stride()
         # self.plot_knee_angle()
         # self.plot_base_elevation()
         self.plot_trunk_angle()

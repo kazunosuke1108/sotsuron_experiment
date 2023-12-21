@@ -60,7 +60,7 @@ class analysisRas():
         stride_table.to_csv(path_management["stride_table_path"])
 
     def analyze_humpback(self):
-        stride_table=pd.DataFrame(index=["0_1_normal","2_avoid","3_humpback","4_paralysis","all"],columns=["truth_humpback","estm_humpback_mean","","err_std[m]"])
+        # stride_table=pd.DataFrame(index=["0_1_normal","2_avoid","3_humpback","4_paralysis","all"],columns=["truth_humpback","estm_humpback_mean","","err_std[m]"])
         answer_binary=self.exp_memo_table["truth_humpback"]
         pred_binary=abs(self.exp_memo_table["estm_humpback_median"])>45/2
         confusion_mtx=confusion_matrix(answer_binary,pred_binary)
@@ -88,8 +88,9 @@ class analysisRas():
         # stride_table.to_csv(path_management["stride_table_path"])
 
     def main(self):
-        # self.analyze_velocity()
-        # self.analyze_stride()
+        self.analyze_velocity()
+        self.analyze_stride()
         self.analyze_humpback()
+        
 analysis=analysisRas()
 analysis.main()
