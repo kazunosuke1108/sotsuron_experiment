@@ -11,7 +11,7 @@ pythonpath="/home/hayashide/anaconda3/bin/python3"
 scriptsdir="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
 resultsdir="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
 
-trialdirs=sorted(glob(resultsdir+"/_2023-12-16*"))
+trialdirs=sorted(glob(resultsdir+"/_2023-12-19*"))
 # trialdirs=[trialdirs[2]]
 for trialdir in trialdirs:
     tfcsv_path=trialdir+f"/{os.path.basename(trialdir)}_tf_raw.csv"
