@@ -67,3 +67,13 @@ def plot_processor(data,msg=""):
         plt.legend()
     except KeyError:
         pass
+
+def resampling_processor(data,resample_dt_str="0.01S"):
+    # リサンプリング
+    # resample_dt_str="0.01S"
+    resample_dt_float=float(resample_dt_str[:-1])
+    data["timestamp_datetime"]=pd.to_datetime(data["timestamp"], unit='s',utc=True).dt.tz_convert('Asia/Tokyo')
+    data["timestamp_datetime_round"]=data["timestamp_datetime"].dt.round(resample_dt_str)
+    data=data.set_index("timestamp_datetime")
+    data=data.asfreq(resample_dt_str,method="pad")
+    return data

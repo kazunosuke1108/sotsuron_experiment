@@ -25,25 +25,27 @@ class wholeBody():
         try:
             self.tfcsvpath=sys.argv[1]
         except Exception:
-            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_tf_raw.csv"
+            self.tfcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-16-17-47-38/_2023-12-16-17-47-38_tf_raw.csv"
         self.savedirpath=os.path.split(self.tfcsvpath)[0]
         tf_data=initial_processor(self.tfcsvpath,True)
-        timestamp_x5_closest_idx=(tf_data["gravity_x"]-5).abs().idxmin()
-        timestamp_x5_closest=tf_data.iloc[timestamp_x5_closest_idx]["timestamp"]
-        x_x5_closest=tf_data.iloc[timestamp_x5_closest_idx]["gravity_x"]
-        timestamp_x0_closest_idx=(tf_data[tf_data["timestamp"]>timestamp_x5_closest]["gravity_x"]-0).abs().idxmin()
-        timestamp_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["timestamp"]
-        x_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["gravity_x"]
-        tf_data=tf_data[tf_data["timestamp"]>timestamp_x5_closest]
-        tf_data=tf_data[tf_data["timestamp"]<timestamp_x0_closest]
+        # timestamp_x5_closest_idx=(tf_data["gravity_x"]-5).abs().idxmin()
+        # timestamp_x5_closest=tf_data.iloc[timestamp_x5_closest_idx]["timestamp"]
+        # x_x5_closest=tf_data.iloc[timestamp_x5_closest_idx]["gravity_x"]
+        # timestamp_x0_closest_idx=(tf_data[tf_data["timestamp"]>timestamp_x5_closest]["gravity_x"]-0).abs().idxmin()
+        # timestamp_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["timestamp"]
+        # x_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["gravity_x"]
+        # tf_data=tf_data[tf_data["timestamp"]>timestamp_x5_closest]
+        # tf_data=tf_data[tf_data["timestamp"]<timestamp_x0_closest]
+        tf_data=tf_data[tf_data["timestamp"]<tf_data["timestamp"].values[0]+30]
         self.tf_data=tf_data
 
         # oddata
         try:
             self.odomcsvpath=sys.argv[2]
         except Exception:
-            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_od_raw.csv"
+            self.odomcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-16-17-47-38/_2023-12-16-17-47-38_od_raw.csv"
         odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
+        # odom_data=odom_data[odom_data["t"]<odom_data["t"].values[0]+35]
         self.odom_data=odom_data
 
     def plot_gravity(self):
@@ -52,23 +54,24 @@ class wholeBody():
         plt.plot(self.tf_data["gravity_x"],self.tf_data["gravity_y"],"o-",markersize=3,label="gravity")
         plt.plot(self.odom_data["x"],self.odom_data["y"],"^-",markersize=3,label="robot")
         plt.legend()
-        plt.xlabel("Hallway direction $\it{x}$ [m]")
-        plt.ylabel("Width direction $\it{y}$ [m]")
+        plt.xlabel("Hallway direction $/it{x}$ [m]")
+        plt.ylabel("Width direction $/it{y}$ [m]")
         plt.gca().set_aspect('equal', adjustable='box')
         plt.subplot(gs[1,0])    
         plt.plot(self.tf_data["timestamp"],self.tf_data["gravity_x"],"o-",markersize=3,label="gravity_x")
         plt.plot(self.odom_data["t"],self.odom_data["x"],"^-",markersize=3,label="robot_x")
         plt.legend()
-        plt.xlabel("Time $\it{t}$ [s]")
-        plt.ylabel("Hallway direction $\it{x}$ [m]")
+        plt.xlabel("Time $/it{t}$ [s]")
+        plt.ylabel("Hallway direction $/it{x}$ [m]")
         plt.subplot(gs[1,1])    
         plt.plot(self.tf_data["timestamp"],self.tf_data["gravity_y"],"o-",markersize=3,label="gravity_y")
         plt.plot(self.odom_data["t"],self.odom_data["y"],"^-",markersize=3,label="robot_y")
         plt.legend()
-        plt.xlabel("Time $\it{t}$ [s]")
-        plt.ylabel("Hallway direction $\it{y}$ [m]")
+        plt.xlabel("Time $/it{t}$ [s]")
+        plt.ylabel("Hallway direction $/it{y}$ [m]")
         plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_gravity")
         plt.cla()
+
 
 
     def plot_head_angle(self):
@@ -98,7 +101,7 @@ class wholeBody():
         plt.subplot(gs[0])    
         plt.plot(self.tf_data["timestamp"],self.tf_data["ear_head_angle_x"],"o-",markersize=3,label="ear_head_angle_x")
         plt.plot(self.tf_data["timestamp"],self.tf_data["eye_head_angle_x"],"o-",markersize=3,label="eye_head_angle_x")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Roll of the head [deg]")
         plt.legend()
         plt.grid()
@@ -107,14 +110,14 @@ class wholeBody():
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_ear_head_angle_y"],"o-",markersize=3,label="l_ear_head_angle_y")
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_eye_head_angle_y"],"o-",markersize=3,label="r_eye_head_angle_y")
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_eye_head_angle_y"],"o-",markersize=3,label="l_eye_head_angle_y")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Pitch of the head [deg]")
         plt.legend()
         plt.grid()
         plt.subplot(gs[2])   
         plt.plot(self.tf_data["timestamp"],self.tf_data["ear_head_angle_z"],"o-",markersize=3,label="ear_head_angle_z")
         plt.plot(self.tf_data["timestamp"],self.tf_data["eye_head_angle_z"],"o-",markersize=3,label="eye_head_angle_z")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Yaw of the head [deg]")
         plt.legend()
         plt.grid()
@@ -162,7 +165,7 @@ class wholeBody():
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_trunk_angle_x"],"o-",markersize=3,label="r_trunk_angle_x")
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_trunk_angle_x"],"o-",markersize=3,label="l_trunk_angle_x")
         plt.plot(self.tf_data["timestamp"],self.tf_data["c_trunk_angle_x"],"o-",markersize=3,label="c_trunk_angle_x")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Roll of the trunk [deg]")
         plt.legend()
         plt.grid()
@@ -170,14 +173,14 @@ class wholeBody():
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_trunk_angle_y"],"o-",markersize=3,label="r_trunk_angle_y")
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_trunk_angle_y"],"o-",markersize=3,label="l_trunk_angle_y")
         plt.plot(self.tf_data["timestamp"],self.tf_data["c_trunk_angle_y"],"o-",markersize=3,label="c_trunk_angle_y")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Pitch of the trunk [deg]")
         plt.legend()
         plt.grid()
         plt.subplot(gs[2])   
         plt.plot(self.tf_data["timestamp"],self.tf_data["s_trunk_angle_z"],"o-",markersize=3,label="s_trunk_angle_z")
         plt.plot(self.tf_data["timestamp"],self.tf_data["b_trunk_angle_z"],"o-",markersize=3,label="b_trunk_angle_z")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Yaw of the trunk [deg]")
         plt.legend()
         plt.grid()
@@ -206,21 +209,21 @@ class wholeBody():
         plt.subplot(gs[0])    
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_hip_angle_x"],"o-",markersize=3,label="r_hip_angle_x")
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_hip_angle_x"],"o-",markersize=3,label="l_hip_angle_x")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Hip angle in (hallway width direction) th_x [deg]")
         plt.legend()
         plt.grid()
         plt.subplot(gs[1])   
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_hip_angle_y"],"o-",markersize=3,label="r_hip_angle_y")
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_hip_angle_y"],"o-",markersize=3,label="l_hip_angle_y")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Hip angle in (hallway direction) th_y [deg]")
         plt.legend()
         plt.grid()
         plt.subplot(gs[2])   
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_hip_angle_z"],"o-",markersize=3,label="r_hip_angle_z")
         plt.plot(self.tf_data["timestamp"],self.tf_data["l_hip_angle_z"],"o-",markersize=3,label="l_hip_angle_z")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Hip angle in (yaw direction) th_z [deg]")
         plt.legend()
         plt.grid()
@@ -230,7 +233,7 @@ class wholeBody():
 
     def plot_base_elevation(self):
         plt.plot(self.tf_data["timestamp"],self.tf_data["r_base_z"]-self.tf_data["l_base_z"],"o-",markersize=3,label="base_z(r-l)")
-        plt.xlabel("Time $\it{t}$ [s]")
+        plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Hip position difference [m]")
         plt.legend()
         plt.grid()
@@ -240,8 +243,8 @@ class wholeBody():
 
 
     def main(self):
-        # self.plot_gravity()
-        self.plot_knee_angle()
+        self.plot_gravity()
+        # self.plot_knee_angle()
         # self.plot_base_elevation()
         # self.plot_trunk_angle()
         # self.plot_head_angle()
