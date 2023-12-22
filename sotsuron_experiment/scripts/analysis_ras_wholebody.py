@@ -398,11 +398,8 @@ class wholeBody():
 
     def main(self):
         self.plot_gravity()
-<<<<<<< HEAD
-=======
         self.get_velocity()
         self.get_stride()
->>>>>>> 141b0383c7a8309af8d74255ccb153f8e5944fc1
         # self.plot_knee_angle()
         # self.plot_base_elevation()
         self.plot_trunk_angle()
