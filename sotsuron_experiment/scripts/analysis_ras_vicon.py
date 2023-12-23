@@ -16,21 +16,22 @@ class analysisVicon():
         
         # VICON data
         # Look
-        self.viconcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/hayashide_robot_06_modified.csv"
+        self.viconcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/hayashide_robot_03_all.csv"
+        # self.viconcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/hayashide_robot_05_modified.csv"
         # humpback
         # self.viconcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/hayashide_robot_10_modified.csv"
         self.vicon_data=pd.read_csv(self.viconcsvpath,index_col=0,header=0)
         self.vicon_data["hayashide_CentreOfMass_X"]=self.vicon_data["hayashide_CentreOfMass_X"]/1000
         self.vicon_data["hayashide_CentreOfMass_Y"]=self.vicon_data["hayashide_CentreOfMass_Y"]/1000
         self.vicon_data["hayashide_CentreOfMass_Z"]=self.vicon_data["hayashide_CentreOfMass_Z"]/1000
-        self.vicon_data["robot_X"]=self.vicon_data["robot_X"]/1000
-        self.vicon_data["robot_Y"]=self.vicon_data["robot_Y"]/1000
-        self.vicon_data["robot_Z"]=self.vicon_data["robot_Z"]/1000
-        self.vicon_data["robot_X"]=self.vicon_data["robot_X"]-self.vicon_data["robot_X"].iat[0]
-        self.vicon_data["robot_Y"]=self.vicon_data["robot_Y"]-self.vicon_data["robot_Y"].iat[0]
+        self.vicon_data["robot_robot1_X"]=self.vicon_data["robot_robot1_X"]/1000
+        self.vicon_data["robot_robot1_Y"]=self.vicon_data["robot_robot1_Y"]/1000
+        self.vicon_data["robot_robot1_Z"]=self.vicon_data["robot_robot1_Z"]/1000
+        self.vicon_data["robot_robot1_X"]=self.vicon_data["robot_robot1_X"]-self.vicon_data["robot_robot1_X"].iat[0]
+        self.vicon_data["robot_robot1_Y"]=self.vicon_data["robot_robot1_Y"]-self.vicon_data["robot_robot1_Y"].iat[0]
         self.vicon_data["timestamp"]=self.vicon_data.index/60
 
-        tfodomdir_path=relationship_data['sotsuron_experiment'].loc[relationship_data['vicon']==os.path.basename(self.viconcsvpath)[:-13]].values[0]
+        tfodomdir_path=relationship_data['sotsuron_experiment'].loc[relationship_data['vicon']==os.path.basename(self.viconcsvpath)[:-8]].values[0]
         print(tfodomdir_path)
         # raise TimeoutError
 
@@ -47,20 +48,77 @@ class analysisVicon():
         self.odomcsv_path=tfodomdir_path+"/"+os.path.basename(tfodomdir_path)+"_od_raw.csv"
         self.odom_data=initial_processor(self.odomcsv_path,False)
 
-        # ピーク検知による時刻同期
-        peak_vicon_x_idx=int(self.vicon_data["robot_Y"].idxmax())
-        peak_odom_x_idx=self.odom_data["y"].idxmax()
-        print(peak_vicon_x_idx)
-        print(peak_odom_x_idx)
-        self.vicon_data["timestamp"]=self.vicon_data["timestamp"]+(self.odom_data["t"].iat[peak_odom_x_idx]-self.vicon_data["timestamp"].iat[peak_vicon_x_idx])
+        # 立ち上がり検知
+        # VICON
+        for idx in range(len(self.vicon_data)):
+            vel_x=(self.vicon_data["robot_robot1_X"].iat[idx+1]-self.vicon_data["robot_robot1_X"].iat[idx])/(self.vicon_data["timestamp"].iat[idx+1]-self.vicon_data["timestamp"].iat[idx])
+            if abs(vel_x)>0.2:
+                print(idx,"/",len(self.vicon_data))
+                vicon_init_idx=idx
+                break
+        # odom
+        for idx in range(len(self.odom_data)):
+            vel_x=(self.odom_data["x"].iat[idx+1]-self.odom_data["x"].iat[idx])/(self.odom_data["t"].iat[idx+1]-self.odom_data["t"].iat[idx])
+            if abs(vel_x)>0.2:
+                print(idx,"/",len(self.odom_data))
+                odom_init_idx=idx
+                break
 
-        # 復路を削除
-        # for idx,row in self.vicon_data.iterrows():
-        #     if row["hayashide_CentreOfMass_X"]<-2:
-        #         cutidx=int(idx)
-        #         print("cutidx: ",cutidx)
+        # ピーク検知による時刻同期
+        peak_vicon_y_idx=int(self.vicon_data["robot_robot1_Y"].idxmax())
+        peak_odom_x_idx=self.odom_data["y"].idxmax()
+        print(peak_vicon_y_idx)
+        print(peak_odom_x_idx)
+        self.vicon_data["timestamp"]=self.vicon_data["timestamp"]+(self.odom_data["t"].iat[peak_odom_x_idx]-self.vicon_data["timestamp"].iat[peak_vicon_y_idx])
+
+        # 不要箇所の削除
+        # VICON
+        vicon_data_nonNaN=self.vicon_data.dropna(subset=["hayashide_LHeadAngles_X"])
+        vicon_data_nonNaN["timestamp_diff1"]=0
+        vicon_data_nonNaN["timestamp_diff1"].iloc[:-1]=vicon_data_nonNaN["timestamp"].values[1:]-vicon_data_nonNaN["timestamp"].values[:-1]
+        vicon_data_nonNaN["timestamp_diff2"]=0
+        vicon_data_nonNaN["timestamp_diff2"].iloc[1:]=vicon_data_nonNaN["timestamp"].values[1:]-vicon_data_nonNaN["timestamp"].values[:-1]
+        startpoints=vicon_data_nonNaN["timestamp"][vicon_data_nonNaN["timestamp_diff1"]>5]
+        endpoints=vicon_data_nonNaN["timestamp"][vicon_data_nonNaN["timestamp_diff2"]>5]
+        print(startpoints.values-endpoints.values)
+        first_miss=True
+        idxs=[]
+        for row1,row2 in zip(startpoints,endpoints):
+            idxs.append(self.vicon_data.index[self.vicon_data["timestamp"]==row1].tolist()[0])
+            idxs.append(self.vicon_data.index[self.vicon_data["timestamp"]==row2].tolist()[0])
+            # print(idx1)
+            # print(idx2)
+        if len(startpoints)==3:
+            idxs=np.arange(idxs[1],idxs[2],1)
+        if len(startpoints)==2:
+            idxs=np.arange(idxs[1],idxs[2],1)
+        if len(startpoints)==1:
+            idxs=np.arange(0,idxs[0],1)
+        self.vicon_data=self.vicon_data.iloc[idxs]
+        print((self.vicon_data["timestamp"].values[1:]-self.vicon_data["timestamp"].values[:-1]).max())
+        print((self.vicon_data["timestamp"].values[-1]-self.vicon_data["timestamp"].values[0]))
+
+        # tf
+        self.tf_data=self.tf_data[self.tf_data["timestamp"]<self.vicon_data["timestamp"].max()]
+
+
+        # endpoint_timestamp=vicon_data_nonNaN["timestamp"][vicon_data_nonNaN["timestamp_diff1"]>10].values
+        # startpoint_timestamp=[]
+        # for endpoint in endpoint_timestamp:
+        #     startpoint_timestamp
+
+        # print(vicon_data_nonNaN)
+        # # print(self.vicon_data)
+        # for idx,row in vicon_data_nonNaN.loc[vicon_init_idx:].iterrows():
+        #     # idx=int(idx)
+        #     print(vicon_data_nonNaN["timestamp"].at[idx]-vicon_data_nonNaN["timestamp"].at[idx-1])
+        #     # print(np.isnan(vicon_data_nonNaN["hayashide_CentreOfMass_X"].at[idx-1]))
+        #     if vicon_data_nonNaN["timestamp"].at[idx]-vicon_data_nonNaN["timestamp"].at[idx-1]>10:
+        #         end_vicon_idx=idx
         #         break
-        # self.vicon_data=self.vicon_data.iloc[:cutidx]
+        # self.vicon_data=self.vicon_data.loc[:end_vicon_idx]
+        print(self.vicon_data)
+        # raise TimeoutError
 
     def plot_odom(self):
         """
@@ -69,7 +127,7 @@ class analysisVicon():
         # # (没)立ち上がり検知
         # # VICON
         # for idx in range(len(self.vicon_data)):
-        #     vel_x=(self.vicon_data["robot_X"].iat[idx+1]-self.vicon_data["robot_X"].iat[idx])/(self.vicon_data["timestamp"].iat[idx+1]-self.vicon_data["timestamp"].iat[idx])
+        #     vel_x=(self.vicon_data["robot_robot1_X"].iat[idx+1]-self.vicon_data["robot_robot1_X"].iat[idx])/(self.vicon_data["timestamp"].iat[idx+1]-self.vicon_data["timestamp"].iat[idx])
         #     if abs(vel_x)>0.2:
         #         print(idx,"/",len(self.vicon_data))
         #         vicon_init_idx=idx
@@ -89,21 +147,21 @@ class analysisVicon():
 
         gs = GridSpec(2, 2, width_ratios=[1,1])
         plt.subplot(gs[0,:])    
-        plt.plot(self.vicon_data["robot_X"],self.vicon_data["robot_Y"],"o-",markersize=3,label="robot (VICON)")
+        plt.plot(self.vicon_data["robot_robot1_X"],self.vicon_data["robot_robot1_Y"],"o-",markersize=3,label="robot (VICON)")
         plt.plot(self.odom_data["x"],self.odom_data["y"],"o-",markersize=3,label="robot (odometry)")
         plt.legend()
         plt.xlabel("Hallway direction $/it{x}$ [m]")
         plt.ylabel("Width direction $/it{y}$ [m]")
         plt.gca().set_aspect('equal', adjustable='box')
         plt.subplot(gs[1,0])    
-        plt.plot(self.vicon_data["timestamp"],self.vicon_data["robot_X"],"o-",markersize=3,label="robot_X (VICON)")
-        plt.plot(self.odom_data["t"],self.odom_data["x"],"o-",markersize=3,label="robot_X (odometry)")
+        plt.plot(self.vicon_data["timestamp"],self.vicon_data["robot_robot1_X"],"o-",markersize=3,label="robot_robot1_X (VICON)")
+        plt.plot(self.odom_data["t"],self.odom_data["x"],"o-",markersize=3,label="robot_robot1_X (odometry)")
         plt.legend()
         plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Hallway direction $/it{x}$ [m]")
         plt.subplot(gs[1,1])    
-        plt.plot(self.vicon_data["timestamp"],self.vicon_data["robot_Y"],"o-",markersize=3,label="robot_Y (VICON)")
-        plt.plot(self.odom_data["t"],self.odom_data["y"],"o-",markersize=3,label="robot_Y (odometry)")
+        plt.plot(self.vicon_data["timestamp"],self.vicon_data["robot_robot1_Y"],"o-",markersize=3,label="robot_robot1_Y (VICON)")
+        plt.plot(self.odom_data["t"],self.odom_data["y"],"o-",markersize=3,label="robot_robot1_Y (odometry)")
         plt.legend()
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Hallway direction $\it{y}$ [m]")
@@ -243,7 +301,7 @@ class analysisVicon():
         plt.grid()
         plt.subplot(gs[2])   
         plt.plot(self.vicon_data["timestamp"],self.vicon_data["hayashide_LThoraxAngles_Z"],"o-",markersize=3,label="hayashide_LThoraxAngles_Z")
-        plt.plot(self.tf_data["timestamp"],self.tf_data["s_trunk_angle_z"]-135,"o-",markersize=3,label="s_trunk_angle_z")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["s_trunk_angle_z"],"o-",markersize=3,label="s_trunk_angle_z")
         # plt.plot(self.tf_data["timestamp"],self.tf_data["b_trunk_angle_z"],"o-",markersize=3,label="b_trunk_angle_z")
         plt.xlabel("Time $/it{t}$ [s]")
         plt.ylabel("Yaw of the trunk [deg]")
@@ -301,8 +359,8 @@ class analysisVicon():
 
     def main(self):
         self.plot_odom()
-        self.plot_head_angle()
-        # self.plot_trunk_angle()
+        # self.plot_head_angle()
+        self.plot_trunk_angle()
 
 analysisv=analysisVicon()
 analysisv.main()
