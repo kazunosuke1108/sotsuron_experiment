@@ -25,7 +25,7 @@ class wholeBody():
         try:
             self.tfcsvpath=sys.argv[1]
         except Exception:
-            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-10-31/_2023-12-19-20-10-31_tf_raw.csv"
+            self.tfcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-20-19-50-52/_2023-12-20-19-50-52_tf_raw.csv"
         self.savedirpath=os.path.split(self.tfcsvpath)[0]
         tf_data=initial_processor(self.tfcsvpath,False)
         timestamp_xm5_closest_idx=(tf_data["gravity_x"]-(-5)).abs().idxmin()
@@ -43,7 +43,7 @@ class wholeBody():
         try:
             self.odomcsvpath=sys.argv[2]
         except Exception:
-            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-10-31/_2023-12-19-20-10-31_od_raw.csv"
+            self.odomcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-20-19-50-52/_2023-12-20-19-50-52_od_raw.csv"
         # odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
         odom_data=initial_processor(self.odomcsvpath,False)
         self.odom_data=odom_data
@@ -394,16 +394,44 @@ class wholeBody():
         plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_base_elevation")
         plt.cla()
 
-
+    def plot_eyes(self):
+        gs = GridSpec(3, 1)
+        plt.subplot(gs[0])    
+        plt.plot(self.tf_data["timestamp"],self.tf_data["r_eye_x"],"o-",markersize=3,label="r_eye_x")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["l_eye_x"],"o-",markersize=3,label="l_eye_x")
+        plt.xlabel("Time $/it{t}$ [s]")
+        plt.ylabel("Hip angle in (hallway width direction) th_x [deg]")
+        plt.legend()
+        plt.grid()
+        plt.subplot(gs[1])   
+        plt.plot(self.tf_data["timestamp"],self.tf_data["r_eye_y"],"o-",markersize=3,label="r_eye_y")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["l_eye_y"],"o-",markersize=3,label="l_eye_y")
+        plt.xlabel("Time $/it{t}$ [s]")
+        plt.ylabel("Hip angle in (hallway direction) th_y [deg]")
+        plt.legend()
+        plt.grid()
+        plt.subplot(gs[2])   
+        plt.plot(self.tf_data["timestamp"],self.tf_data["r_eye_z"],"o-",markersize=3,label="r_eye_z")
+        plt.plot(self.tf_data["timestamp"],self.tf_data["l_eye_z"],"o-",markersize=3,label="l_eye_z")
+        plt.xlabel("Time $/it{t}$ [s]")
+        plt.ylabel("Hip angle in (yaw direction) th_z [deg]")
+        plt.legend()
+        plt.grid()
+        plt.savefig(self.savedirpath+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_eye.png")
+        plt.cla()
+        print((self.tf_data["r_eye_x"]-self.tf_data["l_eye_x"])/(self.tf_data["r_eye_y"]-self.tf_data["l_eye_y"]))
+        print(np.rad2deg(np.arctan((self.tf_data["r_eye_x"]-self.tf_data["l_eye_x"])/(self.tf_data["r_eye_y"]-self.tf_data["l_eye_y"]))))
+        # plt.show()
 
     def main(self):
-        self.plot_gravity()
-        self.get_velocity()
-        self.get_stride()
+        # self.plot_gravity()
+        # self.get_velocity()
+        # self.get_stride()
         # self.plot_knee_angle()
         # self.plot_base_elevation()
-        self.plot_trunk_angle()
+        # self.plot_trunk_angle()
         # self.plot_head_angle()
+        self.plot_eyes()
 
 wb=wholeBody()
 wb.main()

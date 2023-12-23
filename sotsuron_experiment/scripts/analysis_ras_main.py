@@ -4,14 +4,21 @@
 import os
 from glob import glob
 
-# pythonpath="/usr/bin/python3"
-# scriptsdir="/home/hayashide/catkin_ws/src/sotsuron_experiment/scripts"
-# resultsdir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results"
-pythonpath="/home/hayashide/anaconda3/bin/python3"
-scriptsdir="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
-resultsdir="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
+if os.name == "nt":
+    pythonpath = f"C:/Users/hayashide/AppData/Local/anaconda3/python"
+    scriptsdirpath=f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
+    resultsdirpath = f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
+else:
+    if os.path.exists("/home/hayashide/catkin_ws"):
+        self.resultsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/results"
+        self.scriptsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts"
+    else:
+        self.resultsdirpath = f"/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results"
+        self.scriptsdirpath = f"/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts"
 
-trialdirs=sorted(glob(resultsdir+"/_2023-12-19*"))
+
+trialdirs=sorted(glob(resultsdirpath+"/_2023-12-20*"))
+print(trialdirs)
 # trialdirs=[trialdirs[2]]
 for trialdir in trialdirs:
     tfcsv_path=trialdir+f"/{os.path.basename(trialdir)}_tf_raw.csv"
@@ -29,4 +36,4 @@ for trialdir in trialdirs:
     # os.system(f"{pythonpath} {scriptsdir}/analysis_ras_r_foot.py {tfcsv_path} {odomcsv_path}")
     # os.system(f"{pythonpath} {scriptsdir}/analysis_ras_r_humpback.py {tfcsv_path} {odomcsv_path}")
     # os.system(f"{pythonpath} {scriptsdir}/analysis_ras_conv_avi_mp4.py {avi_path}")
-    os.system(f"{pythonpath} {scriptsdir}/analysis_ras_wholebody.py {tfcsv_path} {odomcsv_path}")
+    os.system(f"{pythonpath} {scriptsdirpath}/analysis_ras_wholebody.py {tfcsv_path} {odomcsv_path}")
