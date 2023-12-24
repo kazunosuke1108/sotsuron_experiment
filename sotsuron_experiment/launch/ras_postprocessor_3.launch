@@ -35,7 +35,7 @@
         output="screen" 
     />
 
-    <node
+    <!-- <node
         pkg="ytlab_nlpmp_modules" 
         name="analysis_tf_listener3" 
         type="analysis_tf_listener3.py" 
@@ -49,7 +49,7 @@
         type="analysis_odom_subscriber.py" 
         output="screen" 
         args="$(arg odomcsv_path)"
-    />
+    /> -->
 
     <!-- <node
         pkg="ytlab_nlpmp_modules" 
@@ -67,11 +67,11 @@
         args="$(arg odom_csv_path)"
     /> -->
 
-    <node
+    <!-- <node
         pkg="image_view" 
         name="video_recorder" 
         type="video_recorder" 
         output="screen" 
         args="image:='$(arg video_topic)' _fps:='$(arg fps)' _filename:='$(arg video_path)'"
-    />
+    /> -->
 </launch>
