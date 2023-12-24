@@ -6,7 +6,12 @@ resultsdir="/home/hayashide/catkin_ws/src/sotsuron_experiment/results"
 daydir=sorted(glob(rosbag_dir+"/*"))
 daydir=daydir[-2]
 print(daydir)
-rosbagpaths=sorted(glob(daydir+"/06_murayama/success/*"))
+rosbagpaths=sorted(glob(daydir+"/01_takahashi/success/*"))
+rosbagpaths+=sorted(glob(daydir+"/02_otayu/success/*"))
+rosbagpaths+=sorted(glob(daydir+"/03_koyama/success/*"))
+rosbagpaths+=sorted(glob(daydir+"/04_ohnishi/success/*"))
+rosbagpaths+=sorted(glob(daydir+"/05_inoue/success/*"))
+rosbagpaths+=sorted(glob(daydir+"/06_murayama/success/*"))
 rosbagpaths+=sorted(glob(daydir+"/07_yoshinari/success/*"))
 rosbagpaths+=sorted(glob(daydir+"/08_motoyama/success/*"))
 rosbagpaths+=sorted(glob(daydir+"/09_konishi/success/*"))
