@@ -11,6 +11,7 @@
     
     <arg name="result_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/$(arg bag_name)"/>
     <arg name="tfcsv_path" default="$(arg result_path)/$(arg bag_name)_tf_raw.csv"/>
+    <arg name="tf2dcsv_path" default="$(arg result_path)/$(arg bag_name)_2d_raw.csv"/>
     <arg name="odomcsv_path" default="$(arg result_path)/$(arg bag_name)_od_raw.csv"/>
 
     <arg name="video_path" default="$(arg result_path)/$(arg bag_name).avi"/>
@@ -30,6 +31,7 @@
         pkg="sotsuron_experiment" 
         name="ras_fast_detector" 
         type="ras_fast_detector.py" 
+        args="$(arg tf2dcsv_path)"
         output="screen" 
     />
 
