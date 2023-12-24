@@ -134,6 +134,7 @@ class bdboxDetector():
                 else:
                     np_pred_keypoints=np_pred_keypoints_t
                 output_np_pred_keypoints=np_pred_keypoints.flatten()
+                output_np_pred_keypoints=output_np_pred_keypoints.astype(np.float128)
                 output_np_pred_keypoints=np.insert(output_np_pred_keypoints,0,self.get_time())
                 self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
                 return np_pred_keypoints
