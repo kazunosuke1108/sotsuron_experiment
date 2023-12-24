@@ -9,17 +9,18 @@ if os.name == "nt":
     scriptsdirpath=f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
     resultsdirpath = f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
 else:
-    if os.path.exists("/home/hayashide/catkin_ws"):
-        pythonpath = f"/usr/bin/python3"
-        resultsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/results"
-        scriptsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts"
-    else:
-        pythonpath="/home/hayashide/anaconda3/bin/python3"
-        resultsdirpath = f"/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results"
-        scriptsdirpath = f"/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts"
+    # if os.path.exists("/home/hayashide/catkin_ws"):
+    #     pythonpath = f"/usr/bin/python3"
+    #     resultsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/results"
+    #     scriptsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts"
+    # else:
+    pythonpath="/home/hayashide/anaconda3/bin/python3"
+    resultsdirpath = f"/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
+    scriptsdirpath = f"/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
 
 
-trialdirs=sorted(glob(resultsdirpath+"/_2023-12-20*"))
+trialdirs=sorted(glob(resultsdirpath+"/_2023-12-19*"))
+trialdirs+=sorted(glob(resultsdirpath+"/_2023-12-21*"))
 print(trialdirs)
 # trialdirs=[trialdirs[2]]
 for trialdir in trialdirs:

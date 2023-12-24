@@ -25,7 +25,7 @@ class wholeBody():
         try:
             self.tfcsvpath=sys.argv[1]
         except Exception:
-            self.tfcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-20-19-50-52/_2023-12-20-19-50-52_tf_raw.csv"
+            self.tfcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-56-34/_2023-12-19-20-56-34_tf_raw.csv"
         self.savedirpath=os.path.split(self.tfcsvpath)[0]
         tf_data=initial_processor(self.tfcsvpath,False)
         timestamp_xm5_closest_idx=(tf_data["gravity_x"]-(-5)).abs().idxmin()
@@ -43,7 +43,7 @@ class wholeBody():
         try:
             self.odomcsvpath=sys.argv[2]
         except Exception:
-            self.odomcsvpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-20-19-50-52/_2023-12-20-19-50-52_od_raw.csv"
+            self.odomcsvpath="/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19-20-56-34/_2023-12-19-20-56-34_od_raw.csv"
         # odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
         odom_data=initial_processor(self.odomcsvpath,False)
         self.odom_data=odom_data
@@ -193,7 +193,7 @@ class wholeBody():
         clusterdata=clusterdata[clusterdata["cluster_size"]>10]
         clusterdata["adjacent_vel_x"]=0
         clusterdata["adjacent_vel_x"].iloc[1:]=(clusterdata["mean_x"].values[1:]-clusterdata["mean_x"].values[:-1])/(clusterdata["start_timestamp"].values[1:]-clusterdata["end_timestamp"].values[:-1])
-        clusterdata=clusterdata[(clusterdata["adjacent_vel_x"]>1.5*abs(maybe_truth_vel_x)) | (clusterdata["adjacent_vel_x"]<-1.5*abs(maybe_truth_vel_x))]
+        clusterdata=clusterdata[(clusterdata["adjacent_vel_x"]>abs(maybe_truth_vel_x)) | (clusterdata["adjacent_vel_x"]<-abs(maybe_truth_vel_x))]
         # raise TimeoutError
 
         # 歩幅の算出
@@ -203,18 +203,18 @@ class wholeBody():
 
 
         plt.subplot(211)
-        plt.plot(data["timestamp"],data["r_foot_x"],"m",label="left foot $\it{x}$")
+        plt.plot(data["timestamp"],data["r_foot_x"],"m",label="right foot $\it{x}$")
         plt.scatter(data["timestamp"][data["r_foot_stop"]],data["r_foot_x"][data["r_foot_stop"]],color="m",marker="x",alpha=0.25,label="stop moment")
         plt.scatter(clusterdata["mean_timestamp"],clusterdata["mean_x"],color="k",marker="o",label="mean stoppoint")
         plt.xlabel("Time $\it{t}$ [s]")
-        plt.ylabel("Position of the left ancle in $\it{x}$-direction $\it{x}$ [m]")
+        plt.ylabel("Position of the right ankle in $\it{x}$-direction $\it{x}$ [m]")
         plt.grid()
         plt.legend()
         plt.subplot(212)
-        plt.plot(data["timestamp"],data["r_foot_vx"],"m",label="left foot $\it{v_x}$")
+        plt.plot(data["timestamp"],data["r_foot_vx"],"m",label="right foot $\it{v_x}$")
         plt.scatter(data["timestamp"][data["r_foot_stop"]],data["r_foot_vx"][data["r_foot_stop"]],color="m",marker="x",alpha=0.25,label="stop moment")
         plt.xlabel("Time $\it{t}$ [s]")
-        plt.ylabel("Velocity of the left ancle in $\it{x}$-direction $\it{v_x}$ [m/s]")
+        plt.ylabel("Velocity of the right ankle in $\it{x}$-direction $\it{v_x}$ [m/s]")
         plt.grid()
         plt.legend()
         plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-8]+"_stride.png")
@@ -426,12 +426,12 @@ class wholeBody():
     def main(self):
         # self.plot_gravity()
         # self.get_velocity()
-        # self.get_stride()
+        self.get_stride()
         # self.plot_knee_angle()
         # self.plot_base_elevation()
         # self.plot_trunk_angle()
         # self.plot_head_angle()
-        self.plot_eyes()
+        # self.plot_eyes()
 
 wb=wholeBody()
 wb.main()
