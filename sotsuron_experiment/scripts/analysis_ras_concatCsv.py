@@ -143,11 +143,12 @@ class concatCsv():
         self.odom_data=initial_processor(self.odomcsv_path,False)
 
 
-    def concat_csv(self):
+    def concat_csv(self,use_vicon=False):
         tf_data_resampled=resampling_processor(self.tf_data,"0.01S")
         odom_data_resampled=resampling_processor(self.odom_data,"0.01S")
         merged_data=pd.merge(tf_data_resampled,odom_data_resampled,on="timestamp_datetime_round",how="inner")
-        if 'self.vicon_data' in locals():
+        # if 'self.vicon_data' in locals():
+        if use_vicon:
             vicon_data_resampled=resampling_processor(self.vicon_data,"0.01S")
             merged_data=pd.merge(merged_data,vicon_data_resampled,on="timestamp_datetime_round",how="inner")
         print(len(merged_data))
@@ -159,28 +160,28 @@ class concatCsv():
     # def main(self):
     #     self.concat_csv()
     
-# viconcsvpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/alldata/*.csv"))
-# for viconcsvpath in viconcsvpaths:
-#     print(viconcsvpath)
-#     # try:
-#     concatcsv=concatCsv()
-#     concatcsv.load_with_vicon(viconcsvpath)
-#     concatcsv.concat_csv()
-#     # except Exception as e:
-#     #         exc_type, exc_obj, exc_tb = sys.exc_info()
-#     #         print(f"line {exc_tb.tb_lineno}: {e}")
-#     # break
-
-tfodomdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
-tfodomdirpaths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
-for tfodomdirpath in tfodomdirpaths:
-    print(tfodomdirpath)
+viconcsvpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/alldata/*.csv"))
+for viconcsvpath in viconcsvpaths:
+    print(viconcsvpath)
     # try:
     concatcsv=concatCsv()
-    concatcsv.load(tfodomdirpath)
-    concatcsv.concat_csv()
-    # break
+    concatcsv.load_with_vicon(viconcsvpath)
+    concatcsv.concat_csv(use_vicon=True)
     # except Exception as e:
     #         exc_type, exc_obj, exc_tb = sys.exc_info()
+    #         print(f"line {exc_tb.tb_lineno}: {e}")
+    # break
+
+# tfodomdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
+# tfodomdirpaths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
+# for tfodomdirpath in tfodomdirpaths:
+#     print(tfodomdirpath)
+#     # try:
+#     concatcsv=concatCsv()
+#     concatcsv.load(tfodomdirpath)
+#     concatcsv.concat_csv()
+#     # break
+#     # except Exception as e:
+#     #         exc_type, exc_obj, exc_tb = sys.exc_info()
     #         print(f"line {exc_tb.tb_lineno}: {e}")
     # break
