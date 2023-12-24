@@ -1,0 +1,16 @@
+trial,name,vicon,sotsuron_experiment,ytlab_nlpmp
+0,,,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-37-07,20231220_193754_20231220_99_00_00_vicon
+2,noLook,,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-41-50,20231220_194200_20231220_99_00_02_vicon_noLook
+3,noLook,hayashide_robot_03,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-45-25,20231220_194531_20231220_99_00_03_vicon_noLook
+4,noLook,hayashide_robot_04,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-48-09,20231220_194813_20231220_99_00_04_vicon_noLook
+5,Look,hayashide_robot_05,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-50-52,20231220_195104_20231220_99_00_05_vicon_Look
+6,Look,hayashide_robot_06,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-53-31,20231220_195343_20231220_99_00_06_vicon_Look
+7,avoid,hayashide_robot_07,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-19-56-57,20231220_195715_20231220_99_00_07_vicon_avoid
+8,udefuri,hayashide_robot_08,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-00-11,20231220_200027_20231220_99_00_08_vicon_udefuri
+9,noudefuri,hayashide_robot_09,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-04-12,20231220_200427_20231220_99_00_09_vicon_noudefuri
+10,koshimage,hayashide_robot_10,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-07-04,20231220_200718_20231220_99_00_10_vicon_koshimage
+11,koshimage,hayashide_robot_11,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-09-51,20231220_201005_20231220_99_00_11_vicon_koshimage
+12,mahi,hayashide_robot_12,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-19-53,20231220_202015_20231220_99_00_12_vicon_mahi
+13,mahi,hayashide_robot_13,,20231220_202357_20231220_99_00_13_vicon_mahi
+14,mahi,hayashide_robot_14,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-27-29,20231220_202751_20231220_99_00_14_vicon_mahi
+15,mahi,hayashide_robot_15,C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\results\_2023-12-20-20-32-04,20231220_203218_20231220_99_00_15_vicon_mahi
