@@ -6,12 +6,13 @@ import numpy as np
 import pandas as pd
 from matplotlib import patches
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import Axes3D
 from analysis_management import *
 from analysis_initial_processor import *
 
 class plotSituation():
     def __init__(self,bag_basename="_2023-12-20-19-50-52"):
+        self.bag_basename=bag_basename
         self.exp_memo_path=f"C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts/memo/exp_memo.csv"
         self.nlpmp_results_dir_path="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results"
         self.experiment_results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
@@ -26,7 +27,7 @@ class plotSituation():
         # tf_data
         self.tfcsvpath=self.experiment_results_dir_path+f"/{bag_basename}/{bag_basename}_tf_raw.csv"
         self.savedirpath=os.path.split(self.tfcsvpath)[0]
-        tf_data=initial_processor(self.tfcsvpath,False)
+        tf_data=initial_processor(self.tfcsvpath,True)
         timestamp_xm5_closest_idx=(tf_data["gravity_x"]-(-5)).abs().idxmin()
         timestamp_xm5_closest=tf_data.iloc[timestamp_xm5_closest_idx]["timestamp"]
         # x_x0_closest=tf_data.iloc[timestamp_x0_closest_idx]["gravity_x"]
@@ -42,6 +43,8 @@ class plotSituation():
         self.odomcsvpath=self.experiment_results_dir_path+f"/{bag_basename}/{bag_basename}_od_raw.csv"
         # odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
         odom_data=initial_processor(self.odomcsvpath,False)
+        # odom_data=odom_data[odom_data["t"]<timestamp_xm5_closest]
+        odom_data=odom_data[odom_data["t"]>timestamp_x8_closest]
         self.odom_data=odom_data
 
         # nlpmp_pickle
@@ -62,6 +65,54 @@ class plotSituation():
         self.rbt=self.pickledata["rbt"]
         self.hmn=self.pickledata["hmn"]
         self.sns=self.pickledata["sns"]
+
+    def objF_kukei(self, t, z, u, env, rbt, hmn, sns,zH):
+        zR = z
+        # if hmn['path_prediction'] == "SFM":
+        #     zH, _ = getHumanPath_SFM_paper(t, z, env, rbt, hmn, sns)
+        # else:
+        #     zH = getHumanPath(t, hmn)
+
+        try:
+            vec_HR = np.vstack((zH[0] - zR[0], zH[1] - zR[1]))
+        except Exception:
+            vec_HR = np.vstack((zH[0] - np.transpose(zR[0]), zH[1] - np.transpose(zR[1])))
+        norm_HR = np.sqrt(vec_HR[0] ** 2 + vec_HR[1] ** 2)
+        vec_HR = np.vstack(((norm_HR - hmn["sizer"]) / norm_HR, (norm_HR - hmn["sizer"]) / norm_HR) * vec_HR)
+        norm_HR = np.sqrt(vec_HR[0] ** 2 + vec_HR[1] ** 2)
+        deg_HR = np.arctan2(vec_HR[1], vec_HR[0])
+        deg_compensate1 = np.logical_and((vec_HR[0] < 0), (vec_HR[1] > 0))
+        deg_compensate2 = np.logical_and((vec_HR[0] < 0), (vec_HR[1] < 0))
+        deg_diff = deg_HR - z[2]
+
+        # 条件式の作成
+        condition0 = norm_HR <= sns["r1"]
+        condition1 = np.logical_and(sns["r1"] <= norm_HR, norm_HR <= env["ymax"] - env["ymin"] - hmn["sizer"] - rbt["sizer"])
+        condition2 = np.logical_and(env["ymax"] - env["ymin"] - hmn["sizer"] - rbt["sizer"] <= norm_HR,
+                                    norm_HR <= (sns["r1"] + sns["r2"]) / 2)
+        condition3 = np.logical_and((sns["r1"] + sns["r2"]) / 2 <= norm_HR, norm_HR <= sns["r2"])
+        condition4 = sns["r2"] < norm_HR
+
+        # 評価関数の定義
+        eval_func1_alpha = (0 - 1) / (sns["r1"] - (env["ymax"] - env["ymin"] - hmn["sizer"] - rbt["sizer"]))
+        eval_func1_beta = 0 - eval_func1_alpha * sns["r1"]
+        eval_func3_alpha = (1 - 0) / ((sns["r1"] + sns["r2"]) / 2 - sns["r2"])
+        eval_func3_beta = 1 - eval_func3_alpha * (sns["r1"] + sns["r2"]) / 2
+
+        # 関数の評価
+        score_r = (eval_func1_alpha * norm_HR + eval_func1_beta) * condition1
+        score_r += 1 * condition2
+        score_r += (eval_func3_alpha * norm_HR + eval_func3_beta) * condition3
+
+        mu_phi = 0
+        sgm_phi = 1 / 6 * 2 * sns["phi"]
+        score_p = np.exp(-(deg_diff - mu_phi) ** 2 / (2 * sgm_phi ** 2)) / (sgm_phi * np.sqrt(2 * np.pi))
+
+        J_kari = np.dot(score_r, score_p.T)
+        J = -J_kari
+
+        return J
+        
     
     def plot_situation(self):
         fig = plt.figure()
@@ -101,9 +152,107 @@ class plotSituation():
             arc_left = plt.plot([arc_r1_x[-1], arc_r2_x[-1]],
                                 [arc_r1_y[-1], arc_r2_y[-1]], 'g', linewidth=0.1,alpha=0.2)
         plt.show()
+
+    def plot_colormap(self):
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111)
+        # ax.set_aspect("equal", adjustable="box")
+        # plt.ylim([self.env["ymin"]-0.5,self.env["ymax"]+0.5])
+
+        t=0
+        z=np.zeros(6)
+        u=np.zeros(3)
+        x_array=np.arange(-5,10,0.1)
+        y_array=np.arange(-1.2,1.2,0.1)
+
+        X, Y = np.meshgrid(x_array, y_array)
+        J_list=np.zeros_like(X)
+
+        print(J_list.shape)
+        pprint(self.sns)
+
+        # x_list=[]
+        # y_list=[]
+        # J_list=[]
+        for idx,row in self.odom_data.iterrows():
+            if idx%5==0:
+                print(f"plotting...: {self.bag_basename} {idx}/{len(self.odom_data)}")
+                xR=row["x"]
+                yR=row["y"]
+                theta=row["theta"]
+                pan=row["pan"]
+                z[0]=xR
+                z[1]=yR
+                z[2]=theta+pan
+                for idx_x,x in enumerate(x_array):
+                    for idx_y,y in enumerate(y_array):
+                        zH=np.array([x,y,0,0,0,0])
+                        J=-self.objF_kukei(t,z,u,self.env,self.rbt,self.hmn,self.sns,zH)
+                        J_list[idx_y][idx_x]+=J
+                # fig = plt.figure()
+                # # ax = Axes3D(fig)
+
+                # ax = fig.add_subplot(111,projection='3d')
+                # ax.plot_surface(X, Y, J_list, cmap='jet', linewidth=0)
+                # ax.set_xlabel("Hallway direction $/it{x}$ [m]")
+                # ax.set_ylabel("Width direction $/it{y}$ [m]")
+                # ax.set_zlabel("Value of the function $/it{J}$")
+
+                # ax.plot([0,10],[-2,-2],"k")
+                # ax.plot([0,10],[2,2],"k")
+                # ax.view_init(elev=90, azim=180)
+                # plt.pause(1)
+                # plt.cla()
+            # break
+        fig = plt.figure()
+        ax = fig.subplots()
+        ax.set_aspect("equal")
+        ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
+        plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
+        plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
+        plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap.png")
+        plt.cla()
+        fig = plt.figure()
+        ax = fig.subplots()
+        ax.set_aspect("equal")
+        J_list=np.log(J_list)
+        J_list=np.where(J_list<0,0,J_list)
+        ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
+        plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
+        plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
+        plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap_log.png")
+        plt.legend()
+        plt.xlabel("Hallway direction $\it{x}$ [m]")
+        plt.ylabel("Width direction $\it{y}$ [m]")
+        # ax = fig.add_subplot(111,projection='3d')
+        # ax.plot_surface(X, Y, J_list, cmap='jet', linewidth=0)
+        # ax.set_xlabel("Hallway direction $/it{x}$ [m]")
+        # ax.set_ylabel("Width direction $/it{y}$ [m]")
+        # ax.set_zlabel("Value of the function $/it{J}$")
+        # ax.set_xlim([-10,10])
+        # ax.set_ylim([-10,10])
+
+        # ax.plot([0,10],[-1.2,-1.2],"k")
+        # ax.plot([0,10],[1.2,1.2],"k")
+        # ax.view_init(elev=90, azim=180)
+
+        # plt.show()
+
     
     def main(self):
-        self.plot_situation()
+        # self.plot_situation()
+        self.plot_colormap()
 
-plot=plotSituation("_2023-12-19-12-38-43")
-plot.main()
+trialdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
+trialdirpaths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
+for trialdirpath in trialdirpaths:
+    plot=plotSituation(os.path.basename(trialdirpath))
+    plot.main()
+    # break
+
+
+
+
+
+# plt.savefig("C:/Users/hayashide/latex_ws/20231201_midtermReport/images/objF_potential_top.png")
+# plt.show()

@@ -388,8 +388,8 @@ class analysisVicon():
         # self.plot_odom()
         # self.plot_gravity()
         # self.plot_head_angle()
-        self.plot_trunk_angle()
-        # self.plot_hip_angle()
+        # self.plot_trunk_angle()
+        self.plot_hip_angle()
 
 
 viconcsvpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/alldata/*.csv"))
