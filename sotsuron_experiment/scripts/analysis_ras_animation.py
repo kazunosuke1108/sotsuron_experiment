@@ -11,7 +11,7 @@ from analysis_management import *
 from analysis_initial_processor import *
 
 class plotSituation():
-    def __init__(self,bag_basename="_2023-12-20-19-50-52"):
+    def __init__(self,bag_basename="_2023-12-21-14-39-52"):
         self.bag_basename=bag_basename
         self.exp_memo_path=f"C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts/memo/exp_memo.csv"
         self.nlpmp_results_dir_path="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results"
@@ -153,6 +153,52 @@ class plotSituation():
                                 [arc_r1_y[-1], arc_r2_y[-1]], 'g', linewidth=0.1,alpha=0.2)
         plt.show()
 
+    def add_plot(self,row):
+        arc_resolution=100
+        xR=row["x"]
+        yR=row["y"]
+        theta=row["theta"]
+        pan=row["pan"]
+        print(theta)
+        arc_rad = np.linspace(theta + pan - self.sns["phi"],
+                    theta + pan + self.sns["phi"], arc_resolution)
+        arc_r1_x = self.sns["r1"] * np.cos(arc_rad) + xR
+        arc_r1_y = self.sns["r1"] * np.sin(arc_rad) + yR
+        arc_r2_x = self.sns["r2"] * np.cos(arc_rad) + xR
+        arc_r2_y = self.sns["r2"] * np.sin(arc_rad) + yR
+
+        # arc_r1 = plt.plot(arc_r1_x, arc_r1_y, 'g', linewidth=2.5)
+        # arc_r2 = plt.plot(arc_r2_x, arc_r2_y, 'g', linewidth=2.5)
+
+        # print(f"{theta}, {pan}")
+
+        arc_r1 = patches.Arc(xy=(xR,yR), width=2*self.sns['r1'], height=2*self.sns['r1'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=1, label="arc")
+        arc_r2 = patches.Arc(xy=(xR,yR), width=2*self.sns['r2'], height=2*self.sns['r2'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=1, label="arc")
+        plt.gca().add_patch(arc_r1)
+        plt.gca().add_patch(arc_r2)
+
+        arc_right = plt.plot([arc_r1_x[0], arc_r2_x[0]], [
+                            arc_r1_y[0], arc_r2_y[0]], 'g', linewidth=1,alpha=1)
+        arc_left = plt.plot([arc_r1_x[-1], arc_r2_x[-1]],
+                            [arc_r1_y[-1], arc_r2_y[-1]], 'g', linewidth=1,alpha=1)
+        arc_right_support = plt.plot([xR,arc_r1_x[0]], [
+                            yR,arc_r1_y[0]], 'g--', linewidth=1,alpha=1)
+        arc_left_support = plt.plot([xR,arc_r1_x[-1]],
+                            [yR,arc_r1_y[-1]], 'g--', linewidth=1,alpha=1)
+        
+        rbt_position = plt.Circle((xR, yR),
+                                     radius=self.rbt["sizer"], edgecolor='b', facecolor='w')
+        plt.gca().add_patch(rbt_position)
+        rbt_direction = plt.plot([xR, xR + self.rbt["sizer"] * np.cos(theta + pan)],
+                                 [yR, yR + self.rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2)
+        hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()]),
+                                     radius=self.hmn["sizer"], edgecolor='r', facecolor='r')
+        plt.gca().add_patch(hmn_position)
+        print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()])
+        # raise TimeoutError
+        # plt.gca().add_patch(arc_right)
+        # plt.gca().add_patch(arc_left)
+        
     def plot_colormap(self):
         # fig = plt.figure()
         # ax = fig.add_subplot(111)
@@ -174,6 +220,10 @@ class plotSituation():
         # x_list=[]
         # y_list=[]
         # J_list=[]
+        fig = plt.figure()
+        ax = fig.subplots()
+        ax.set_aspect("equal")
+
         for idx,row in self.odom_data.iterrows():
             if idx%5==0:
                 print(f"plotting...: {self.bag_basename} {idx}/{len(self.odom_data)}")
@@ -189,6 +239,9 @@ class plotSituation():
                         zH=np.array([x,y,0,0,0,0])
                         J=-self.objF_kukei(t,z,u,self.env,self.rbt,self.hmn,self.sns,zH)
                         J_list[idx_y][idx_x]+=J
+            
+            if idx%300==0:
+                self.add_plot(row)
                 # fig = plt.figure()
                 # # ax = Axes3D(fig)
 
@@ -204,17 +257,14 @@ class plotSituation():
                 # plt.pause(1)
                 # plt.cla()
             # break
-        fig = plt.figure()
-        ax = fig.subplots()
-        ax.set_aspect("equal")
-        ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
-        plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
-        plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
-        plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap.png")
-        plt.cla()
-        fig = plt.figure()
-        ax = fig.subplots()
-        ax.set_aspect("equal")
+        # ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
+        # plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
+        # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
+        # plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap.png")
+        # plt.cla()
+        # fig = plt.figure()
+        # ax = fig.subplots()
+        # ax.set_aspect("equal")
         J_list=np.log(J_list)
         J_list=np.where(J_list<0,0,J_list)
         ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
@@ -238,18 +288,24 @@ class plotSituation():
 
         # plt.show()
 
-    
     def main(self):
         # self.plot_situation()
         self.plot_colormap()
 
 trialdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
 trialdirpaths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
-for trialdirpath in trialdirpaths:
-    plot=plotSituation(os.path.basename(trialdirpath))
-    plot.main()
+for trialdirpath in trialdirpaths[2:]:
+    try:
+        plot=plotSituation(os.path.basename(trialdirpath))
+        plot.main()
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print(f"line {exc_tb.tb_lineno}: {e}")
+
     # break
 
+# plot=plotSituation()
+# plot.main()
 
 
 

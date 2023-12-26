@@ -91,9 +91,9 @@ class analysisRas():
         # stride_table.to_csv(path_management["stride_table_path"])
 
     def main(self):
-        # self.analyze_velocity()
+        self.analyze_velocity()
         self.analyze_stride()
-        # self.analyze_humpback()
+        self.analyze_humpback()
         
 analysis=analysisRas()
 analysis.main()
