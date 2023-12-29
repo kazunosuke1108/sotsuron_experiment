@@ -11,7 +11,7 @@ from analysis_management import *
 from analysis_initial_processor import *
 
 class plotSituation():
-    def __init__(self,bag_basename="_2023-12-21-11-09-57"):
+    def __init__(self,bag_basename="_2023-12-19-20-10-31"):
         self.bag_basename=bag_basename
         self.exp_memo_path=f"C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts/memo/exp_memo.csv"
         self.nlpmp_results_dir_path="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results"
@@ -20,7 +20,7 @@ class plotSituation():
         self.exp_memo=pd.read_csv(self.exp_memo_path,header=0)
         
         path_management,csv_labels,color_dict=management_initial()
-        plt.rcParams["figure.figsize"] = (12,8)
+        plt.rcParams["figure.figsize"] = (7,3.5)
         plt.rcParams["figure.autolayout"] = True
         plt.rcParams['font.family'] = 'Times New Roman'
 
@@ -172,8 +172,8 @@ class plotSituation():
 
         # print(f"{theta}, {pan}")
 
-        arc_r1 = patches.Arc(xy=(xR,yR), width=2*self.sns['r1'], height=2*self.sns['r1'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=3, label="arc")
-        arc_r2 = patches.Arc(xy=(xR,yR), width=2*self.sns['r2'], height=2*self.sns['r2'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=3, label="arc")
+        arc_r1 = patches.Arc(xy=(xR,yR), width=2*self.sns['r1'], height=2*self.sns['r1'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=3, label="measurable area")
+        arc_r2 = patches.Arc(xy=(xR,yR), width=2*self.sns['r2'], height=2*self.sns['r2'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=3)
         plt.gca().add_patch(arc_r1)
         plt.gca().add_patch(arc_r2)
 
@@ -193,12 +193,12 @@ class plotSituation():
         theta=row["theta"]
         pan=row["pan"]
         rbt_position = plt.Circle((xR, yR),
-                                     radius=self.rbt["sizer"], edgecolor='b', facecolor='w')
+                                     radius=self.rbt["sizer"], edgecolor='b', facecolor='w',label="robot")
         plt.gca().add_patch(rbt_position)
         rbt_direction = plt.plot([xR, xR + self.rbt["sizer"] * np.cos(theta + pan)],
                                  [yR, yR + self.rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2)
         hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()]),
-                                     radius=self.hmn["sizer"], edgecolor='r', facecolor='w')
+                                     radius=self.hmn["sizer"], edgecolor='r', facecolor='w',label="human")
         plt.gca().add_patch(hmn_position)
         print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()])
         # raise TimeoutError
@@ -246,18 +246,20 @@ class plotSituation():
                         J=-self.objF_kukei(t,z,u,self.env,self.rbt,self.hmn,self.sns,zH)
                         J_list[idx_y][idx_x]+=J
             
-            if idx==1140 or idx==1200 or idx==1500 or idx==1600 or idx==1800 or idx==2400: # [self.odom_data["t"]<=row["t"]]
+            if idx==900 or idx==1000 or idx==1100 or idx==1200 or idx==1300 or idx==1400: # [self.odom_data["t"]<=row["t"]]
                 J_list_log=np.log(J_list)
                 J_list_log=np.where(J_list_log<0,0,J_list_log)
                 ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
-                plt.plot(self.odom_data["x"][self.odom_data["t"]<=row["t"]],self.odom_data["y"][self.odom_data["t"]<=row["t"]],"b",label="robot")
+                plt.plot(self.odom_data["x"][self.odom_data["t"]<=row["t"]],self.odom_data["y"][self.odom_data["t"]<=row["t"]],"b")
                 # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
                 self.add_plot_ougi(row)
                 self.add_plot_others(row)
                 plt.legend()
                 plt.xlabel("Hallway direction $\it{x}$ [m]")
                 plt.ylabel("Width direction $\it{y}$ [m]")
-                plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_log_{idx}.png")
+                plt.xlim([-4,7])
+                plt.ylim([-2,2])
+                plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{idx}.png")
                 plt.cla()
                 self.add_plot_others(row)
                 # fig = plt.figure()
@@ -274,6 +276,8 @@ class plotSituation():
                 # ax.view_init(elev=90, azim=180)
                 # plt.pause(1)
                 # plt.cla()
+                if idx==1400:
+                    break
             # break
         # ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
         # plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
@@ -288,7 +292,7 @@ class plotSituation():
         ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
         plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
         # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
-        plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap_log.png")
+        plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap_1229.png")
         plt.legend()
         plt.xlabel("Hallway direction $\it{x}$ [m]")
         plt.ylabel("Width direction $\it{y}$ [m]")
@@ -310,15 +314,19 @@ class plotSituation():
         # self.plot_situation()
         self.plot_colormap()
 
-trialdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
-trialdirpaths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
+exp_memo_01_data=pd.read_csv("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/exp_memo_01.csv",header=0)
+
+
+# trialdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
+# trialdirpaths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
 # for trialdirpath in trialdirpaths[2:]:
-#     try:
-#         plot=plotSituation(os.path.basename(trialdirpath))
-#         plot.main()
-#     except Exception as e:
-#         exc_type, exc_obj, exc_tb = sys.exc_info()
-#         print(f"line {exc_tb.tb_lineno}: {e}")
+#     if os.path.basename(trialdirpath)+".bag" in exp_memo_01_data["bag_path"].values:
+#         try:
+#             plot=plotSituation(os.path.basename(trialdirpath))
+#             plot.main()
+#         except Exception as e:
+#             exc_type, exc_obj, exc_tb = sys.exc_info()
+#             print(f"line {exc_tb.tb_lineno}: {e}")
 
     # break
 

@@ -7,7 +7,7 @@ index,person_id,person,type,trial,bag_path,nlpmp_path,memo,bag扱い,video07301,
 5,1,takahashi,2.0,2.0,_2023-12-19-13-11-59.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_131211_20231219_02_02_takahashi,フレームアウトsi,削除済み,C0038.MP4,C0034.MP4,0
 6,1,takahashi,2.0,3.0,_2023-12-19-13-14-31.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_131442_20231219_02_03_takahashi,いちおう？,削除済み,C0039.MP4,C0035.MP4,0
 7,1,takahashi,2.0,4.0,_2023-12-19-13-17-33.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_131743_20231219_02_04_takahashi,,削除済み,C0040.MP4,C0036.MP4,0
-8,1,takahashi,2.0,5.0,_2023-12-19-13-20-44.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_132054_20231219_02_05_takahashi,,,C0041.MP4,C0037.MP4,1
+8,1,takahashi,2.0,5.0,_2023-12-19-13-20-44.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_132054_20231219_02_05_takahashi,,,C0041.MP4,C0037.MP4,0
 12,2,otayu,0.0,0.0,_2023-12-19-14-03-52.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_140403_20231219_04_00_otayu,,,C0045.MP4,C0041.MP4,1
 13,2,otayu,1.0,0.0,_2023-12-19-14-06-55.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_140713_20231219_02_01_00_otayu,クラッシュ,削除済み,C0046.MP4,C0042.MP4,0
 14,2,otayu,1.0,1.0,_2023-12-19-14-10-13.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_141021_20231219_02_01_01_otayu,検知遅れ・クラッシュ,削除済み,C0047.MP4,C0043.MP4,0
@@ -22,11 +22,11 @@ index,person_id,person,type,trial,bag_path,nlpmp_path,memo,bag扱い,video07301,
 31,3,koyama,2.0,1.0,_2023-12-19-16-46-04.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_164615_20231219_03_02_01_koyama,crash,削除済み,C0064.MP4,C0060.MP4,0
 32,3,koyama,2.0,2.0,_2023-12-19-16-48-42.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_164853_20231219_03_02_02_koyama,girigiri,削除済み,C0065.MP4,C0061.MP4,0
 33,3,koyama,2.0,3.0,_2023-12-19-16-52-33.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_165247_20231219_03_02_03_koyama,,削除済み,C0066.MP4,C0062.MP4,0
-34,3,koyama,2.0,3.0,_2023-12-19-16-55-03.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_165514_20231219_03_02_03_koyama,,,C0067.MP4,C0063.MP4,1
+34,3,koyama,2.0,3.0,_2023-12-19-16-55-03.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_165514_20231219_03_02_03_koyama,,,C0067.MP4,C0063.MP4,0
 35,4,ohnishi,0.0,0.0,_2023-12-19-18-08-39.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_180921_20231219_04_00_00_ohnishi,OK,,C0068.MP4,C0064.MP4,1
 36,4,ohnishi,1.0,0.0,_2023-12-19-18-12-38.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_181248_20231219_04_01_00_ohnishi,OK,,C0069.MP4,C0065.MP4,1
 46,4,ohnishi,2.0,0.0,_2023-12-19-18-54-00.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_185411_20231219_04_02_00_ohnishi,,削除済み,C0079.MP4,C0075.MP4,0
-47,4,ohnishi,2.0,0.0,_2023-12-19-18-55-32.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_185537_20231219_04_02_00_ohnishi,部分ロストはしているがよい,,C0080.MP4,C0076.MP4,1
+47,4,ohnishi,2.0,0.0,_2023-12-19-18-55-32.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_185537_20231219_04_02_00_ohnishi,部分ロストはしているがよい,,C0080.MP4,C0076.MP4,0
 48,4,ohnishi,2.0,2.0,_2023-12-19-18-57-50.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_185804_20231219_04_02_02_ohnishi,crash,削除済み,C0081.MP4,C0077.MP4,0
 49,4,ohnishi,2.0,3.0,_2023-12-19-19-00-19.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_190030_20231219_04_02_03_ohnishi,,削除済み,C0082.MP4,C0078.MP4,0
 50,4,ohnishi,2.0,4.0,_2023-12-19-19-05-33.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_190544_20231219_04_02_04_ohnishi,,削除済み,C0083.MP4,C0079.MP4,0
@@ -41,7 +41,7 @@ index,person_id,person,type,trial,bag_path,nlpmp_path,memo,bag扱い,video07301,
 65,5,inoue,2.0,4.0,_2023-12-19-20-47-50.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_204802_20231219_05_02_04_inoue,途中でガッツリロスト,削除済み,C0097.MP4,C0093.MP4,0
 66,5,inoue,2.0,5.0,_2023-12-19-20-50-18.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_205028_20231219_05_02_05_inoue,モータ,削除済み,C0098.MP4,C0094.MP4,0
 67,5,inoue,2.0,6.0,_2023-12-19-20-54-00.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_205412_20231219_05_02_06_inoue,crash,削除済み,C0099.MP4,C0095.MP4,0
-68,5,inoue,2.0,7.0,_2023-12-19-20-56-34.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_205644_20231219_05_02_07_inoue,おしい（残す）,,C0100.MP4,C0096.MP4,1
+68,5,inoue,2.0,7.0,_2023-12-19-20-56-34.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_205644_20231219_05_02_07_inoue,おしい（残す）,,C0100.MP4,C0096.MP4,0
 69,5,inoue,2.0,8.0,_2023-12-19-21-01-06.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_210118_20231219_05_02_08_inoue,モータ,削除済み,C0101.MP4,C0097.MP4,0
 70,5,inoue,2.0,9.0,_2023-12-19-21-03-20.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_210336_20231219_05_02_09_inoue,途中でガッツリロスト,削除済み,C0102.MP4,C0098.MP4,0
 71,5,inoue,2.0,10.0,_2023-12-19-21-05-43.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_210554_20231219_05_02_10_inoue,途中でガッツリロスト,削除済み,C0103.MP4,C0099.MP4,0
@@ -53,7 +53,7 @@ index,person_id,person,type,trial,bag_path,nlpmp_path,memo,bag扱い,video07301,
 86,6,murayama,2.0,1.0,_2023-12-21-11-01-17.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_110127_20231221_06_02_01_murayama,完全ロスト,削除済み,C0125.MP4,C0112.MP4,0
 87,6,murayama,2.0,2.0,_2023-12-21-11-04-17.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_110426_20231221_06_02_02_murayama,直前で見つけた,,C0126.MP4,C0113.MP4,0
 88,6,murayama,2.0,3.0,_2023-12-21-11-07-28.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_110738_20231221_06_02_03_murayama,いい感じだったけどcrash,削除済み,C0127.MP4,C0114.MP4,0
-89,6,murayama,2.0,4.0,_2023-12-21-11-09-57.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_111008_20231221_06_02_04_murayama,OK,,C0128.MP4,C0115.MP4,1
+89,6,murayama,2.0,4.0,_2023-12-21-11-09-57.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_111008_20231221_06_02_04_murayama,OK,,C0128.MP4,C0115.MP4,0
 90,7,yoshinari,0.0,0.0,_2023-12-21-14-19-29.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_141940_20231221_07_00_00_yoshinari,序盤フレームアウト,,C0129.MP4,C0116.MP4,0
 91,7,yoshinari,0.0,1.0,_2023-12-21-14-22-13.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_142223_20231221_07_00_01_yoshinari,完全フレームアウト,削除済み,C0130.MP4,C0117.MP4,0
 92,7,yoshinari,0.0,2.0,_2023-12-21-14-24-37.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_142450_20231221_07_00_02_yoshinari,完全フレームアウト,削除済み,C0131.MP4,C0118.MP4,0
@@ -65,7 +65,7 @@ index,person_id,person,type,trial,bag_path,nlpmp_path,memo,bag扱い,video07301,
 109,7,yoshinari,2.0,2.0,_2023-12-21-15-19-03.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_151914_20231221_07_02_02_yoshinari,振り向くのやめちゃった,削除済み,C0146.MP4,C0133.MP4,0
 110,7,yoshinari,2.0,3.0,_2023-12-21-15-21-18.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_152127_20231221_07_02_03_yoshinari,ちらちら見えた程度,削除済み,C0147.MP4,C0134.MP4,0
 111,7,yoshinari,2.0,4.0,_2023-12-21-15-24-08.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_152419_20231221_07_02_04_yoshinari,振り向けず,削除済み,C0148.MP4,C0135.MP4,0
-112,7,yoshinari,2.0,5.0,_2023-12-21-15-26-31.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_152642_20231221_07_02_05_yoshinari,途中フレームアウト　まし,,C0149.MP4,C0136.MP4,1
+112,7,yoshinari,2.0,5.0,_2023-12-21-15-26-31.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_152642_20231221_07_02_05_yoshinari,途中フレームアウト　まし,,C0149.MP4,C0136.MP4,0
 113,8,motoyama,2.0,0.0,_2023-12-21-16-10-53.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_161113_20231221_08_00_00_motoyama,序盤フレームアウト,,C0150.MP4,C0137.MP4,0
 114,8,motoyama,2.0,1.0,_2023-12-21-16-13-41.bag,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_161357_20231221_08_00_01_motoyama,jt,,C0151.MP4,C0138.MP4,0
 115,8,motoyama,2.0,1.0,,/home/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231221/20231221_161415_20231221_08_00_01_motoyama,中盤フレームアウト,,C0152.MP4,C0139.MP4,0

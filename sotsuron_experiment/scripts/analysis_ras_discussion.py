@@ -25,7 +25,7 @@ class Discussion():
     def pickup_prcd_png(self):
         self.exp_memo_all_data["result"]=0
         for idx,row in self.exp_memo_all_data.iterrows():
-            if str(row["nlpmp_path"]) != "nan":
+            if str(row["nlpmp_path"]) != "nan" and (row["type"]==0 or row["type"]==1):
                 nlpmp_path="C:/Users/hayashide"+row["nlpmp_path"][len("/home/hayashide"):]
                 # print(nlpmp_path)
                 try:
@@ -33,16 +33,16 @@ class Discussion():
                     # basename=f"{int(row['person_id'])}".zfill(2)+"_"+f"{int(row['type'])}".zfill(2)+"_"+f"{int(row['trial'])}".zfill(2)+"_"+os.path.basename(prcdpath)
                     basename=f"{int(row['person_id'])}".zfill(2)+"_"+f"{int(row['type'])}".zfill(2)+"_"+f"{int(row['trial'])}".zfill(2)+"_"+os.path.basename(prcdpath)
                     if row["nlpmp_path"] in self.exp_memo_data["nlpmp"].values:
-                        self.read_pickle_history(nlpmp_path)
-                        plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/prcd/success/"+basename)
+                        # self.read_pickle_history(nlpmp_path)
+                        plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/0or1/"+basename)
                         plt.cla()
-                        # shutil.copy(prcdpath,"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/prcd/success/"+basename)
+                        shutil.copy(prcdpath,"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/prcd/success/"+basename)
                         print(basename)
                         self.exp_memo_all_data["result"].iat[idx]=1
 
                     else:
-                        self.read_pickle_history(nlpmp_path)
-                        plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/prcd/failure/"+basename)
+                        # self.read_pickle_history(nlpmp_path)
+                        plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/0or1/"+basename)
                         plt.cla()
                         # shutil.copy(prcdpath,"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/prcd/failure/"+basename)
                         # self.read_pickle_history(nlpmp_path)
