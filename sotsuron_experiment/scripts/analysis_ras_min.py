@@ -8,24 +8,6 @@ import pickle
 import matplotlib.pyplot as plt
 from noise_processor import vel_processor
 
-
-import os
-from glob import glob
-
-if os.name == "nt":
-    pythonpath = f"C:/Users/hayashide/AppData/Local/anaconda3/python"
-    scriptsdirpath=f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
-    resultsdirpath = f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
-else:
-    # if os.path.exists("/home/hayashide/catkin_ws"):
-    #     pythonpath = f"/usr/bin/python3"
-    #     resultsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/results"
-    #     scriptsdirpath = f"/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts"
-    # else:
-    pythonpath="/home/hayashide/anaconda3/bin/python3"
-    resultsdirpath = f"/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
-    scriptsdirpath = f"/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts"
-
 class Discussion():
     def __init__(self):
         self.exp_memo_takahashi_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/exp_memo_takahashi.csv"
@@ -219,26 +201,30 @@ class Discussion():
         plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/timestamp.png")
         plt.show()
 
-
+    def check_min_dist(self,trialdirpath):
+        try:
+            os.system(f"C:/Users/hayashide/AppData/Local/anaconda3/python.exe c:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts/drawConcatPath.py {trialdirpath}")
+            concatpicklepath=sorted(glob(trialdirpath+"/concat_traj.pickle"))[0]
+        except IndexError:
+            return None
+        with open(concatpicklepath, 'rb') as pickle_file:
+            try:
+                data = pickle.load(pickle_file)
+                print(data["analysis"]["min_norm_HR"])
+            except EOFError:
+                print(f"pickle file broken: {concatpicklepath}")
+        # print(concatpicklepath)
     def main(self):
         trialdirpaths=[]
         # self.pickup_prcd_png()
         for idx,row in self.exp_memo_all_data.iterrows():
-            if str(row["nlpmp_path"]) != "nan":
+            if str(row["nlpmp_path"]) != "nan" and (row["type"]==0 or row["type"]==1):
                 nlpmp_path="C:/Users/hayashide"+row["nlpmp_path"][len("/home/hayashide"):]
                 trialdirpaths.append(nlpmp_path)
         # self.init_theta_traj(trialdirpaths)
+        # pprint(len(trialdirpaths))
         for trialdirpath in trialdirpaths:
-            tfcsv_path=trialdirpath+f"/{os.path.basename(trialdirpath)}_tf_raw.csv"
-            odomcsv_path=trialdirpath+f"/{os.path.basename(trialdirpath)}_od_raw.csv"
-            os.system(f"{pythonpath} {scriptsdirpath}/analysis_ras_wholebody.py {tfcsv_path} {odomcsv_path}")
-        
-        # self.pickup_prcd_png()
-        # trialdirpath1="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_201042_20231219_05_01_00_inoue"
-        # trialdirpath2="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_191011_20231219_04_02_05_ohnishi"
-        # trialdirpath="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results/20231219/20231219_201042_20231219_05_01_00_inoue"
-        # self.read_pickle_history(trialdirpath=trialdirpath2)
-        # self.compare_time(trialdirpath1,trialdirpath2)
+            self.check_min_dist(trialdirpath=trialdirpath)
 
 disc=Discussion()
 disc.main()
