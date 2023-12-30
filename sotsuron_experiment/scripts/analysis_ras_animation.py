@@ -193,12 +193,12 @@ class plotSituation():
         theta=row["theta"]
         pan=row["pan"]
         rbt_position = plt.Circle((xR, yR),
-                                     radius=self.rbt["sizer"], edgecolor='b', facecolor='w',label="robot")
+                                     radius=self.rbt["sizer"], edgecolor='b', facecolor='w')#,label="robot")
         plt.gca().add_patch(rbt_position)
         rbt_direction = plt.plot([xR, xR + self.rbt["sizer"] * np.cos(theta + pan)],
                                  [yR, yR + self.rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2)
         hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()]),
-                                     radius=self.hmn["sizer"], edgecolor='r', facecolor='w',label="human")
+                                     radius=self.hmn["sizer"], edgecolor='r', facecolor='w')#,label="human")
         plt.gca().add_patch(hmn_position)
         print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()])
         # raise TimeoutError
@@ -290,7 +290,7 @@ class plotSituation():
         J_list_log=np.log(J_list)
         J_list_log=np.where(J_list_log<0,0,J_list_log)
         ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
-        plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
+        plt.plot(self.odom_data["x"],self.odom_data["y"],"b")#,label="robot")
         # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
         plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap_1229.png")
         plt.legend()
