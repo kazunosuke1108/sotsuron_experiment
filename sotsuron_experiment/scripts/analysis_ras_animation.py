@@ -246,22 +246,23 @@ class plotSituation():
                         J=-self.objF_kukei(t,z,u,self.env,self.rbt,self.hmn,self.sns,zH)
                         J_list[idx_y][idx_x]+=J
             
-            if idx==900 or idx==1000 or idx==1100 or idx==1200 or idx==1300 or idx==1400: # [self.odom_data["t"]<=row["t"]]
-                J_list_log=np.log(J_list)
-                J_list_log=np.where(J_list_log<0,0,J_list_log)
-                ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
-                plt.plot(self.odom_data["x"][self.odom_data["t"]<=row["t"]],self.odom_data["y"][self.odom_data["t"]<=row["t"]],"b")
-                # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
-                self.add_plot_ougi(row)
-                self.add_plot_others(row)
-                plt.legend()
-                plt.xlabel("Hallway direction $\it{x}$ [m]")
-                plt.ylabel("Width direction $\it{y}$ [m]")
-                plt.xlim([-4,7])
-                plt.ylim([-2,2])
-                plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{idx}.png")
-                plt.cla()
-                self.add_plot_others(row)
+            # if idx==900 or idx==1000 or idx==1100 or idx==1200 or idx==1300 or idx==1400: # [self.odom_data["t"]<=row["t"]]
+            J_list_log=np.log(J_list)
+            J_list_log=np.where(J_list_log<0,0,J_list_log)
+            ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
+            plt.plot(self.odom_data["x"][self.odom_data["t"]<=row["t"]],self.odom_data["y"][self.odom_data["t"]<=row["t"]],"b")
+            # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
+            self.add_plot_ougi(row)
+            self.add_plot_others(row)
+            plt.legend()
+            plt.xlabel("Hallway direction $\it{x}$ [m]")
+            plt.ylabel("Width direction $\it{y}$ [m]")
+            plt.xlim([-4,7])
+            plt.ylim([-2,2])
+            plt.savefig("//192.168.1.5/common/FY2023/02_M1/05_hayashide/exp_results/20240109_colormap/images"+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{str(idx).zfill(4)}.png")
+            # plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{idx}.png")
+            plt.cla()
+            self.add_plot_others(row)
                 # fig = plt.figure()
                 # # ax = Axes3D(fig)
 
@@ -276,8 +277,8 @@ class plotSituation():
                 # ax.view_init(elev=90, azim=180)
                 # plt.pause(1)
                 # plt.cla()
-                if idx==1400:
-                    break
+            # if idx==1400:
+            #     break
             # break
         # ax.pcolor(x_array,y_array,J_list,cmap="jet",alpha=0.25)
         # plt.plot(self.odom_data["x"],self.odom_data["y"],"b",label="robot")
@@ -310,11 +311,27 @@ class plotSituation():
 
         # plt.show()
 
+    def draw_anim_from_images(self):
+        import cv2
+        images_dir_path="//192.168.1.5/common/FY2023/02_M1/05_hayashide/exp_results/20240109_colormap/images"
+        images=sorted(glob(images_dir_path+"/*"))
+        fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+        img=cv2.imread(images[0],cv2.IMREAD_COLOR)
+        height, width, channels = img.shape[:3]
+        video = cv2.VideoWriter('//192.168.1.5/common/FY2023/02_M1/05_hayashide/exp_results/20240109_colormap/concat_anim.mp4',fourcc, 30.0, (width, height))
+        for img_path in images:
+            img=cv2.imread(img_path,cv2.IMREAD_COLOR)
+            video.write(img)
+            print(img_path)
+        video.release()
+        pass
+
     def main(self):
         # self.plot_situation()
         self.plot_colormap()
+        self.draw_anim_from_images()
 
-exp_memo_01_data=pd.read_csv("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/exp_memo_01.csv",header=0)
+# exp_memo_01_data=pd.read_csv("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/exp_memo_01.csv",header=0)
 
 
 # trialdirpaths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
