@@ -12,7 +12,7 @@ analysis_ws_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_ex
 original_dir_paths=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-19*"))
 original_dir_paths+=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21*"))
 roi_suffix=".png"
-roi_keyword="stride_kernel"
+roi_keyword="start"
 
 for original_dir_path in original_dir_paths:
     # print(original_dir_path)
