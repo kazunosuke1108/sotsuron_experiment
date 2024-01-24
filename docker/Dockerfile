@@ -17,6 +17,7 @@ RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.l
 ##                      install common packages                      ##
 #######################################################################
 ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt -y upgrade
 RUN apt-get update && apt-get install -y --no-install-recommends \
    pkg-config \
    apt-utils \
@@ -188,6 +189,30 @@ RUN pip install -U pip && pip install \
 
 RUN git clone https://github.com/facebookresearch/detectron2.git && \
     python3 -m pip install -e detectron2
+
+
+#######################################################################
+##                 install environment for mmpose                    ##
+#######################################################################
+# Install xtcocotools
+RUN pip install cython
+RUN pip install xtcocotools
+
+# Install MMEngine and MMCV
+# RUN python3 -m pip install --upgrade pip
+# RUN pip install --upgrade --force-reinstall PyYAML
+RUN pip install openmim
+# RUN mim install mmengine "mmcv>=2.0.0"
+
+# Install MMPose
+# RUN conda clean --all
+# RUN git clone https://github.com/open-mmlab/mmpose.git /mmpose
+# WORKDIR /mmpose
+# RUN git checkout main
+# ENV FORCE_CUDA="1"
+# RUN pip install -r requirements/build.txt
+# RUN pip install --no-cache-dir -e .
+# RUN pip install --upgrade pip
 
 #######################################################################
 ##                install environment for openpose                   ##
