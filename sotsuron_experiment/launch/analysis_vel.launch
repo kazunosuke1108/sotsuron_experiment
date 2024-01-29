@@ -1,8 +1,11 @@
 <launch>
     <arg name="bag_name" default="_2023-12-21-10-22-39"/>
-    
     <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231221/06_murayama/success/_2023-12-21-10-22-39.bag"/>
-    
+    <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_tf_raw.csv"/>
+    <arg name="video_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39.mp4"/>
+    <arg name="video_topic" default="/zed/zed_node/rgb/image_rect_color"/>
+    <arg name="fps" default="30.0"/>
+
     <rosparam param="/use_sim_time">true</rosparam>
     <node
         pkg="rosbag" 
@@ -12,7 +15,7 @@
         required="True"
     />    
     
-    <node pkg="sotsuron_experiment" 
+    <!-- <node pkg="sotsuron_experiment" 
         name="analysis_tf_listener1"
         type="analysis_tf_listener1.py"
         args="$(arg bag_name)"
@@ -31,6 +34,22 @@
         type="analysis_tf_listener3.py"
         args="$(arg bag_name)"
         output="screen" 
+    /> -->
+
+    <node
+        pkg="ytlab_nlpmp_modules" 
+        name="analysis_tf_listener3" 
+        type="analysis_tf_listener3.py" 
+        output="screen" 
+        args="$(arg tfcsv_path)"
+    />
+
+    <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg video_topic)' _fps:='$(arg fps)' _filename:='$(arg video_path)'"
     />
 
     <!-- <node pkg="ytlab_nlpmp_modules" 

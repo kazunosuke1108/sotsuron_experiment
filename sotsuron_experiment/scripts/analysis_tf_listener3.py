@@ -23,7 +23,7 @@ class TfListener(ExpCommons):
         self.listener= tf.TransformListener()
         
         # ファイルの立ち上げ
-        self.tfrawcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error"+"/"+f"{sys.argv[1]}_zed_to_hmn.csv"
+        self.tfrawcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error"+"/"+f"{sys.argv[1]}_zed_to_hmn_01.csv"
         # self.tfrawcsvpath="/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts/exp_debug_tf.csv"
         # self.tfprcdcsvpath=self.tfrawcsvpath[:-6]+"prcd.csv"
         # self.tfprcdcsvpath="/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts/exp_debug_tf_prcd.csv"
