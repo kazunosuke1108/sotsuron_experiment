@@ -21,8 +21,8 @@ import torch
 import cv2
 from glob import glob
 
-videoPaths=["/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20231014/movie/_2023-10-14-19-43-12.mp4"]
-skeletonVideoPaths=["/home/hayashide/catkin_ws/src/sotsuron_experiment/results/20230526/skeleton_movie/_2023-10-14-19-43-12.mp4"]
+videoPaths=["/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46.mp4"]
+skeletonVideoPaths=["/home/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-11-11-55-46/_2023-12-11-11-55-46_skeleton.mp4"]
 
 
 for i, videoPath in enumerate(videoPaths):

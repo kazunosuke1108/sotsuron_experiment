@@ -1,3 +1,6 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from glob import glob
 import json
 import os
@@ -6,9 +9,22 @@ def management_initial():
 
     ## パス管理dict作成
     path_management={}
-    path_management["json_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/json"
-    path_management["png_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png"
-    path_management["csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv"
+    if os.name == "nt":
+        home = os.path.expanduser("~")
+    else:
+        home=os.environ['HOME']
+    path_management["exp_memo_csv_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/exp_memo.csv"
+    path_management["velocity_table_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_table.csv"
+    path_management["stride_table_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/stride_table.csv"
+    path_management["humpback_table_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/humpback_table.csv"
+    path_management["vicon_humpback_table_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/accuracy_table/vicon_humpback.csv"
+    path_management["vicon_hip_table_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20231220_VICON/accuracy_table/vicon_hip.csv"
+    path_management["velocity_csv_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity.csv"
+    path_management["stride_csv_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/stride.csv"
+    path_management["humpback_csv_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/humpback.csv"
+    path_management["json_dir_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/json"
+    path_management["png_dir_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/png"
+    path_management["csv_dir_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv"
     path_management["debug_csv_path"]=path_management["csv_dir_path"]+"/debug.csv"
     path_management["denoise_3d_csv_path"]=path_management["csv_dir_path"]+"/denoise_3d"
     path_management["patient_csv_path"]=path_management["csv_dir_path"]+"/patient_data.csv"
@@ -18,15 +34,15 @@ def management_initial():
     path_management["comparefiles_csv_path"]=path_management["csv_dir_path"]+"/comparefiles.csv"
     path_management["usabledata_csv_path"]=path_management["csv_dir_path"]+"/usabledata.csv"
     path_management["table_pie_path"]=path_management["png_dir_path"]+"/pie_why_partialout.png"
-    path_management["ras_tf_csv_dir_path"]=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*_tf.csv"))
-    path_management["ras_2d_csv_dir_path"]=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*_2d.csv"))
+    path_management["ras_tf_csv_dir_path"]=sorted(glob(f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*_tf.csv"))
+    path_management["ras_2d_csv_dir_path"]=sorted(glob(f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*_2d.csv"))
     path_management["ras_od_csv_dir_path"]=[]
-    path_management["ras_od_csv_dir_path_temp"]=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*.csv"))
+    path_management["ras_od_csv_dir_path_temp"]=sorted(glob(f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/ras_csv/*.csv"))
     for ras_od_csv_candidate in path_management["ras_od_csv_dir_path_temp"]:
         if ("_tf" not in ras_od_csv_candidate) and ("_2d" not in ras_od_csv_candidate) and ("_kp" not in ras_od_csv_candidate):
                         path_management["ras_od_csv_dir_path"].append(ras_od_csv_candidate)
-    path_management["denoise_3d_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_3d"
-    path_management["denoise_2d_csv_dir_path"]="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_2d"
+    path_management["denoise_3d_csv_dir_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_3d"
+    path_management["denoise_2d_csv_dir_path"]=f"{home}/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/csv/denoise_2d"
     
     ### 重複のない試行を取得
     path_management["ras_tf_csv_dir_path_unique"]=[]
@@ -67,7 +83,7 @@ def management_initial():
         for suffix in suffixes:
             csv_labels["detectron2_joint_2d"].append(joint_name+suffix)
     
-    for joint_name in csv_labels["detectron2_joint"]:
+    for joint_name in csv_labels["detectron2_joint_trunk"]:
         suffixes=["_x","_y","_z"]
         for suffix in suffixes:
             csv_labels["detectron2_joint_3d"].append(joint_name+suffix)

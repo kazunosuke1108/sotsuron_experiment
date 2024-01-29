@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
+
 import time
 from datetime import datetime
 import numpy as np
@@ -18,6 +19,7 @@ from detectron2_core import *
 
 class bdboxDetector():
     def __init__(self):
+        self.logger=self.prepare_log()
         # ROS
         rospy.init_node('ras_fast_detector')
         # parameters
@@ -25,11 +27,12 @@ class bdboxDetector():
         self.model_type="KP"
 
         # path
-        try:
-            self.logcsvpath=sys.argv[1]
-        except Exception:
-            self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
+        # try:
+        #     self.logcsvpath=sys.argv[1]
+        # except Exception:
+        self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
         
+        self.tf2d_csvpath=sys.argv[1]
 
         # Detectron2
         self.detector=Detector(model_type=self.model_type)
@@ -59,6 +62,33 @@ class bdboxDetector():
         ans=float(str(rostime.secs)+"."+format(rostime.nsecs,'09'))
         # ans=time.time()
         return ans
+
+    def prepare_log(self):
+        import os
+        from datetime import datetime
+        import logging
+
+        # logdir=os.path.split(os.path.split(__file__)[0])[0]+"/log"
+        logdir = "/home/hayashide/catkin_ws/src/sotsuron_experiment/log"
+        logdaydir=logdir+"/"+datetime.now().strftime('%Y%m%d')
+        os.makedirs(logdaydir,exist_ok=True)
+
+        logger = logging.getLogger(os.path.basename(__file__))
+        logger.setLevel(logging.DEBUG)
+        format = "%(asctime)s [%(filename)s:%(funcName)s:%(lineno)d] %(levelname)-9s  %(message)s"
+        st_handler = logging.StreamHandler()
+        st_handler.setLevel(logging.DEBUG)
+        # StreamHandlerによる出力フォーマットを先で定義した'format'に設定
+        st_handler.setFormatter(logging.Formatter(format))
+
+        fl_handler = logging.FileHandler(filename=logdaydir+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".log", encoding="utf-8")
+        fl_handler.setLevel(logging.INFO)
+        # FileHandlerによる出力フォーマットを先で定義した'format'に設定
+        fl_handler.setFormatter(logging.Formatter(format))
+
+        logger.addHandler(st_handler)
+        logger.addHandler(fl_handler)
+        return logger
     
     def pub_sub(self):
         sub_list=[]
@@ -103,6 +133,10 @@ class bdboxDetector():
                     np_pred_keypoints[:,0]=rgb_array.shape[1]-np_pred_keypoints_t[:,1]
                 else:
                     np_pred_keypoints=np_pred_keypoints_t
+                output_np_pred_keypoints=np_pred_keypoints.flatten()
+                output_np_pred_keypoints=output_np_pred_keypoints.astype(np.float128)
+                output_np_pred_keypoints=np.insert(output_np_pred_keypoints,0,self.get_time())
+                self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
                 return np_pred_keypoints
             
             except IndexError:
@@ -190,9 +224,9 @@ class bdboxDetector():
                 output_data=np.insert(output_data,0,self.get_time())
                 return output_data
 
-    def write_log(self,output_data):
+    def write_log(self,output_data,csvpath):
         try:
-            with open(self.logcsvpath, 'a') as f_handle:
+            with open(csvpath, 'a') as f_handle:
                 np.savetxt(f_handle,[output_data],delimiter=",")
         except FileNotFoundError:
             np.savetxt(self.logcsvpath,[output_data],delimiter=",")
@@ -213,7 +247,7 @@ class bdboxDetector():
             t.header.frame_id = "zed_left_camera_optical_frame_tate"
             t.header.stamp = rospy.Time.now()
             t.child_frame_id = tf_name
-            if not np.isnan(kp_3d).any():
+            if not np.isnan(kp_3d[0]):
                 # t.transform.translation.x = gravity_zone[2]/1000
                 # t.transform.translation.y = -gravity_zone[0]/1000
                 # t.transform.translation.z = gravity_zone[1]/1000
@@ -232,6 +266,7 @@ class bdboxDetector():
 
 
     def ImageCallback(self,rgb_data,dpt_data,info_data):
+        self.logger.debug("ImageCallback start")
         # extract image
         rgb_array=self.get_image(rgb_data,datatype="rgb_ZED")
         dpt_array=self.get_image(dpt_data,datatype="dpt")
@@ -239,13 +274,17 @@ class bdboxDetector():
 
         # keypoint detection
         output_data=self.get_position(rgb_array,dpt_array,proj_mtx)
+        self.logger.debug(output_data)
         # rospy.loginfo(output_data)
 
         try:
             # log (csv)
-            self.write_log(output_data)
+            self.write_log(output_data,csvpath=self.logcsvpath)
             # tf
             self.publish_tf(output_data)
-        except TypeError:# output_dataがない（get_positionがreturnされずNoneの場合）
+            self.logger.info("processed successfully")
+        except TypeError as e:# output_dataがない（get_positionがreturnされずNoneの場合）
+            self.logger.warning(e)
             pass
+        
 detector=bdboxDetector()
