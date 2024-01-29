@@ -1,4 +1,5 @@
 <launch>
+    <arg name="start_delay" default="10"/>
     <arg name="bag_name" default="_2023-12-21-10-22-39"/>
     <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231221/06_murayama/success/_2023-12-21-10-22-39.bag"/>
     <arg name="tfcsv_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_tf_raw.csv"/>
@@ -12,6 +13,7 @@
         name="play" 
         type="play" 
         args="$(arg bag_path) --clock"
+        launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' "
         required="True"
     />    
     
