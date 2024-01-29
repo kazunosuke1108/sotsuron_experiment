@@ -48,13 +48,13 @@
         output="screen" 
     />
 
-    <!-- <node
+    <node
         pkg="ytlab_nlpmp_modules" 
-        name="analysis_tf_listener3" 
-        type="analysis_tf_listener3.py" 
+        name="analysis_tf_listener4" 
+        type="analysis_tf_listener4.py" 
         output="screen" 
         args="$(arg tfcsv_path)"
-    /> -->
+    />
 
     <node
         pkg="image_view" 
