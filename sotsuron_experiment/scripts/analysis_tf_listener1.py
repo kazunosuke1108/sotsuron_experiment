@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import time
 from datetime import datetime
 from glob import glob
@@ -22,7 +23,7 @@ class TfListener(ExpCommons):
         self.listener= tf.TransformListener()
         
         # ファイルの立ち上げ
-        self.tfrawcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error"+"/"+"_2023-12-21-10-22-39_odom_to_hmn.csv"
+        self.tfrawcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error"+"/"+f"{sys.argv[1]}_odom_to_hmn.csv"
         # self.tfrawcsvpath="/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts/exp_debug_tf.csv"
         # self.tfprcdcsvpath=self.tfrawcsvpath[:-6]+"prcd.csv"
         # self.tfprcdcsvpath="/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts/exp_debug_tf_prcd.csv"

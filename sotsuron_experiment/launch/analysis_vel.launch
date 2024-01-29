@@ -1,5 +1,6 @@
 <launch>
-
+    <arg name="bag_name" default="_2023-12-21-10-22-39"/>
+    
     <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231221/06_murayama/success/_2023-12-21-10-22-39.bag"/>
     
     <rosparam param="/use_sim_time">true</rosparam>
@@ -14,6 +15,21 @@
     <node pkg="sotsuron_experiment" 
         name="analysis_tf_listener1"
         type="analysis_tf_listener1.py"
+        args="$(arg bag_name)"
+        output="screen" 
+    />
+
+    <node pkg="sotsuron_experiment" 
+        name="analysis_tf_listener2"
+        type="analysis_tf_listener2.py"
+        args="$(arg bag_name)"
+        output="screen" 
+    />
+
+    <node pkg="sotsuron_experiment" 
+        name="analysis_tf_listener3"
+        type="analysis_tf_listener3.py"
+        args="$(arg bag_name)"
         output="screen" 
     />
 
