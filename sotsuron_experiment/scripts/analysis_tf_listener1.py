@@ -22,7 +22,7 @@ class TfListener(ExpCommons):
         self.listener= tf.TransformListener()
         
         # ファイルの立ち上げ
-        self.tfrawcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/csv"+"/"+"_2023-12-21-10-22-39_zed_to_hmn.csv"
+        self.tfrawcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error"+"/"+"_2023-12-21-10-22-39_odom_to_hmn.csv"
         # self.tfrawcsvpath="/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts/exp_debug_tf.csv"
         # self.tfprcdcsvpath=self.tfrawcsvpath[:-6]+"prcd.csv"
         # self.tfprcdcsvpath="/home/hayashide/catkin_ws/src/ytlab_nlpmp_modules/scripts/exp_debug_tf_prcd.csv"
@@ -33,7 +33,7 @@ class TfListener(ExpCommons):
             try:
                 # odometry
                 # TF
-                (trans,rot) = self.listener.lookupTransform('/zed_left_camera_optical_frame_tate', '/hmn_trunk', rospy.Time(0))
+                (trans,rot) = self.listener.lookupTransform('/odom', '/hmn_trunk', rospy.Time(0))
                 timestamp = self.get_now()
                 trans=np.block([np.array(timestamp),np.array(trans)])
                 trans=np.array(trans)
