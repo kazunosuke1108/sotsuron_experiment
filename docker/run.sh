@@ -29,7 +29,7 @@ else
     
     docker run -it \
     --privileged \
-    --runtime=nvidia \
+    --gpus all \
     -e NVIDIA_VISIBLE_DEVICES=all \
     -e NVIDIA_DRIVER_CAPABILITIES=all \
     --env=DISPLAY=$DISPLAY \

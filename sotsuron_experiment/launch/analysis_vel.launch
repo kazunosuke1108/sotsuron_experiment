@@ -1,0 +1,26 @@
+<launch>
+
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231221/06_murayama/success/_2023-12-21-10-22-39.bag"/>
+    
+    <rosparam param="/use_sim_time">true</rosparam>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path) --clock"
+        required="True"
+    />    
+    
+    <node pkg="sotsuron_experiment" 
+        name="analysis_tf_listener1"
+        type="analysis_tf_listener1.py"
+        output="screen" 
+    />
+
+    <!-- <node pkg="ytlab_nlpmp_modules" 
+        name="analysis_tf_listener1"
+        type="analysis_tf_listener1.py"
+        output="screen" 
+    /> -->
+
+</launch>
