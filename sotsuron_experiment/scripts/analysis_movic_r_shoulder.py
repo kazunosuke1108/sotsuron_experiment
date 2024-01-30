@@ -16,8 +16,11 @@ zH_trunk_x=zH[["r_shoulder_x","l_shoulder_x","r_base_x","l_base_x"]]
 
 # odom
 odom_to_zed_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21-10-22-39/_2023-12-21-10-22-39_od_raw.csv"
-
 zR=pd.read_csv(odom_to_zed_csv_path,names=["t","x","y","theta","phi"])
+
+# sharpness
+sharpness_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_01x.csv"
+sharpness_data=pd.read_csv(sharpness_csv_path,names=["timestamp","sharpness"])
 
 # 2d
 two_d_10x_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_2d_raw.csv"
@@ -32,17 +35,19 @@ ax1.set_ylabel("Position of the human $\it{x}$ [s]")
 ax1.legend(loc="upper left")
 ax2=ax1.twinx()
 
-ax2.plot(zR["t"],zR["x"],label="xR")
-ax2.plot(zR["t"],zR["y"],label="yR")
-ax2.plot(zR["t"],zR["theta"],label="theta")
-ax2.plot(zR["t"],zR["phi"],label="phi")
-plt.ylabel("Position of the robot$\it{x_R}$ [m]")
+ax2.plot(sharpness_data["timestamp"],sharpness_data["sharpness"],label="sharpness")
+ax2.set_ylabel("sharpness of the image using laplacian kernel")
+# ax2.plot(zR["t"],zR["x"],label="xR")
+# ax2.plot(zR["t"],zR["y"],label="yR")
+# ax2.plot(zR["t"],zR["theta"],label="theta")
+# ax2.plot(zR["t"],zR["phi"],label="phi")
+# plt.ylabel("Position of the robot$\it{x_R}$ [m]")
 # ax2.plot(two_d_10x_csv["timestamp"],two_d_10x_csv["r_shoulder_x"],label="r_shoulder_x (2d)")
 # ax2.plot(two_d_10x_csv["timestamp"],two_d_10x_csv["r_shoulder_y"],label="r_shoulder_y (2d)")
 # plt.ylabel("Position in image $\it{x}$ [pixel]")
 ax2.legend(loc="upper right")
 ax1.grid()
-plt.title(f"relationship between odom & estimation result ({os.path.basename(sys.argv[0])} _2023-12-21-10-22-39)")
-plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_odom_and_position.png")
+plt.title(f"relationship between sharpness & estimation result ({os.path.basename(sys.argv[0])} _2023-12-21-10-22-39)")
+plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_sharpness_and_position.png")
 print(zR)
 plt.show()
