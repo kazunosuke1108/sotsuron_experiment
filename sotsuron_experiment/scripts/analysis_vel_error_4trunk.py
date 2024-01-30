@@ -21,4 +21,5 @@ plt.plot(zR["timestamp"],zR_trunk_x.median(axis=1),"o-",markersize=3,label="medi
 plt.xlabel("Time $\it{t}$ [s]")
 plt.ylabel("Position $\it{x}$ [m]")
 plt.legend()
-plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_tf_raw_x.png",dpi=500)
+# plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_tf_raw_x.png",dpi=500)
+plt.show()
