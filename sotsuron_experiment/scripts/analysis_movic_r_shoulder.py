@@ -16,7 +16,6 @@ zH_trunk_x=zH[["r_shoulder_x","l_shoulder_x","r_base_x","l_base_x"]]
 
 # odom
 odom_to_zed_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12-21-10-22-39/_2023-12-21-10-22-39_od_raw.csv"
-
 zR=pd.read_csv(odom_to_zed_csv_path,names=["t","x","y","theta","phi"])
 
 # 2d
