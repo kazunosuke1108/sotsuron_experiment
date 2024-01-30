@@ -8,4 +8,5 @@ sotsuron_experiment/images/save.jpg
 *_ignore/*
 sotsuron_experiment/analysis/png/*
 sotsuron_experiment/analysis/mp4/*
+sotsuron_experiment/analysis/velocity_error/big_data
 *.log

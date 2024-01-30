@@ -32,7 +32,9 @@ class bdboxDetector():
         # except Exception:
         self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
         
-        self.tf2d_csvpath=sys.argv[1]
+        # self.tf2d_csvpath=sys.argv[1]
+        self.bigdata_rgb_dir_path=sys.argv[1]
+        self.bigdata_dpt_dir_path=sys.argv[2]
 
         # Detectron2
         self.detector=Detector(model_type=self.model_type)
@@ -104,15 +106,21 @@ class bdboxDetector():
 
         return self.mf
     
-    def get_image(self,data,datatype="rgb_ZED"):
+    def get_image(self,data,datatype="rgb_ZED",save=False):
         data_time=self.get_time(data.header.stamp)
         if datatype=="rgb_ZED":
             rgb_array = np.frombuffer(data.data, dtype=np.uint8).reshape(data.height, data.width, -1)
             rgb_array=np.nan_to_num(rgb_array, copy=False)
+            if save:
+                rgb_array_t=cv2.rotate(rgb_array,cv2.ROTATE_90_COUNTERCLOCKWISE)
+                cv2.imwrite(self.bigdata_rgb_dir_path+"/"+str(data_time)+".jpg",rgb_array_t)
             rgb_array=cv2.cvtColor(rgb_array,cv2.COLOR_BGR2RGB)
             return rgb_array
         elif datatype=="dpt":
             dpt_array=CvBridge().imgmsg_to_cv2(data)
+            if save:
+                dpt_array_t=cv2.rotate(dpt_array,cv2.ROTATE_90_COUNTERCLOCKWISE)
+                cv2.imwrite(self.bigdata_dpt_dir_path+"/"+str(data_time)+".jpg",dpt_array_t)
             dpt_array=np.array(dpt_array,dtype=np.float32)            
             return dpt_array
     
@@ -136,7 +144,7 @@ class bdboxDetector():
                 output_np_pred_keypoints=np_pred_keypoints.flatten()
                 output_np_pred_keypoints=output_np_pred_keypoints.astype(np.float128)
                 output_np_pred_keypoints=np.insert(output_np_pred_keypoints,0,self.get_time())
-                self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
+                # self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
                 return np_pred_keypoints
             
             except IndexError:
@@ -268,8 +276,8 @@ class bdboxDetector():
     def ImageCallback(self,rgb_data,dpt_data,info_data):
         self.logger.debug("ImageCallback start")
         # extract image
-        rgb_array=self.get_image(rgb_data,datatype="rgb_ZED")
-        dpt_array=self.get_image(dpt_data,datatype="dpt")
+        rgb_array=self.get_image(rgb_data,datatype="rgb_ZED",save=True)
+        dpt_array=self.get_image(dpt_data,datatype="dpt",save=True)
         proj_mtx=np.array(info_data.P).reshape(3,4)
 
         # keypoint detection
