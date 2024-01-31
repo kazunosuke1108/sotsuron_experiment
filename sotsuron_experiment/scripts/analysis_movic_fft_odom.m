@@ -79,17 +79,22 @@ Y_odom(:,9) = fft(detrended_odom_data(:,9));
 % Y_lapl(:,5) = fft(detrended_laplacian_data(:,5));
 % Y_lapl(:,6) = fft(detrended_laplacian_data(:,6));
 
-% plot(resampled_odom_data(:,1),resampled_odom_data(:,6),"LineWidth",2)
-fig=figure();clf;
-plot(Fs/L*(0:(L-1)),abs(Y_odom(:,6)),"LineWidth",2)
-hold on; grid on; 
-% % plot(resampled_odom_data(:,1),detrended_laplacian_data(:,2))
-% plot(Fs/L*(0:T:L),abs(Y_lapl(:,2)),"LineWidth",2)
-title("Complex Magnitude of fft Spectrum (resample 1000Hz)")
-xlabel("f (Hz)")
-ylabel("|fft(X)|")
-saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\analysis\velocity_error/odom_fft_1000Hz.png")
+%% SST
+sst_result_odom_2=wsst(detrended_odom_data)
 
-% % plot(resampled_odom_data(:,1),resampled_laplacian_data(:,2))
+
+%% plot
+% % plot(resampled_odom_data(:,1),resampled_odom_data(:,6),"LineWidth",2)
+% fig=figure();clf;
+% plot(Fs/L*(0:(L-1)),abs(Y_odom(:,6)),"LineWidth",2)
+% hold on; grid on; 
+% % % plot(resampled_odom_data(:,1),detrended_laplacian_data(:,2))
+% % plot(Fs/L*(0:T:L),abs(Y_lapl(:,2)),"LineWidth",2)
+% title("Complex Magnitude of fft Spectrum (resample 1000Hz)")
+% xlabel("f (Hz)")
+% ylabel("|fft(X)|")
+% saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\analysis\velocity_error/odom_fft_1000Hz.png")
+
+% % % plot(resampled_odom_data(:,1),resampled_laplacian_data(:,2))
 
 %% SST
