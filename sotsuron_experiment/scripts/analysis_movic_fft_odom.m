@@ -80,7 +80,14 @@ Y_odom(:,9) = fft(detrended_odom_data(:,9));
 % Y_lapl(:,6) = fft(detrended_laplacian_data(:,6));
 
 %% SST
-sst_result_odom_2=wsst(detrended_odom_data)
+[sst,f]=wsst(detrended_odom_data(:,6));
+fig=figure();clf;
+pcolor(detrended_odom_data(:,1),f,abs(sst))
+shading interp
+xlabel('Seconds')
+ylabel('Frequency (Hz)')
+title('Synchrosqueezed Transform')
+saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\analysis\velocity_error/odom_sst_1000Hz.png")
 
 
 %% plot

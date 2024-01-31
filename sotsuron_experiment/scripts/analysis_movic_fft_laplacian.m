@@ -53,6 +53,18 @@ Y_lapl(:,2) = fft(detrended_laplacian_data(:,2));
 % Y_lapl(:,5) = fft(detrended_laplacian_data(:,5));
 % Y_lapl(:,6) = fft(detrended_laplacian_data(:,6));
 
+%% SST
+[sst,f]=wsst(detrended_laplacian_data(:,2));
+fig=figure();clf;
+pcolor(detrended_laplacian_data(:,1),f,abs(sst))
+shading interp
+xlabel('Seconds')
+ylabel('Frequency (Hz)')
+title('Synchrosqueezed Transform')
+saveas(fig,"C:\Users\hayashide\kazu_ws\sotsuron_experiment\sotsuron_experiment\analysis\velocity_error/lapl_sst_1000Hz.png")
+
+
+%% plot
 fig1=figure();clf;
 plot(resampled_laplacian_data(:,1),resampled_laplacian_data(:,2),"LineWidth",2)
 hold on; grid on; 
