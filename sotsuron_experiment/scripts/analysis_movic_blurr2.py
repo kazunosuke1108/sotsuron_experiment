@@ -17,9 +17,9 @@ plt.rcParams["figure.figsize"] = (15,10)
 plt.rcParams["figure.autolayout"] = True
 plt.rcParams['font.family'] = 'Times New Roman'
 
-images_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/rgb"
-csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn.csv"
-png_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn.png"
+images_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/rgb_01x"
+csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn_01x.csv"
+png_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn_01x.png"
 
 ## ブレの定量化
 
@@ -50,17 +50,17 @@ for img_path in images:
         break
 
 # ## ブレを描画
-csv_data=pd.read_csv(csv_path,names=["timestamp","laplacian","min_x","max_x","min_y","max_y"])
-print(csv_data)
-fig,ax1=plt.subplots()
-ax1.plot(csv_data["timestamp"].values,csv_data["laplacian"].values,label="Sharpness")
-ax1.set_xlabel("Time $\it{t}$ [s]")
-ax1.set_ylabel("Sharpness of the image using laplacian kernel")
-ax1.legend(loc="upper left")
-ax2=ax1.twinx()
-ax2.plot(csv_data["timestamp"].values,csv_data["max_x"].values-csv_data["min_x"].values,"r",marker="o",label="width of the image")
-ax2.plot(csv_data["timestamp"].values,csv_data["max_y"].values-csv_data["min_y"].values,"b",marker="o",label="height of the image")
-ax2.set_ylabel("size of the image [pixel]")
-ax2.legend(loc="upper right")
-plt.title(f"Sharpness of the image calculated by laplacian kernel ({os.path.basename(sys.argv[0])} _2023-12-21-10-22-39)")
-plt.savefig(png_path,dpi=500)
+# csv_data=pd.read_csv(csv_path,names=["timestamp","laplacian","min_x","max_x","min_y","max_y"])
+# print(csv_data)
+# fig,ax1=plt.subplots()
+# ax1.plot(csv_data["timestamp"].values,csv_data["laplacian"].values,label="Sharpness")
+# ax1.set_xlabel("Time $\it{t}$ [s]")
+# ax1.set_ylabel("Sharpness of the image using laplacian kernel")
+# ax1.legend(loc="upper left")
+# ax2=ax1.twinx()
+# ax2.plot(csv_data["timestamp"].values,csv_data["max_x"].values-csv_data["min_x"].values,"r",marker="o",label="width of the image")
+# ax2.plot(csv_data["timestamp"].values,csv_data["max_y"].values-csv_data["min_y"].values,"b",marker="o",label="height of the image")
+# ax2.set_ylabel("size of the image [pixel]")
+# ax2.legend(loc="upper right")
+# plt.title(f"Sharpness of the image calculated by laplacian kernel ({os.path.basename(sys.argv[0])} _2023-12-21-10-22-39)")
+# plt.savefig(png_path,dpi=500)

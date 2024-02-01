@@ -16,7 +16,7 @@ plt.rcParams['font.family'] = 'Times New Roman'
 images_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/hmn_01x_skeleton"
 images_4000_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/hmn_01x_skeleton_4000"
 images_1000_dir_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/hmn_01x_skeleton_1000"
-csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn.csv"
+csv_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn_01x.csv"
 png_path="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_laplacian_rgb_hmn.png"
 
 
@@ -26,11 +26,13 @@ csv_data_sharp_4000=csv_data[csv_data["laplacian"]>=4000]
 csv_data_sharp_1000=csv_data[csv_data["laplacian"]<=1000]
 
 for idx, row in csv_data_sharp_4000.iterrows():
-    print(images_dir_path+"/"+str(int(row["timestamp"])))
-    copyimage=sorted(glob(images_dir_path+"/"+str(int(row["timestamp"]))+"*"))[0]
+    print(row["timestamp"])
+    print(str(np.floor(row["timestamp"]*10)/10))
+    print(images_dir_path+"/"+str((np.floor(row["timestamp"]*10)/10)))
+    copyimage=sorted(glob(images_dir_path+"/"+str((np.floor(row["timestamp"]*10)/10))+"*"))[0]
     shutil.copy(copyimage,images_4000_dir_path+"/"+os.path.basename(copyimage))
 
 for idx, row in csv_data_sharp_1000.iterrows():
-    print(images_dir_path+"/"+str(int(row["timestamp"])))
-    copyimage=sorted(glob(images_dir_path+"/"+str(int(row["timestamp"]))+"*"))[0]
+    print(images_dir_path+"/"+str((np.floor(row["timestamp"]*10)/10)))
+    copyimage=sorted(glob(images_dir_path+"/"+str((np.floor(row["timestamp"]*10)/10))+"*"))[0]
     shutil.copy(copyimage,images_1000_dir_path+"/"+os.path.basename(copyimage))
