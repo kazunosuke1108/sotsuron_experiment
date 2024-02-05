@@ -1,0 +1,33 @@
+<launch>
+    <arg name="bag_name" default="_2024-02-04-17-23-27"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/'Extreme Pro'/hayashide/rosbag/20240204/hsrb/$(arg bag_name).bag"/>
+    <arg name="topic_name" default="/hsrb/base_accurate_imu/data"/>
+
+    <arg name="skip" default="0"/>
+    <arg name="duration" default="60"/>
+    <arg name="speed" default="0.1"/>
+
+    <arg name="results_dir_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/$(arg bag_name)"/>
+
+    <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
+
+   <rosparam param="/use_sim_time">true</rosparam>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path) -s $(arg skip) -u $(arg duration) --clock -r $(arg speed)"
+        required="True"
+    />    
+        <!-- args="-r 0.05 $(arg bag_path)" -->
+        <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    />
+
+</launch>

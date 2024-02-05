@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo chmod 666 /var/run/docker.sock
+
 cd `dirname $0`
 
 # xhost +

@@ -29,6 +29,13 @@ class ExpCommons():
             csv_labels["detectron2_joint_3d_4"].append(joint_name+suffix)
 
     csv_labels["result_chart"]=["patient_id","type_id","trial_id","n_frames","n_partialout_head","n_partialout_foot","n_partialout_left","n_partialout_right","n_totalout","time_partialout_head","time_partialout_foot","time_partialout_left","time_partialout_right","time_totalout","csvpath"]
+    
+    csv_labels["imu"]=["timestamp","orien_x","orien_y","orien_z","orien_w","ang_vel_x","ang_vel_y","ang_vel_z","lin_acc_x","lin_acc_y","lin_acc_z"]
+    cov_list=["orien_cov","ang_vel_cov","lin_acc_cov"]
+    for cov_name in cov_list:
+        for i in np.arange(1,10,1):
+            csv_labels["imu"].append(cov_name+"_"+str(i).zfill(2))
+    
     def __init__(self):
         if os.name == "nt":
             if os.path.isdir("//192.168.1.5/common/FY2023/02_M1/05_hayashide/ytlab_nlpmp_modules/results"):
@@ -47,10 +54,13 @@ class ExpCommons():
 
 
 
-    def get_now(self):
+    def get_time(self,rostime=None):
         try:
             import rospy
-            now=rospy.Time.now()
+            if rostime==None:
+                now=rospy.Time.now()
+            else:
+                now=rostime
             ans=float(str(now.secs)+"."+format(now.nsecs,'09'))
         except ModuleNotFoundError:
             import time
