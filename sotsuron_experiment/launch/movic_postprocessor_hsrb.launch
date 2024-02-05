@@ -1,11 +1,14 @@
 <launch>
     <arg name="bag_name" default="_2024-02-04-17-23-27"/>
     <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/'Extreme Pro'/hayashide/rosbag/20240204/hsrb/$(arg bag_name).bag"/>
-    <arg name="topic_name" default="/hsrb/base_accurate_imu/data"/>
+    <arg name="topic_name_1" default="/hsrb/base_accurate_imu/data"/>
+    <arg name="topic_name_2" default="/hsrb/base_imu/data"/>
+    <arg name="topic_name_3" default="/hsrb/ceiling_stereo_camera/imu/data_raw"/>
 
+    <arg name="start_delay" default="10"/>
     <arg name="skip" default="0"/>
     <arg name="duration" default="60"/>
-    <arg name="speed" default="0.1"/>
+    <arg name="speed" default="1"/>
 
     <arg name="results_dir_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/$(arg bag_name)"/>
 
@@ -21,12 +24,29 @@
     />    
         <!-- args="-r 0.05 $(arg bag_path)" -->
         <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
+        <!-- launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' " -->
 
     <node
         pkg="sotsuron_experiment" 
-        name="analysis_movic_subscribe_imu" 
+        name="analysis_movic_subscribe_imu1" 
         type="analysis_movic_subscribe_imu.py" 
-        args="$(arg topic_name) $(arg results_dir_path) $(arg speed)"
+        args="$(arg topic_name_1) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    />
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu2" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name_2) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    />
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu3" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name_3) $(arg results_dir_path) $(arg speed)"
         output="screen" 
     />
 
