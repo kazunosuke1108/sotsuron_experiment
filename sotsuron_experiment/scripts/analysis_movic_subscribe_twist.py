@@ -28,9 +28,11 @@ class TwistSubscriber(ExpCommons):
 
             self.frame_id=os.path.basename(os.path.split(self.topic_name)[1])
             self.csv_path=sys.argv[2]+"/"+self.frame_id+"_"+str(sys.argv[3])+".csv"
-            rospy.init_node(f"imu_subscriber_{self.frame_id}")
-            self.mf=self.pub_sub()
-            self.mf.registerCallback(self.TwistCallback)
+            rospy.init_node(f"twist_subscriber_{self.frame_id}")
+            
+            rospy.Subscriber(self.topic_name, Twist, self.TwistCallback)
+            # self.mf=self.pub_sub()
+            # self.mf.registerCallback(self.TwistCallback)
             rospy.spin()
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -38,24 +40,24 @@ class TwistSubscriber(ExpCommons):
             pass
 
 
-    def pub_sub(self):
-        sub_list=[]
-        imu_sub_1=message_filters.Subscriber(self.topic_name,Twist)
-        sub_list.append(imu_sub_1)
+    # def pub_sub(self):
+    #     sub_list=[]
+    #     imu_sub_1=message_filters.Subscriber(self.topic_name,Twist)
+    #     sub_list.append(imu_sub_1)
 
-        mf=message_filters.ApproximateTimeSynchronizer(sub_list,2,1)
-        return mf
+    #     mf=message_filters.ApproximateTimeSynchronizer(sub_list,2,1)
+    #     return mf
 
-    def ImuCallback(self,twist_data):
+    def TwistCallback(self,twist_data):
         try:
             output_data=[]
-            timestamp=self.get_time(twist_data.header.stamp)
+            timestamp=self.get_time()
             output_data=output_data+[timestamp]
             twist_info=[twist_data.linear.x,twist_data.linear.y,twist_data.linear.z,twist_data.angular.x,twist_data.angular.y,twist_data.angular.z]
             output_data=output_data+twist_info
             
-            # self.write_csvlog(output_data,self.csv_path)
-            print(output_data)
+            self.write_csvlog(output_data,self.csv_path)
+            # print(output_data)
             self.logger.info(f"data @ {timestamp} was processed successfully")
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
