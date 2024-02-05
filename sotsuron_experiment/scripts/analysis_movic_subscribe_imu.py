@@ -18,18 +18,24 @@ class IMUSubscriber(ExpCommons):
     def __init__(self):
         super().__init__()
         self.logger=self.prepare_log()
-
         try:
-            self.topic_name=sys.argv[1]
-        except Exception:
-            self.topic_name="/hsrb/base_accurate_imu/data"
 
-        self.frame_id=os.path.basename(os.path.split(self.topic_name)[0])
-        self.csv_path=sys.argv[2]+"/"+self.frame_id+"_"+str(sys.argv[3])+".csv"
-        rospy.init_node(f"imu_subscriber_{self.frame_id}")
-        self.mf=self.pub_sub()
-        self.mf.registerCallback(self.ImuCallback)
-        rospy.spin()
+            try:
+                self.topic_name=sys.argv[1]
+            except Exception:
+                self.topic_name="/hsrb/base_accurate_imu/data"
+
+            self.frame_id=os.path.basename(os.path.split(self.topic_name)[0])
+            self.csv_path=sys.argv[2]+"/"+self.frame_id+"_"+str(sys.argv[3])+".csv"
+            rospy.init_node(f"imu_subscriber_{self.frame_id}")
+            self.mf=self.pub_sub()
+            self.mf.registerCallback(self.ImuCallback)
+            rospy.spin()
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            self.logger.error(f"line {exc_tb.tb_lineno}: {e}")
+            pass
+
 
     def pub_sub(self):
         sub_list=[]
