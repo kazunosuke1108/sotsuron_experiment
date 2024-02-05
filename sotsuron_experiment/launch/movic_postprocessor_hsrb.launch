@@ -4,6 +4,7 @@
     <arg name="topic_name_1" default="/hsrb/base_accurate_imu/data"/>
     <arg name="topic_name_2" default="/hsrb/base_imu/data"/>
     <arg name="topic_name_3" default="/hsrb/ceiling_stereo_camera/imu/data_raw"/>
+    <arg name="topic_name_twist" default="/hsrb/command_velocity"/>
 
     <!-- <arg name="start_delay" default="10"/> -->
     <arg name="skip" default="0"/>
@@ -29,26 +30,34 @@
 
     <node
         pkg="sotsuron_experiment" 
-        name="analysis_movic_subscribe_imu1" 
-        type="analysis_movic_subscribe_imu.py" 
+        name="analysis_movic_subscribe_twist" 
+        type="analysis_movic_subscribe_twist.py" 
         args="$(arg topic_name_1) $(arg results_dir_path) $(arg speed)"
         output="screen" 
     />
 
-    <node
+    <!-- <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu1" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name_1) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    /> -->
+
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="analysis_movic_subscribe_imu2" 
         type="analysis_movic_subscribe_imu.py" 
         args="$(arg topic_name_2) $(arg results_dir_path) $(arg speed)"
         output="screen" 
-    />
+    /> -->
 
-    <node
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="analysis_movic_subscribe_imu3" 
         type="analysis_movic_subscribe_imu.py" 
         args="$(arg topic_name_3) $(arg results_dir_path) $(arg speed)"
         output="screen" 
-    />
+    /> -->
 
 </launch>
