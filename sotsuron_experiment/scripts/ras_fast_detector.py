@@ -32,9 +32,9 @@ class bdboxDetector():
         # except Exception:
         self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
         
-        # self.tf2d_csvpath=sys.argv[1]
-        self.bigdata_rgb_dir_path=sys.argv[1]
-        self.bigdata_dpt_dir_path=sys.argv[2]
+        self.tf2d_csvpath=sys.argv[1]
+        self.bigdata_rgb_dir_path=sys.argv[2]
+        # self.bigdata_dpt_dir_path=sys.argv[2]
 
         # Detectron2
         self.detector=Detector(model_type=self.model_type)
@@ -120,7 +120,7 @@ class bdboxDetector():
             dpt_array=CvBridge().imgmsg_to_cv2(data)
             if save:
                 dpt_array_t=cv2.rotate(dpt_array,cv2.ROTATE_90_COUNTERCLOCKWISE)
-                cv2.imwrite(self.bigdata_dpt_dir_path+"/"+str(data_time)+".jpg",dpt_array_t)
+                # cv2.imwrite(self.bigdata_dpt_dir_path+"/"+str(data_time)+".jpg",dpt_array_t)
             dpt_array=np.array(dpt_array,dtype=np.float32)            
             return dpt_array
     
@@ -144,7 +144,7 @@ class bdboxDetector():
                 output_np_pred_keypoints=np_pred_keypoints.flatten()
                 output_np_pred_keypoints=output_np_pred_keypoints.astype(np.float128)
                 output_np_pred_keypoints=np.insert(output_np_pred_keypoints,0,self.get_time())
-                # self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
+                self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
                 return np_pred_keypoints
             
             except IndexError:

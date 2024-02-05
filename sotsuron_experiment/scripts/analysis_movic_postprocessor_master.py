@@ -12,9 +12,9 @@ hsrb_rosbag_paths=sorted(glob(hsrbdir+"/_2024*"))
 zed_rosbag_paths=sorted(glob(zeddir+"/*"))
 stereo_rosbag_paths=sorted(glob(stereodir+"/*"))
 
-hsrb_rosbag_paths.reverse()
-zed_rosbag_paths.reverse()
-stereo_rosbag_paths.reverse()
+# hsrb_rosbag_paths.reverse()
+# zed_rosbag_paths.reverse()
+# stereo_rosbag_paths.reverse()
 
 for idx, [hsrb_rosbag_path,zed_rosbag_path,stereo_rosbag_path] in enumerate(zip(hsrb_rosbag_paths,zed_rosbag_paths,stereo_rosbag_paths)):
 
@@ -30,14 +30,16 @@ for idx, [hsrb_rosbag_path,zed_rosbag_path,stereo_rosbag_path] in enumerate(zip(
         bag_name=os.path.basename(rosbag_path)[:-4]
         bag_path=rosbag_path
         results_dir_path=result_subdir_path
-        if category=="hsrb":
-            print(bag_name)
-            print(bag_path)
-            print(results_dir_path)
-            os.system(f"roslaunch sotsuron_experiment movic_postprocessor_hsrb.launch bag_name:={bag_name} results_dir_path:={results_dir_path}")
-        # if category=="zed":
+        # if category=="hsrb":
         #     print(bag_name)
         #     print(bag_path)
         #     print(results_dir_path)
-        #     os.system(f"roslaunch sotsuron_experiment movic_postprocessor_zed.launch bag_name:={bag_name} results_dir_path:={results_dir_path}")
+        #     os.system(f"roslaunch sotsuron_experiment movic_postprocessor_hsrb.launch bag_name:={bag_name} results_dir_path:={results_dir_path}")
+        if category=="zed":
+            print(bag_name)
+            print(bag_path)
+            print(results_dir_path)
+            bigdata_rgb_dir_path=f"/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/20240204/{bag_name}"
+            os.makedirs(bigdata_rgb_dir_path,exist_ok=True)
+            os.system(f"roslaunch sotsuron_experiment movic_postprocessor_zed.launch bag_name:={bag_name} results_dir_path:={results_dir_path} bigdata_rgb_dir_path:={bigdata_rgb_dir_path}")
             
