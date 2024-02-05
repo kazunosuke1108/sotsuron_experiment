@@ -8,7 +8,7 @@
     <arg name="topic_name_odom" default="/hsrb/odom"/>
 
     <!-- <arg name="start_delay" default="10"/> -->
-    <arg name="skip" default="30"/>
+    <arg name="skip" default="0"/>
     <!-- <arg name="duration" default="60"/> -->
     <arg name="speed" default="1"/>
 

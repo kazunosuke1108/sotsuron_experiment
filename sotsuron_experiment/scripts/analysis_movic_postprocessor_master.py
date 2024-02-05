@@ -35,9 +35,9 @@ for idx, [hsrb_rosbag_path,zed_rosbag_path,stereo_rosbag_path] in enumerate(zip(
             print(bag_path)
             print(results_dir_path)
             os.system(f"roslaunch sotsuron_experiment movic_postprocessor_hsrb.launch bag_name:={bag_name} results_dir_path:={results_dir_path}")
-        if category=="zed":
-            print(bag_name)
-            print(bag_path)
-            print(results_dir_path)
-            os.system(f"roslaunch sotsuron_experiment movic_postprocessor_zed.launch bag_name:={bag_name} results_dir_path:={results_dir_path}")
+        # if category=="zed":
+        #     print(bag_name)
+        #     print(bag_path)
+        #     print(results_dir_path)
+        #     os.system(f"roslaunch sotsuron_experiment movic_postprocessor_zed.launch bag_name:={bag_name} results_dir_path:={results_dir_path}")
             
