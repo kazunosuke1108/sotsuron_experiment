@@ -2,12 +2,14 @@ import numpy as np
 import pandas as pd
 
 def vel_processor(data):
-    data["vx"]=0
-    data["vy"]=0
-    data["vz"]=0
-    data["vx"][1:]=(data["x"].values[1:]-data["x"].values[:-1])/(data["t"].values[1:]-data["t"].values[:-1])
-    data["vy"][1:]=(data["y"].values[1:]-data["y"].values[:-1])/(data["t"].values[1:]-data["t"].values[:-1])
-    data["vz"][1:]=(data["z"].values[1:]-data["z"].values[:-1])/(data["t"].values[1:]-data["t"].values[:-1])
+    data["v_x"]=0
+    data["v_y"]=0
+    data["v_theta"]=0
+    data["v_pan"]=0
+    data["v_x"][1:]=(data["x"].values[1:]-data["x"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    data["v_y"][1:]=(data["y"].values[1:]-data["y"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    data["v_theta"][1:]=(data["theta"].values[1:]-data["theta"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
+    data["v_pan"][1:]=(data["pan"].values[1:]-data["pan"].values[:-1])/(data["timestamp"].values[1:]-data["timestamp"].values[:-1])
     return data
 
 

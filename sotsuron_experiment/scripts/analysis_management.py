@@ -73,7 +73,8 @@ def management_initial():
                 path_management["ras_od_csv_dir_path_unique"].append(same_trial2[-1])
     # csvのnames作成
     csv_labels={}
-    csv_labels["odometry"]=["t","x","y","theta","pan"]
+    csv_labels["odometry"]=["timestamp","x","y","theta","pan"]
+    csv_labels["command_velocity"]=["timestamp","v_x","v_y","v_z","omg_x","omg_y","omg_z"]
     csv_labels["detectron2_joint"]=["gravity","nose","l_eye","r_eye","l_ear","r_ear","l_shoulder","r_shoulder","l_elbow","r_elbow","l_hand","r_hand","l_base","r_base","l_knee","r_knee","l_foot","r_foot"]
     csv_labels["detectron2_joint_trunk"]=["gravity","trunk","nose","l_eye","r_eye","l_ear","r_ear","l_shoulder","r_shoulder","l_elbow","r_elbow","l_hand","r_hand","l_base","r_base","l_knee","r_knee","l_foot","r_foot"]
     csv_labels["detectron2_joint_2d"]=["timestamp"]
