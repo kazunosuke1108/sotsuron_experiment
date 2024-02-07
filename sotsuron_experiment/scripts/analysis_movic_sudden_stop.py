@@ -12,6 +12,7 @@ class AnalyzeSuddenStop():
         self.path_management,self.csv_labels,self.color_dict=management_initial()
         plt.rcParams["figure.figsize"] = (15,10)
         plt.rcParams["figure.autolayout"] = True
+        plt.rcParams["font.size"] = 24
         plt.rcParams['font.family'] = 'Times New Roman'
         self.png_prefix="ROI"
 
@@ -30,7 +31,7 @@ class AnalyzeSuddenStop():
             self.command_velocity_data=pd.read_csv(self.command_velocity_csv_path,names=self.csv_labels["command_velocity"])
         except FileNotFoundError:
             pass
-        start_timestamp=self.command_velocity_data["timestamp"].min()-0.5
+        start_timestamp=self.command_velocity_data["timestamp"].min()-5
         end_timestamp=self.command_velocity_data["timestamp"].max()+2
         try:
             self.base_accurate_imu_data=pd.read_csv(self.base_accurate_imu_csv_path,names=self.csv_labels["imu"])
@@ -73,15 +74,15 @@ class AnalyzeSuddenStop():
         plt.plot(self.base_accurate_imu_data["timestamp"],self.base_accurate_imu_data["lin_acc_x"],label=r"base $\it{\alpha_x}$")
         plt.plot(self.head_imu_data["timestamp"],-self.head_imu_data["lin_acc_x_calib"],label=r"head $\it{\alpha_x}$")
         plt.plot(self.zed_imu_data["timestamp"],self.zed_imu_data["lin_acc_x_calib"],label=r"zed $\it{\alpha_x}$")
-        plt.legend(loc="upper left")
+        plt.legend()
         plt.grid()
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Acceleration $\it{a}$ [m/s$^{2}$]")
         plt.subplot(gs[1])
-        plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],label="command")
         plt.plot(self.odom_data["timestamp"],self.odom_data["v_x"],label="odometry")
+        plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],label="command")
         plt.grid()
-        plt.legend(loc="upper right")
+        plt.legend()
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Velocity $\it{v_x}$ [m/s]")
         plt.title("all IMU and velocity"+" "+os.path.basename(self.results_dir_path))
@@ -109,7 +110,7 @@ class AnalyzeSuddenStop():
             plt.plot(brake_base_accurate_imu_data["timestamp"],brake_base_accurate_imu_data["lin_acc_x"],label=r"base $\it{\alpha_x}$")
             plt.plot(brake_head_imu_data["timestamp"],-brake_head_imu_data["lin_acc_x_calib"],label=r"head $\it{\alpha_x}$")
             plt.plot(brake_zed_imu_data["timestamp"],brake_zed_imu_data["lin_acc_x_calib"],label=r"zed $\it{\alpha_x}$")
-            plt.legend(loc="upper left")
+            plt.legend()
             plt.grid()
             plt.xlabel("Time $\it{t}$ [s]")
             plt.ylabel("Acceleration $\it{a}$ [m/s$^{2}$]")
@@ -117,7 +118,7 @@ class AnalyzeSuddenStop():
             # plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],label="command")
             plt.plot(brake_odom_data["timestamp"],brake_odom_data["v_x"],label="odometry")
             plt.grid()
-            plt.legend(loc="upper right")
+            plt.legend()
             plt.xlabel("Time $\it{t}$ [s]")
             plt.ylabel("Velocity $\it{v_x}$ [m/s]")
             plt.title("all IMU and velocity"+" "+os.path.basename(self.results_dir_path))
@@ -170,7 +171,7 @@ class AnalyzeSuddenStop():
         plt.legend()
         plt.grid()
         plt.xlabel("Frequency [Hz]")
-        plt.xlabel("Amplitude")
+        plt.ylabel("Amplitude")
         plt.title("FFT of the main IMUs when stop"+" "+os.path.basename(self.results_dir_path))
         plt.savefig(self.results_dir_path+f"/all_IMU_fft_{png_suffix}.png")
         # plt.show()
@@ -179,8 +180,14 @@ class AnalyzeSuddenStop():
 
     def plot_imu(self,data,data_name):
         try:
-            plt.plot(data["timestamp"],data["lin_acc_x_calib"],"r",label="lin_acc_x (calib)")
-            plt.plot(data["timestamp"],data["lin_acc_y_calib"],"g",label="lin_acc_y (calib)")
+            if "head" in data_name:
+                plt.plot(data["timestamp"],-data["lin_acc_x_calib"],"r",label="lin_acc_x (calib)")
+            else:
+                plt.plot(data["timestamp"],data["lin_acc_x_calib"],"r",label="lin_acc_x (calib)")
+            if "head" in data_name:
+                plt.plot(data["timestamp"],-data["lin_acc_y_calib"],"g",label="lin_acc_y (calib)")
+            else:
+                plt.plot(data["timestamp"],data["lin_acc_y_calib"],"g",label="lin_acc_y (calib)")
             plt.plot(data["timestamp"],data["lin_acc_z_calib"],"b",label="lin_acc_z (calib)")
         except KeyError:
             plt.plot(data["timestamp"],data["lin_acc_x"],"r",label="lin_acc_x")
@@ -206,19 +213,20 @@ class AnalyzeSuddenStop():
         data=vel_processor(data)
         fig,ax1=plt.subplots()
         ax1.plot(data["timestamp"],data["x"],"r",label="$\it{x}$")
-        ax1.plot(data["timestamp"],data["y"],"g",label="$\it{y}$")
-        ax1.plot(data["timestamp"],data["theta"],"b",label=r"$\theta$")
-        ax1.plot(data["timestamp"],data["pan"],"c",label="$\phi$")
-        ax1.legend(loc="upper left")
+        # ax1.plot(data["timestamp"],data["y"],"g",label="$\it{y}$")
+        # ax1.plot(data["timestamp"],data["theta"],"b",label=r"$\theta$")
+        # ax1.plot(data["timestamp"],data["pan"],"c",label="$\phi$")
+        ax1.legend()
         ax1.grid()
         ax1.set_xlabel("Time $\it{t}$ [s]")
         ax1.set_ylabel("Position [m]")
         ax2=ax1.twinx()
-        ax2.plot(data["timestamp"],data["v_x"],"r--",label="$\it{v_x}$ [m/s]")
-        ax2.plot(data["timestamp"],data["v_y"],"g--",label="$\it{v_y}$ [m/s]")
-        ax2.plot(data["timestamp"],data["v_theta"],"b--",label=r"$v_{\theta}$ [rad/s]")
-        ax2.plot(data["timestamp"],data["v_pan"],"c--",label="$v_{\phi}$ [rad/s]")
-        ax2.legend(loc="upper right")
+        ax2.plot(data["timestamp"],data["v_x"],"r--",label="Odometry $\it{v_x}$ [m/s]")
+        plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],"k",label="Control input $\it{v_x}$ [m/s]")
+        # ax2.plot(data["timestamp"],data["v_y"],"g--",label="$\it{v_y}$ [m/s]")
+        # ax2.plot(data["timestamp"],data["v_theta"],"b--",label=r"$v_{\theta}$ [rad/s]")
+        # ax2.plot(data["timestamp"],data["v_pan"],"c--",label="$v_{\phi}$ [rad/s]")
+        ax2.legend()
         ax2.set_ylabel("Velocity [m/s]")
 
         plt.title(data_name+" "+os.path.basename(self.results_dir_path))
@@ -270,9 +278,10 @@ class AnalyzeSuddenStop():
             pass
 
 cls=AnalyzeSuddenStop()
-cls.plot_all_imu()
-cls.plot_fft()
-# start_timestamp=cls.command_velocity_data["timestamp"].min()
+# cls.plot_all_imu()
+cls.plot_all()
+# cls.plot_fft()
+# start_timestamp=cls.command_velocity_data["timestamp"].min()-3
 # end_timestamp=start_timestamp+1
 # idx=0
 # while end_timestamp<=cls.command_velocity_data["timestamp"].max()+2:
@@ -280,3 +289,4 @@ cls.plot_fft()
 #     start_timestamp=start_timestamp+0.5
 #     end_timestamp=start_timestamp+1
 #     print(start_timestamp)
+#     break

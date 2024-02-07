@@ -7,7 +7,7 @@ from analysis_management import *
 from noise_processor import *
 
 class MovicExporter():
-    def __init__(self,results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_04"):
+    def __init__(self,results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_07"):
         self.path_management,self.csv_labels,self.color_dict=management_initial()
         plt.rcParams["figure.figsize"] = (15,10)
         plt.rcParams["figure.autolayout"] = True
@@ -93,9 +93,10 @@ class MovicExporter():
             self.head_imu_data["lin_acc_x_calib"]=self.head_imu_data["lin_acc_x"]*np.cos(stable_angle)-self.head_imu_data["lin_acc_z"]*np.sin(stable_angle)
             self.head_imu_data["lin_acc_y_calib"]=self.head_imu_data["lin_acc_y"]
             self.head_imu_data["lin_acc_z_calib"]=self.head_imu_data["lin_acc_x"]*np.sin(stable_angle)+self.head_imu_data["lin_acc_z"]*np.cos(stable_angle)
-            # plt.plot(self.head_imu_data["timestamp"],self.head_imu_data["lin_acc_x_calib"],"r")
-            # plt.plot(self.head_imu_data["timestamp"],self.head_imu_data["lin_acc_y_calib"],"g")
-            # plt.plot(self.head_imu_data["timestamp"],self.head_imu_data["lin_acc_z_calib"],"b")
+            plt.plot(self.head_imu_data["timestamp"],self.head_imu_data["lin_acc_x_calib"],"r")
+            plt.plot(self.head_imu_data["timestamp"],self.head_imu_data["lin_acc_y_calib"],"g")
+            plt.plot(self.head_imu_data["timestamp"],self.head_imu_data["lin_acc_z_calib"],"b")
+            plt.show()
             # print(stable_acc_z)
             # print(stable_angle)
             # print(np.median(np.sqrt(self.head_imu_data["lin_acc_x_calib"].values**2+self.head_imu_data["lin_acc_z_calib"].values**2)))
@@ -113,6 +114,7 @@ class MovicExporter():
             print(g)
             print(stable_angle)
             print(np.median(np.sqrt(self.zed_imu_data["lin_acc_x_calib"].values**2+self.zed_imu_data["lin_acc_y_calib"].values**2)))
+            plt.show()
             self.zed_imu_data.to_csv(self.zed_imu_calib_csv_path,index=False)
 
             raise TimeoutError
@@ -213,7 +215,7 @@ class MovicExporter():
 
 results_dirs=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_*"))
 # print(results_dirs)
-cls=MovicExporter(results_dirs[3])
+cls=MovicExporter(results_dirs[6])
 cls.main()
 # for results_dir_path in results_dirs:
     # cls=MovicExporter(results_dir_path)
