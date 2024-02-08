@@ -7,7 +7,7 @@ from analysis_management import *
 from noise_processor import *
 
 class MovicExporter():
-    def __init__(self,results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_07"):
+    def __init__(self,results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_12"):
         self.path_management,self.csv_labels,self.color_dict=management_initial()
         plt.rcParams["figure.figsize"] = (15,10)
         plt.rcParams["figure.autolayout"] = True
@@ -211,11 +211,12 @@ class MovicExporter():
             pass
 
     def main(self):
+        self.calib_data(self.head_imu_data,"head_imu_data")
         self.calib_data(self.zed_imu_data,"zed_imu_data")
 
 results_dirs=sorted(glob("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_*"))
 # print(results_dirs)
-cls=MovicExporter(results_dirs[6])
+cls=MovicExporter(results_dirs[11])
 cls.main()
 # for results_dir_path in results_dirs:
     # cls=MovicExporter(results_dir_path)

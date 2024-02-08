@@ -10,5 +10,5 @@ trial_id,type,max_speed,sudden_stop,lower_speed,video_right,video_left,calib_sta
 09,test,,,,C0191,C0178,,
 10,run,0.4,0,,C0192,C0179,,
 11,test,,,,C0193,C0180,,
-12,random_run,0.4,1,0.1,C0194,C0181,,
+12,random_run,0.4,1,0.1,C0194,C0181,1.707035070007327080e+09,10
 ,,,,,,,,

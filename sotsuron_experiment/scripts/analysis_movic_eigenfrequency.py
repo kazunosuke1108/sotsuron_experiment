@@ -69,7 +69,17 @@ class AnalyzeEigenFreq():
             self.odom_data=self.odom_data[self.odom_data["timestamp"]<=end_timestamp]
         except FileNotFoundError:
             pass
-
+    def plot_base_rotation(self):
+        plt.plot(self.base_accurate_imu_data["timestamp"],self.base_accurate_imu_data["ang_vel_x"],"r",label="ang_vel_x")
+        plt.plot(self.base_accurate_imu_data["timestamp"],self.base_accurate_imu_data["ang_vel_y"],"g",label="ang_vel_y")
+        plt.plot(self.base_accurate_imu_data["timestamp"],self.base_accurate_imu_data["ang_vel_z"],"b",label="ang_vel_z")
+        plt.legend()
+        plt.grid()
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Angle velocity $\it{\omega}$ [rad/s]")
+        plt.title("base_accurate_imu_data_rotation"+" "+os.path.basename(self.results_dir_path))
+        plt.savefig(self.results_dir_path+f"/base_accurate_imu_data_rotation_{self.png_prefix}.png")
+        plt.clf()
     def plot_all_imu(self):
         # fig,ax1=plt.subplots()
         gs = GridSpec(2, 1)
@@ -262,6 +272,7 @@ class AnalyzeEigenFreq():
         ## IMU
         try:
             self.plot_imu(self.base_accurate_imu_data,"base_accurate_imu_data")
+            self.plot_base_rotation()
         except AttributeError:
             pass
         try:

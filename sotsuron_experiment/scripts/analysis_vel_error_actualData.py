@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (15,10)
 plt.rcParams["figure.autolayout"] = True
 plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams["font.size"] = 24
 
 odom_to_zed_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_odom_to_zed.csv"
 zed_to_hmn_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/velocity_error/_2023-12-21-10-22-39_zed_to_hmn.csv"
