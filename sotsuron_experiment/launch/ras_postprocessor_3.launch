@@ -1,0 +1,77 @@
+<launch>
+    <arg name="bag_name" default="_2023-12-13-14-06-23"/>
+    <arg name="skip" default="0"/>
+    <arg name="duration" default="150"/>
+    <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
+
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231213/$(arg bag_name).bag"/>
+
+    <arg name="video_topic" default="/zed/zed_node/rgb/image_rect_color"/>
+    <arg name="fps" default="30.0"/>
+    
+    <arg name="result_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/$(arg bag_name)"/>
+    <arg name="tfcsv_path" default="$(arg result_path)/$(arg bag_name)_tf_raw.csv"/>
+    <arg name="tf2dcsv_path" default="$(arg result_path)/$(arg bag_name)_2d_raw.csv"/>
+    <arg name="odomcsv_path" default="$(arg result_path)/$(arg bag_name)_od_raw.csv"/>
+
+    <arg name="video_path" default="$(arg result_path)/$(arg bag_name).avi"/>
+    
+    <rosparam param="/use_sim_time">true</rosparam>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path) -s $(arg skip) -u $(arg duration) --clock -r 0.1"
+        required="True"
+    />    
+        <!-- args="-r 0.05 $(arg bag_path)" -->
+        <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="ras_fast_detector" 
+        type="ras_fast_detector.py" 
+        args="$(arg tf2dcsv_path)"
+        output="screen" 
+    />
+
+    <!-- <node
+        pkg="ytlab_nlpmp_modules" 
+        name="analysis_tf_listener3" 
+        type="analysis_tf_listener3.py" 
+        output="screen" 
+        args="$(arg tfcsv_path)"
+    />
+
+    <node
+        pkg="ytlab_nlpmp_modules" 
+        name="analysis_odom_subscriber" 
+        type="analysis_odom_subscriber.py" 
+        output="screen" 
+        args="$(arg odomcsv_path)"
+    /> -->
+
+    <!-- <node
+        pkg="ytlab_nlpmp_modules" 
+        name="exp_odom_subscriber_atokaiseki" 
+        type="exp_odom_subscriber_atokaiseki.py" 
+        output="screen" 
+        args="$(arg bag_name)"
+    /> -->
+    
+    <!-- <node
+        pkg="sotsuron_experiment" 
+        name="odom_subscriber" 
+        type="odom_subscriber.py" 
+        output="screen" 
+        args="$(arg odom_csv_path)"
+    /> -->
+
+    <!-- <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg video_topic)' _fps:='$(arg fps)' _filename:='$(arg video_path)'"
+    /> -->
+</launch>

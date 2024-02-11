@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
+
 import time
 from datetime import datetime
 import numpy as np
@@ -26,11 +27,12 @@ class bdboxDetector():
         self.model_type="KP"
 
         # path
-        try:
-            self.logcsvpath=sys.argv[1]
-        except Exception:
-            self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
+        # try:
+        #     self.logcsvpath=sys.argv[1]
+        # except Exception:
+        self.logcsvpath="/home/hayashide/catkin_ws/src/sotsuron_experiment/exp_log/fast_detector"+"/"+datetime.now().strftime('%Y%m%d_%H%M%S')+".csv"
         
+        self.tf2d_csvpath=sys.argv[1]
 
         # Detectron2
         self.detector=Detector(model_type=self.model_type)
@@ -131,6 +133,10 @@ class bdboxDetector():
                     np_pred_keypoints[:,0]=rgb_array.shape[1]-np_pred_keypoints_t[:,1]
                 else:
                     np_pred_keypoints=np_pred_keypoints_t
+                output_np_pred_keypoints=np_pred_keypoints.flatten()
+                output_np_pred_keypoints=output_np_pred_keypoints.astype(np.float128)
+                output_np_pred_keypoints=np.insert(output_np_pred_keypoints,0,self.get_time())
+                self.write_log(output_np_pred_keypoints,csvpath=self.tf2d_csvpath)
                 return np_pred_keypoints
             
             except IndexError:
@@ -218,9 +224,9 @@ class bdboxDetector():
                 output_data=np.insert(output_data,0,self.get_time())
                 return output_data
 
-    def write_log(self,output_data):
+    def write_log(self,output_data,csvpath):
         try:
-            with open(self.logcsvpath, 'a') as f_handle:
+            with open(csvpath, 'a') as f_handle:
                 np.savetxt(f_handle,[output_data],delimiter=",")
         except FileNotFoundError:
             np.savetxt(self.logcsvpath,[output_data],delimiter=",")
@@ -273,11 +279,12 @@ class bdboxDetector():
 
         try:
             # log (csv)
-            self.write_log(output_data)
+            self.write_log(output_data,csvpath=self.logcsvpath)
             # tf
             self.publish_tf(output_data)
             self.logger.info("processed successfully")
         except TypeError as e:# output_dataがない（get_positionがreturnされずNoneの場合）
             self.logger.warning(e)
             pass
+        
 detector=bdboxDetector()
