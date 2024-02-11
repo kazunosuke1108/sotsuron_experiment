@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo chmod 666 /var/run/docker.sock
+
 cd `dirname $0`
 
 # xhost +
@@ -29,7 +31,7 @@ else
     
     docker run -it \
     --privileged \
-    --runtime=nvidia \
+    --gpus all \
     -e NVIDIA_VISIBLE_DEVICES=all \
     -e NVIDIA_DRIVER_CAPABILITIES=all \
     --env=DISPLAY=$DISPLAY \
@@ -50,7 +52,7 @@ else
     -v /etc/localtime:/etc/localtime:ro \
     -v /media:/home/${USER}/catkin_ws/media \
     -v "/${PWD}/../../../ytlab_ros_ws/ytlab_rosbag:/home/${USER}/catkin_ws/src/ytlab_rosbag" \
-    -v "/${PWD}/../../../ytlab_ros_ws/ytlab_nlpmp:/home/${USER}/catkin_ws/src/ytlab_nlpmp" \
+    -v "/${PWD}/../../../ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules:/home/${USER}/catkin_ws/src/ytlab_nlpmp_modules" \
     -v "/${PWD}/../../../ytlab_ros_ws/ytlab_hsr:/home/${USER}/catkin_ws/src/ytlab_hsr" \
     -v "/$(pwd)/../../../ytlab_ros_ws/ytlab_navigation:/home/${USER}/catkin_ws/src/ytlab_navigation" \
     -v "/$(pwd)/../../../ytlab_ros_ws/ytlab_environment/ytlab_environment_msgs:/home/${USER}/catkin_ws/src/ytlab_environment/ytlab_environment_msgs" \

@@ -1,0 +1,79 @@
+<launch>
+    <arg name="bag_name" default="_2024-02-04-17-23-27"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/'Extreme Pro'/hayashide/rosbag/20240204/zed/$(arg bag_name).bag"/>
+    <arg name="topic_name_1" default="/zed/zed_node/imu/data"/>
+    <!-- <arg name="topic_name_2" default="/hsrb/base_imu/data"/>
+    <arg name="topic_name_3" default="/hsrb/ceiling_stereo_camera/imu/data_raw"/> -->
+
+
+    <!-- <arg name="start_delay" default="10"/> -->
+    <arg name="skip" default="0"/>
+    <!-- <arg name="duration" default="60"/> -->
+    <arg name="speed" default="0.1"/>
+
+    <arg name="results_dir_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/$(arg bag_name)"/>
+    <arg name="tf2dcsv_path" default="$(arg results_dir_path)/$(arg bag_name)_2d_$(arg speed).csv"/>
+    <arg name="bigdata_rgb_dir_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/velocity_error/big_data/20240204/$(arg bag_name)"/>
+    <arg name="tfcsv_path" default="$(arg results_dir_path)/$(arg bag_name)_tf_$(arg speed).csv"/>
+
+    <!-- <arg name="avi_basename" default="20230203_d_060_0_Hayashide"/> -->
+
+   <rosparam param="/use_sim_time">true</rosparam>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="$(arg bag_path) -s $(arg skip) --clock -r $(arg speed)"
+        required="True"
+    />
+        <!--  -u $(arg duration) -->
+        <!-- args="-r 0.05 $(arg bag_path)" -->
+        <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
+        <!-- launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' " -->
+
+    <node
+        pkg="sotsuron_experiment" 
+        name="ras_fast_detector" 
+        type="ras_fast_detector.py" 
+        args="$(arg tf2dcsv_path) $(arg bigdata_rgb_dir_path)"
+        output="screen" 
+    />
+
+    <node pkg="ytlab_nlpmp_modules" 
+        name="exp_calib_zed_tf_publisher" 
+        type="exp_calib_zed_tf_publisher.py" 
+    />
+
+    <node
+        pkg="ytlab_nlpmp_modules" 
+        name="analysis_tf_listener3" 
+        type="analysis_tf_listener3.py" 
+        output="screen" 
+        args="$(arg tfcsv_path)"
+    />
+
+    <!-- <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu1" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name_1) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    /> -->
+
+    <!-- <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu2" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name_2) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    /> -->
+
+    <!-- <node
+        pkg="sotsuron_experiment" 
+        name="analysis_movic_subscribe_imu3" 
+        type="analysis_movic_subscribe_imu.py" 
+        args="$(arg topic_name_3) $(arg results_dir_path) $(arg speed)"
+        output="screen" 
+    /> -->
+
+</launch>

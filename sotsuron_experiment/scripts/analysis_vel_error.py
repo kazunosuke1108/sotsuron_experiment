@@ -68,11 +68,13 @@ for idx,row in exp_memo_data.iterrows():
         plt.rcParams['font.family'] = 'Times New Roman'
 
         fig, ax1 = plt.subplots()
-        ax1.plot(fast_prcd_data["t"],fast_prcd_data["x"],"-",label="x (fast prcd)")
-        ax1.plot(fast_raw_data["t"],fast_raw_data["x"],"-",label="x (fast raw)")
-        # # ax1.plot(slow_data["t"],slow_data["x"],"-",label="x (slow)")
-        ax1.plot(odom_data["t"],odom_data["x"],"-",label="x (odom)")
+        ax1.plot(fast_prcd_data["t"],fast_prcd_data["x"],"o-",label="x (fast prcd)")
+        ax1.plot(fast_raw_data["t"],fast_raw_data["x"],"o-",label="x (fast raw)")
+        # # ax1.plot(slow_data["t"],slow_data["x"],"o-",label="x (slow)")
+        ax1.plot(odom_data["t"],odom_data["x"],"o-",label="x (odom)")
         ax1.plot([odom_data["t"][odom_data["x"]<0.1].max(),odom_data["t"][odom_data["x"]<0.1].max()],[-5,10],"r",label="robot start")
+        rbt_start=odom_data["t"][odom_data["x"]<0.1].max()
+        ax1.set_xlim([rbt_start-1,rbt_start+1])
         ax1.legend()
         ax1.set_xlabel("Time [s]")
         ax1.set_ylabel("Position [m]")
@@ -80,8 +82,9 @@ for idx,row in exp_memo_data.iterrows():
         # ax2.plot(fast_prcd_data["t"],fast_prcd_data["vx"],"--",label="vx (fast)")
         # ax2.plot(fast_raw_data["t"],fast_raw_data["vx"],"--",label="vx (raw)")
         # ax2.plot(slow_data["t"],slow_data["vx"],"--",label="vx (slow)")
-        ax2.plot(odom_data["t"],odom_data["vx"],"-",linewidth=0.5,label="vx (odom)")
+        ax2.plot(odom_data["t"],odom_data["vx"],"o-",linewidth=0.5,label="vx (odom)")
         ax2.legend()
+        ax2.set_xlim([rbt_start-1,rbt_start+1])
         ax2.set_ylabel("Velocity [m/s]")
         try:
             plt.savefig(result_path+"/"+os.path.basename(fast_prcd_data_path)[:-4]+"_check_start_noise.png")
