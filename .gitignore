@@ -9,5 +9,6 @@ sotsuron_experiment/images/save.jpg
 sotsuron_experiment/analysis/png/*
 sotsuron_experiment/analysis/mp4/*
 sotsuron_experiment/analysis/velocity_error/big_data
+sotsuron_experiment/scripts/__pycache__
 *.log
 *.asv

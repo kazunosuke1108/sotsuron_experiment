@@ -4,6 +4,7 @@ import re
 import pickle
 import numpy as np
 import pandas as pd
+from glob import glob
 from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
@@ -23,10 +24,11 @@ class RestoreRefTraj(ExpCommons):
         self.logpath=logpath
         self.log_data=pd.read_table(self.logpath,names=["raw_txt"])
         self.csvpath=os.path.split(self.logpath)[0]+"/"+os.path.basename(self.logpath)[:-4]+".csv"
+        self.pngpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/movic_clock"
         try:
             self.csv_data=pd.read_csv(self.csvpath,header=0)
         except FileNotFoundError:
-            self.main_generate_csv()
+            self.main_generate_csv(export=True)
             self.csv_data=pd.read_csv(self.csvpath,header=0)
 
     # utilities
@@ -125,9 +127,10 @@ class RestoreRefTraj(ExpCommons):
 
             # メッセージの抽出
         if export:
+            print("###")
             self.log_data.to_csv(self.csvpath)
 
-    def concat_traj(self):
+    def concat_traj(self,save_concat_data=True):
         t=np.array([0])
         zR=np.array([[0,0,0,0,0,0]]).T
         roi_data=self.csv_data[(self.csv_data["pickle_new_version"]==True) & (self.csv_data["data_extracted_properly"]==True) & (self.csv_data["new_pickle_used"]==True) & (self.csv_data["log_category"]=="data_extracted_properly")]
@@ -156,6 +159,14 @@ class RestoreRefTraj(ExpCommons):
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Position in hallway direction $\it{x}$ [m]")
         plt.title(f"Restored reference trajectory {os.path.basename(self.logpath[:-4])} {os.path.basename(sys.argv[0])}")
+        
+        if save_concat_data:
+            concat_pickle_data={}
+            concat_pickle_data["logpath"]=self.logpath
+            concat_pickle_data["t"]=t
+            concat_pickle_data["zR"]=zR
+            with open(os.path.split(self.logpath)[0]+"/"+os.path.basename(self.logpath)[:-4]+".pickle", mode='wb') as f:
+                pickle.dump(concat_pickle_data, f)
 
         # クロック数の推移を観察
         plt.subplot(gs[1])
@@ -167,7 +178,23 @@ class RestoreRefTraj(ExpCommons):
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Planning frequency [Hz]")
         plt.title(f"Frequency {os.path.basename(self.logpath[:-4])} {os.path.basename(sys.argv[0])}")
+        plt.savefig(self.pngpath+"/"+os.path.basename(self.logpath)[:-4]+".png")
 
-
-cls=RestoreRefTraj()
-cls.concat_traj()
+logpaths_candidate=[]
+logpaths_candidate+=sorted(glob("C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/log/20231219/*.log"))
+logpaths_candidate+=sorted(glob("C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/log/20231221/*.log"))
+logpaths=[]
+for logpath_candidate in logpaths_candidate:
+    logpaths_candidate_data=pd.read_table(logpath_candidate,names=["raw_txt"])
+    for idx,row in logpaths_candidate_data.iterrows():
+        if "TwistTrajPublisher" in row["raw_txt"]:
+            logpaths.append(logpath_candidate)
+        break
+print(logpaths)
+for logpath in logpaths:
+    try:
+        cls=RestoreRefTraj(logpath=logpath)
+        # cls.main_generate_csv(export=True)
+        cls.concat_traj()
+    except Exception:
+        pass
