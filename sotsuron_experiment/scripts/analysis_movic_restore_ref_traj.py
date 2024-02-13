@@ -9,14 +9,15 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
+from analysis_management import management_initial
 from exp_commons import ExpCommons
 
 
 class RestoreRefTraj(ExpCommons):
     def __init__(self,logpath="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/log/20231221/20231221_102255.log"):
         super().__init__()
-        
-        plt.rcParams["figure.figsize"] = (15,10)
+        self.path_management,self.csv_labels,self.color_dict=management_initial()
+        plt.rcParams["figure.figsize"] = (15,25)
         plt.rcParams["figure.autolayout"] = True
         plt.rcParams["font.size"] = 24
         plt.rcParams['font.family'] = 'Times New Roman'
@@ -25,11 +26,25 @@ class RestoreRefTraj(ExpCommons):
         self.log_data=pd.read_table(self.logpath,names=["raw_txt"])
         self.csvpath=os.path.split(self.logpath)[0]+"/"+os.path.basename(self.logpath)[:-4]+".csv"
         self.pngpath="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/movic_clock"
+        self.sotsuron_experiment_results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12"
         try:
             self.csv_data=pd.read_csv(self.csvpath,header=0)
         except FileNotFoundError:
             self.main_generate_csv(export=True)
             self.csv_data=pd.read_csv(self.csvpath,header=0)
+
+        self.exp_memo_path="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts/memo/exp_memo.csv"
+        self.exp_memo_data=pd.read_csv(self.exp_memo_path,header=0)
+        self.exp_memo_data["log_exp_TwistTraj_basename"]=""
+        for idx,row in self.exp_memo_data.iterrows():
+            try:
+                self.exp_memo_data.loc[idx,"log_exp_TwistTraj_basename"]=os.path.basename(self.exp_memo_data.loc[idx,"log_exp_TwistTraj"])
+            except TypeError:
+                continue
+        self.odom_csv_dir_name=self.exp_memo_data["bag_path"][self.exp_memo_data["log_exp_TwistTraj_basename"]==os.path.basename(logpath)].values[0][:-4]
+        self.odom_csv_path=sorted(glob(self.sotsuron_experiment_results_dir_path+"/"+self.odom_csv_dir_name+"/"+"*_od_raw.csv"))[0]
+        self.odom_csv_data=pd.read_csv(self.odom_csv_path,names=self.csv_labels["odometry"])
+
 
     # utilities
     def unpack_2d_array(self,raw_txt):
@@ -46,6 +61,7 @@ class RestoreRefTraj(ExpCommons):
     def extract_last_string(self,raw_txt):
         extracted_txt=raw_txt.split()[-1]
         return extracted_txt
+
 
     def main_generate_csv(self,export=False):
         self.log_data["timestamp_unix"]=0
@@ -131,14 +147,16 @@ class RestoreRefTraj(ExpCommons):
             self.log_data.to_csv(self.csvpath)
 
     def concat_traj(self,save_concat_data=True):
+        timestamp_unix_list=[]
         t=np.array([0])
         zR=np.array([[0,0,0,0,0,0]]).T
         roi_data=self.csv_data[(self.csv_data["pickle_new_version"]==True) & (self.csv_data["data_extracted_properly"]==True) & (self.csv_data["new_pickle_used"]==True) & (self.csv_data["log_category"]=="data_extracted_properly")]
-        gs = GridSpec(2, 1)
+        gs = GridSpec(3, 1)
         # 結合処理
         plt.subplot(gs[0])
         for idx, row in roi_data.iterrows():
             timestamp_unix=row["timestamp_unix"]
+            timestamp_unix_list.append(timestamp_unix)
             pickle_file_path=row["pickle_file_path_windows"]
             with open(pickle_file_path, 'rb') as f:
                 pickledata = pickle.load(f)
@@ -156,6 +174,7 @@ class RestoreRefTraj(ExpCommons):
         plt.plot(t,zR[0,:],"o-",linewidth=3,label="global reference traj.")
         plt.legend()
         plt.grid()
+        plt.xlim([np.min(t)-5,np.max(t)+5])
         plt.xlabel("Time $\it{t}$ [s]")
         plt.ylabel("Position in hallway direction $\it{x}$ [m]")
         plt.title(f"Restored reference trajectory {os.path.basename(self.logpath[:-4])} {os.path.basename(sys.argv[0])}")
@@ -168,8 +187,25 @@ class RestoreRefTraj(ExpCommons):
             with open(os.path.split(self.logpath)[0]+"/"+os.path.basename(self.logpath)[:-4]+".pickle", mode='wb') as f:
                 pickle.dump(concat_pickle_data, f)
 
-        # クロック数の推移を観察
+        # Odometryとconcat_trajの比較
         plt.subplot(gs[1])
+        plt.plot(t,zR[0,:],"o-",linewidth=3,label="global reference traj.")
+        plt.plot(self.odom_csv_data["timestamp"],self.odom_csv_data["x"],label="odometry")
+        for idx,timestamp_unix in enumerate(timestamp_unix_list):
+            if idx==0:
+                plt.plot([timestamp_unix,timestamp_unix],[0,np.max(zR[0,:])],"r",linestyle="--",alpha=0.5,label="traj. renewed")
+            else:
+                plt.plot([timestamp_unix,timestamp_unix],[0,np.max(zR[0,:])],"r",linestyle="--",alpha=0.5)
+        plt.legend()
+        plt.grid()
+        plt.xlim([np.min(t)-5,np.max(t)+5])
+        plt.xlabel("Time $\it{t}$ [s]")
+        plt.ylabel("Position in hallway direction $\it{x}$ [m]")
+        plt.title(f"Reference trajectory and odometry {os.path.basename(self.logpath[:-4])} {os.path.basename(sys.argv[0])}")        
+        
+        
+        # クロック数の推移を観察
+        plt.subplot(gs[2])
         roi_data["clock_hz"]=0
         roi_data["clock_hz"].iloc[1:]=1/(roi_data["timestamp_unix"].values[1:]-roi_data["timestamp_unix"].values[:-1])
         plt.plot(roi_data["timestamp_unix"],roi_data["clock_hz"])
@@ -179,6 +215,10 @@ class RestoreRefTraj(ExpCommons):
         plt.ylabel("Planning frequency [Hz]")
         plt.title(f"Frequency {os.path.basename(self.logpath[:-4])} {os.path.basename(sys.argv[0])}")
         plt.savefig(self.pngpath+"/"+os.path.basename(self.logpath)[:-4]+".png")
+
+
+# cls=RestoreRefTraj()
+# cls.concat_traj()
 
 logpaths_candidate=[]
 logpaths_candidate+=sorted(glob("C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/log/20231219/*.log"))

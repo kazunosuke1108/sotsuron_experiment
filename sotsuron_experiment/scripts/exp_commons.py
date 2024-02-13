@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*- 
 import os
+import re
 import numpy as np
 from glob import glob
 from datetime import datetime
@@ -121,3 +122,8 @@ class ExpCommons():
         except FileNotFoundError:
             np.savetxt(csvpath,[output_data],delimiter=",")
         pass  
+
+    def extract_py_filename(self,raw_txt):
+        reg = '(?<=\[).+?(?=py)'
+        txt=re.findall(reg, raw_txt)
+        return txt[0][:-1]
