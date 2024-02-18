@@ -5,8 +5,14 @@ from glob import glob
 import json
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 
 def management_initial():
+    
+    plt.rcParams["figure.figsize"] = (15,10)
+    plt.rcParams["figure.autolayout"] = True
+    plt.rcParams["font.size"] = 24
+    plt.rcParams['font.family'] = 'Times New Roman'
 
     ## パス管理dict作成
     path_management={}

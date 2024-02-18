@@ -79,6 +79,31 @@ def resampling_processor(data,resample_dt_str="0.01S"):
     except KeyError:
         data["timestamp_datetime"]=pd.to_datetime(data["t"], unit='s',utc=True).dt.tz_convert('Asia/Tokyo')
     data["timestamp_datetime_round"]=data["timestamp_datetime"].dt.round(resample_dt_str)
-    data=data.set_index("timestamp_datetime")
-    data=data.asfreq(resample_dt_str,method="pad")
+    data=data.set_index("timestamp_datetime_round")
+    # data=data.asfreq(resample_dt_str,method="nearest")
+    data=data.drop("timestamp_datetime",axis=1)
+    data=data.resample(resample_dt_str).interpolate(method="time")
     return data
+
+def fft_processor(data,labels=["v_x","v_y"],dt=0.01):
+    ## resample
+    data=resampling_processor(data)
+    ## definition
+    N=len(data)
+    fs=1/dt # サンプリング周波数（標本点の間隔^-1）
+    fn=fs/2 # ナイキスト周波数（再現可能な周波数の上限値）
+    freq=np.fft.fftfreq(N,d=dt)
+
+    # from scipy import signal
+    # window = signal.hann(N)  # ハニング窓関数(開始・終了地点にずれが生じてしまう場合の解消法．トレンド除去済みのデータになら適用できるかも)
+
+    F_list=[]
+    Amp_list=[]
+    for label in labels:
+        F=np.fft.fft(data[label],axis=0)
+        Amp=np.abs(F)
+        F_list.append(F)
+        Amp_list.append(Amp)#[:N//2])
+
+    return freq, Amp_list, F_list
+    # return freq[:N//2], Amp_list, F_list
