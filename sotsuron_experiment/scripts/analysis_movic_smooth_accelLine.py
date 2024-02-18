@@ -55,6 +55,9 @@ class AccelLine(ExpCommons):
         self.odom_data["v_y_LPF"]=self.LPF_processor(self.freq,self.F_y,thredshold_hz=thredshold_hz,label=label,memo="v_y")
         self.plot_timeseries(self.odom_data["timestamp"],self.odom_data["v_y_LPF"],label="$\it{v_y}$ (LPF)",memo="after_LPF_v_y")
 
+        ## save LPF data
+        self.odom_data.to_csv(self.odom_csv_path[:-4]+"_LPF.png",index=0)
+
     def LPF_processor(self,freq,F,thredshold_hz=3,label="",memo=""):
         cut_idx=np.where(abs(freq)>thredshold_hz)[0]
         F[cut_idx]=0
@@ -71,6 +74,7 @@ class AccelLine(ExpCommons):
         plt.ylabel("Velocity $\it{v}$ [m/s]")
         plt.legend()
         plt.savefig(self.result_individual_dir_path+"/"+"timeseries_"+memo+".png")
+        plt.close()
 
     def plot_fft(self,freq,Amp,label="",memo=""):
         plt.bar(freq[:len(freq)//2],Amp[:len(Amp)//2],label=label)
@@ -79,6 +83,7 @@ class AccelLine(ExpCommons):
         plt.ylabel("Amplitude")
         plt.legend()
         plt.savefig(self.result_individual_dir_path+"/"+"fft_"+memo+".png")
+        plt.close()
 
 
 cls=AccelLine()
