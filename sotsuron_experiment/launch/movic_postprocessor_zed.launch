@@ -1,13 +1,15 @@
 <launch>
-    <arg name="bag_name" default="_2024-02-04-17-23-27"/>
-    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/'Extreme Pro'/hayashide/rosbag/20240204/zed/$(arg bag_name).bag"/>
+    <arg name="bag_name" default="_2024-02-04-17-23-24"/>
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/Extreme\ Pro/hayashide/rosbag/20240204/zed/$(arg bag_name).bag"/>
     <arg name="topic_name_1" default="/zed/zed_node/imu/data"/>
     <!-- <arg name="topic_name_2" default="/hsrb/base_imu/data"/>
     <arg name="topic_name_3" default="/hsrb/ceiling_stereo_camera/imu/data_raw"/> -->
-
+    <arg name="video_topic" default="/zed/zed_node/rgb/image_rect_color"/>
+    <arg name="fps" default="30.0"/>
+    <arg name="video_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/results/$(arg bag_name)_01.avi"/>
 
     <!-- <arg name="start_delay" default="10"/> -->
-    <arg name="skip" default="0"/>
+    <arg name="skip" default="30"/>
     <!-- <arg name="duration" default="60"/> -->
     <arg name="speed" default="0.1"/>
 
@@ -31,7 +33,7 @@
         <!-- args="-r 0.1 $(arg bag_path) -(kesu)- clock" -->
         <!-- launch-prefix="bash -c 'sleep $(arg start_delay); $0 $@' " -->
 
-    <node
+    <!-- <node
         pkg="sotsuron_experiment" 
         name="ras_fast_detector" 
         type="ras_fast_detector.py" 
@@ -50,7 +52,7 @@
         type="analysis_tf_listener3.py" 
         output="screen" 
         args="$(arg tfcsv_path)"
-    />
+    /> -->
 
     <!-- <node
         pkg="sotsuron_experiment" 
@@ -76,4 +78,11 @@
         output="screen" 
     /> -->
 
+    <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg video_topic)' _fps:='$(arg fps)' _filename:='$(arg video_path)'"
+    />
 </launch>

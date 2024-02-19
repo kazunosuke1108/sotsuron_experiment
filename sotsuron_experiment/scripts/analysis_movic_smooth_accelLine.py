@@ -14,8 +14,12 @@ class AccelLine(ExpCommons):
         self.path_management,self.csv_labels,self.color_dict=management_initial()        
 
 
-        self.odom_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_12/hsrb/odom_1.csv"
+        # self.odom_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_12/hsrb/odom_1.csv"
+        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240219_07/odom_1.csv"
         self.odom_data=pd.read_csv(self.odom_csv_path,names=self.csv_labels["odometry"])
+
+        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240219_07/command_velocity_1.csv"
+        self.command_velocity_data=pd.read_csv(self.command_velocity_csv_path,names=self.csv_labels["command_velocity"])
 
         self.result_individual_dir_path=self.odom_csv_path[:-4]
         os.makedirs(self.result_individual_dir_path,exist_ok=True)
@@ -58,6 +62,13 @@ class AccelLine(ExpCommons):
         ## save LPF data
         self.odom_data.to_csv(self.odom_csv_path[:-4]+"_LPF.csv",index=0)
 
+    def compare_with_reference(self):
+        plt.plot(self.odom_data["timestamp"],self.odom_data["v_x"],"r",label="Odometry")
+        plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],"b",label="reference")
+        draw_labels_timeseries_velocity()
+        plt.savefig(self.result_individual_dir_path+"odom_twist_compare.png")
+        pass
+
     def LPF_processor(self,freq,F,thredshold_hz=3,label="",memo=""):
         cut_idx=np.where(abs(freq)>thredshold_hz)[0]
         F[cut_idx]=0
@@ -88,3 +99,4 @@ class AccelLine(ExpCommons):
 
 cls=AccelLine()
 cls.denoise()
+cls.compare_with_reference()
