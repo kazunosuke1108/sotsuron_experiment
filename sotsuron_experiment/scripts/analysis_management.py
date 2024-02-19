@@ -136,3 +136,21 @@ def json_saver(path_management,csv_labels,color_dict):
     tf = open(path_management["json_dir_path"]+f"/analysis_database.json", "w")
     json.dump(json_dict, tf)
     tf.close()
+
+def draw_labels_timeseries_position():
+    plt.xlabel("Time $\it{t}$ [s]")
+    plt.ylabel("Position $\it{x}$ [m]")
+    plt.grid()
+    plt.legend()
+
+def draw_labels_timeseries_velocity():
+    plt.xlabel("Time $\it{t}$ [s]")
+    plt.ylabel("Velocity $\it{v}$ [m/s]")
+    plt.grid()
+    plt.legend()
+
+def draw_labels_fft():
+    plt.xlabel("Frequency [Hz]")
+    plt.ylabel("Amplitude")
+    plt.grid()
+    plt.legend()
