@@ -56,7 +56,7 @@ class AccelLine(ExpCommons):
         self.plot_timeseries(self.odom_data["timestamp"],self.odom_data["v_y_LPF"],label="$\it{v_y}$ (LPF)",memo="after_LPF_v_y")
 
         ## save LPF data
-        self.odom_data.to_csv(self.odom_csv_path[:-4]+"_LPF.png",index=0)
+        self.odom_data.to_csv(self.odom_csv_path[:-4]+"_LPF.csv",index=0)
 
     def LPF_processor(self,freq,F,thredshold_hz=3,label="",memo=""):
         cut_idx=np.where(abs(freq)>thredshold_hz)[0]
