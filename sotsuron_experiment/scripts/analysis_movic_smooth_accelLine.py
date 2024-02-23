@@ -15,11 +15,14 @@ class AccelLine(ExpCommons):
 
 
         # self.odom_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_12/hsrb/odom_1.csv"
-        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240219_08/odom_1.csv"
+        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240223_03/odom_1.csv"
         self.odom_data=pd.read_csv(self.odom_csv_path,names=self.csv_labels["odometry"])
 
-        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240219_08/command_velocity_1.csv"
+        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240223_03/command_velocity_1.csv"
         self.command_velocity_data=pd.read_csv(self.command_velocity_csv_path,names=self.csv_labels["command_velocity"])
+
+        self.hsrzr8_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240223_03/HsrZr8_1.csv"
+        self.HsrZr8_data=pd.read_csv(self.hsrzr8_csv_path,names=self.csv_labels["hsrzr8"])
 
         self.result_individual_dir_path=self.odom_csv_path[:-4]
         os.makedirs(self.result_individual_dir_path,exist_ok=True)
@@ -64,7 +67,8 @@ class AccelLine(ExpCommons):
 
     def compare_with_reference(self):
         plt.plot(self.odom_data["timestamp"],self.odom_data["v_x"],"r",label="Odometry")
-        plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],"b",label="reference")
+        plt.plot(self.command_velocity_data["timestamp"],self.command_velocity_data["v_x"],"b",label="ref_after_mpc")
+        plt.plot(self.HsrZr8_data["timestamp"],self.HsrZr8_data["v_x"],"g",label="ref_before_mpc")
         draw_labels_timeseries_velocity()
         plt.savefig(self.result_individual_dir_path+"odom_twist_compare.png")
         pass

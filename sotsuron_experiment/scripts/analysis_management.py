@@ -103,6 +103,7 @@ def management_initial():
 
     csv_labels["result_chart"]=["patient_id","type_id","trial_id","n_frames","n_partialout_head","n_partialout_foot","n_partialout_left","n_partialout_right","n_totalout","time_partialout_head","time_partialout_foot","time_partialout_left","time_partialout_right","time_totalout","csvpath"]
     csv_labels["imu"]=["timestamp","orien_x","orien_y","orien_z","orien_w","ang_vel_x","ang_vel_y","ang_vel_z","lin_acc_x","lin_acc_y","lin_acc_z"]
+    csv_labels["hsrzr8"]=["timestamp","x","y","theta","pan","v_x","v_y","omega_theta","omega_pan"]
     cov_list=["orien_cov","ang_vel_cov","lin_acc_cov"]
     for cov_name in cov_list:
         for i in np.arange(1,10,1):
