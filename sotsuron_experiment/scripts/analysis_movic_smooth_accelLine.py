@@ -15,13 +15,13 @@ class AccelLine(ExpCommons):
 
 
         # self.odom_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_12/hsrb/odom_1.csv"
-        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240228_07/odom_1.csv"
+        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240229_03/odom_1.csv"
         self.odom_data=pd.read_csv(self.odom_csv_path,names=self.csv_labels["odometry"])
 
-        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240228_07/command_velocity_1.csv"
+        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240229_03/command_velocity_1.csv"
         self.command_velocity_data=pd.read_csv(self.command_velocity_csv_path,names=self.csv_labels["command_velocity"])
 
-        self.hsrzr8_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240228_07/HsrZr8_1.csv"
+        self.hsrzr8_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240229_03/HsrZr8_1.csv"
         self.HsrZr8_data=pd.read_csv(self.hsrzr8_csv_path,names=self.csv_labels["hsrzr8"])
 
         self.result_individual_dir_path=self.odom_csv_path[:-4]
