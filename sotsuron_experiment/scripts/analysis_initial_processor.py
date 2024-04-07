@@ -26,7 +26,7 @@ def initial_processor(csvpath,denoise=True):
         data=pd.read_csv(csvpath,names=csv_labels["detectron2_joint_3d"])
         data=data.dropna(how="all",subset=csv_labels["detectron2_joint_3d"][1:])
     if "_od" in csvpath:
-        timestamp_key="t"
+        timestamp_key="timestamp"
     else:
         timestamp_key="timestamp"
     data=data.sort_values(timestamp_key)

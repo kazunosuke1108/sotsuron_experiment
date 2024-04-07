@@ -15,12 +15,12 @@ class plotSituation():
         self.bag_basename=bag_basename
         self.exp_memo_path=f"C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/scripts/memo/exp_memo.csv"
         self.nlpmp_results_dir_path="C:/Users/hayashide/ytlab_ros_ws/ytlab_nlpmp/ytlab_nlpmp_modules/results"
-        self.experiment_results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results"
+        self.experiment_results_dir_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/_2023-12"
 
         self.exp_memo=pd.read_csv(self.exp_memo_path,header=0)
         
         path_management,csv_labels,color_dict=management_initial()
-        plt.rcParams["figure.figsize"] = (7,3.5)
+        plt.rcParams["figure.figsize"] = (10,5)
         plt.rcParams["figure.autolayout"] = True
         plt.rcParams['font.family'] = 'Times New Roman'
 
@@ -43,8 +43,8 @@ class plotSituation():
         self.odomcsvpath=self.experiment_results_dir_path+f"/{bag_basename}/{bag_basename}_od_raw.csv"
         # odom_data=pd.read_csv(self.odomcsvpath,header=0,names=csv_labels["odometry"])
         odom_data=initial_processor(self.odomcsvpath,False)
-        # odom_data=odom_data[odom_data["t"]<timestamp_xm5_closest]
-        odom_data=odom_data[odom_data["t"]>timestamp_x8_closest]
+        # odom_data=odom_data[odom_data["timestamp"]<timestamp_xm5_closest]
+        odom_data=odom_data[odom_data["timestamp"]>timestamp_x8_closest]
         self.odom_data=odom_data
 
         # nlpmp_pickle
@@ -197,10 +197,10 @@ class plotSituation():
         plt.gca().add_patch(rbt_position)
         rbt_direction = plt.plot([xR, xR + self.rbt["sizer"] * np.cos(theta + pan)],
                                  [yR, yR + self.rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2)
-        hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()]),
+        hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()]),
                                      radius=self.hmn["sizer"], edgecolor='r', facecolor='w')#,label="human")
         plt.gca().add_patch(hmn_position)
-        print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["t"]).idxmin()])
+        print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()])
         # raise TimeoutError
         # plt.gca().add_patch(arc_right)
         # plt.gca().add_patch(arc_left)
@@ -246,12 +246,12 @@ class plotSituation():
                         J=-self.objF_kukei(t,z,u,self.env,self.rbt,self.hmn,self.sns,zH)
                         J_list[idx_y][idx_x]+=J
             
-            # if idx==900 or idx==1000 or idx==1100 or idx==1200 or idx==1300 or idx==1400: # [self.odom_data["t"]<=row["t"]]
+            # if idx==900 or idx==1000 or idx==1100 or idx==1200 or idx==1300 or idx==1400: # [self.odom_data["timestamp"]<=row["timestamp"]]
             J_list_log=np.log(J_list)
             J_list_log=np.where(J_list_log<0,0,J_list_log)
-            ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
-            plt.plot(self.odom_data["x"][self.odom_data["t"]<=row["t"]],self.odom_data["y"][self.odom_data["t"]<=row["t"]],"b")
-            # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
+            # ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
+            plt.plot(self.odom_data["x"][self.odom_data["timestamp"]<=row["timestamp"]],self.odom_data["y"][self.odom_data["timestamp"]<=row["timestamp"]],"b")
+            plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
             self.add_plot_ougi(row)
             self.add_plot_others(row)
             plt.legend()
@@ -259,7 +259,8 @@ class plotSituation():
             plt.ylabel("Width direction $\it{y}$ [m]")
             plt.xlim([-4,7])
             plt.ylim([-2,2])
-            plt.savefig("//192.168.1.5/common/FY2023/02_M1/05_hayashide/exp_results/20240109_colormap/images"+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{str(idx).zfill(4)}.png")
+            plt.savefig("//192.168.1.5/common/FY2023/02_M1/05_hayashide/ICRA_2024"+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{str(idx).zfill(4)}.png")
+            # plt.savefig("//192.168.1.5/common/FY2023/02_M1/05_hayashide/exp_results/20240109_colormap/images"+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{str(idx).zfill(4)}.png")
             # plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+f"_colormap_1229_{idx}.png")
             plt.cla()
             self.add_plot_others(row)
@@ -290,7 +291,7 @@ class plotSituation():
         # ax.set_aspect("equal")
         J_list_log=np.log(J_list)
         J_list_log=np.where(J_list_log<0,0,J_list_log)
-        ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
+        # ax.pcolor(x_array,y_array,J_list_log,cmap="jet",alpha=0.25)
         plt.plot(self.odom_data["x"],self.odom_data["y"],"b")#,label="robot")
         # plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",label="human")
         plt.savefig(os.path.split(self.tfcsvpath)[0]+"/"+os.path.basename(self.tfcsvpath)[:-11]+"_colormap_1229.png")
@@ -326,11 +327,28 @@ class plotSituation():
         video.release()
         pass
 
+    def plot_simple_traj(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.set_aspect("equal", adjustable="box")
+        plt.ylim([self.env["ymin"]-0.5,self.env["ymax"]+0.5])
+        arc_resolution=100
+        plt.plot([-5,10],[self.env["ymax"],self.env["ymax"]],"k",label="Wall")
+        plt.plot([-5,10],[self.env["ymin"],self.env["ymin"]],"k")
+        plt.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],"r",linewidth=3,label="Pedestrian")
+        plt.plot(self.odom_data["x"][:-200],self.odom_data["y"][:-200],"b",linewidth=3,label="Robot")
+        # plt.plot(self.odom_data["x"],self.odom_data["y"],color="b",label="Odometry")
+        # plt.plot(self.tf_data["gravity_x"],self.tf_data["gravity_y"],color="r",label="Pedestrian")
+        plt.xlabel("Hallway direction $\it{x}$ [m]")
+        plt.ylabel("Width direction $\it{y}$ [m]")
+        plt.legend(loc='lower center', bbox_to_anchor=(.5, 1.1), ncol=3)
+        plt.grid(linestyle='dotted')
+        plt.savefig(f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/icra/analysis_output/{self.bag_basename}.jpg")
     def main(self):
         # self.plot_situation()
-        self.plot_colormap()
-        self.draw_anim_from_images()
-
+        # self.plot_colormap()
+        # self.draw_anim_from_images()
+        self.plot_simple_traj()
 # exp_memo_01_data=pd.read_csv("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/exp_memo_01.csv",header=0)
 
 
