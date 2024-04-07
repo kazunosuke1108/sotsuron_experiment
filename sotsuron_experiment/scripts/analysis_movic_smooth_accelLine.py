@@ -15,14 +15,26 @@ class AccelLine(ExpCommons):
 
 
         # self.odom_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/results/20240204_12/hsrb/odom_1.csv"
-        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240229_03/odom_1.csv"
+        self.odom_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_mpc/ytlab_mpc_modules/results/20240302/20240302_04/odom_1.csv"
         self.odom_data=pd.read_csv(self.odom_csv_path,names=self.csv_labels["odometry"])
 
-        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240229_03/command_velocity_1.csv"
+        self.command_velocity_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_mpc/ytlab_mpc_modules/results/20240302/20240302_04/command_velocity_1.csv"
         self.command_velocity_data=pd.read_csv(self.command_velocity_csv_path,names=self.csv_labels["command_velocity"])
 
-        self.hsrzr8_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_nlpmp2/ytlab_nlpmp2_modules/results/20240229_03/HsrZr8_1.csv"
+        self.hsrzr8_csv_path="/home/hayashide/ytlab_ros_ws/ytlab_mpc/ytlab_mpc_modules/results/20240302/20240302_04/HsrZr8_1.csv"
         self.HsrZr8_data=pd.read_csv(self.hsrzr8_csv_path,names=self.csv_labels["hsrzr8"])
+
+        odom_timestamp_min,odom_timestamp_max=self.odom_data["timestamp"].min(),self.odom_data["timestamp"].max()
+        command_velocity_timestamp_min,command_velocity_timestamp_max=self.command_velocity_data["timestamp"].min(),self.command_velocity_data["timestamp"].max()
+        HsrZr8_timestamp_min,HsrZr8_timestamp_max=self.HsrZr8_data["timestamp"].min(),self.HsrZr8_data["timestamp"].max()
+        timestamp_min=np.max((odom_timestamp_min,command_velocity_timestamp_min,HsrZr8_timestamp_min))-2
+        timestamp_max=np.min((odom_timestamp_max,command_velocity_timestamp_max,HsrZr8_timestamp_max))+2
+        self.odom_data=self.odom_data[self.odom_data["timestamp"]>timestamp_min]
+        self.command_velocity_data=self.command_velocity_data[self.command_velocity_data["timestamp"]>timestamp_min]
+        self.HsrZr8_data=self.HsrZr8_data[self.HsrZr8_data["timestamp"]>timestamp_min]
+        self.odom_data=self.odom_data[self.odom_data["timestamp"]<timestamp_max]
+        self.command_velocity_data=self.command_velocity_data[self.command_velocity_data["timestamp"]<timestamp_max]
+        self.HsrZr8_data=self.HsrZr8_data[self.HsrZr8_data["timestamp"]<timestamp_max]
 
         self.result_individual_dir_path=self.odom_csv_path[:-4]
         os.makedirs(self.result_individual_dir_path,exist_ok=True)

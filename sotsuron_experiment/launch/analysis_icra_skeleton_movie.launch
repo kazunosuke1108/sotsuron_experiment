@@ -1,0 +1,26 @@
+<launch>
+    <arg name="bag_name" default="_2023-12-19-18-12-38"/>
+
+    <arg name="bag_path" default="/home/hayashide/catkin_ws/media/hayashide/KIOXIA/hayashide/rosbag/20231219/04_ohnishi/success/$(arg bag_name).bag"/>
+    <arg name="video_topic" default="/zed/zed_node/rgb/image_rect_color"/>
+    <arg name="fps" default="30"/>
+    <arg name="video_path" default="/home/hayashide/catkin_ws/src/sotsuron_experiment/analysis/icra/$(arg bag_name).mp4"/>
+    
+    <rosparam param="/use_sim_time">true</rosparam>
+    <node
+        pkg="rosbag" 
+        name="play" 
+        type="play" 
+        args="-r 1 $(arg bag_path) --clock"
+        required="True"
+    />   
+
+    <node
+        pkg="image_view" 
+        name="video_recorder" 
+        type="video_recorder" 
+        output="screen" 
+        args="image:='$(arg video_topic)' _fps:='$(arg fps)' _filename:='$(arg video_path)'"
+    />    
+
+</launch>
