@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from analysis_management import *
 from analysis_initial_processor import *
+from matplotlib.gridspec import GridSpec
 
 class plotSituation():
     def __init__(self,bag_basename="_2023-12-19-20-10-31"):
@@ -20,8 +21,9 @@ class plotSituation():
         self.exp_memo=pd.read_csv(self.exp_memo_path,header=0)
         
         path_management,csv_labels,color_dict=management_initial()
-        plt.rcParams["figure.figsize"] = (10,5)
-        plt.rcParams["figure.autolayout"] = True
+        plt.rcParams["figure.figsize"] = (10,10)
+        plt.rcParams["figure.autolayout"] = False
+        plt.rcParams["font.size"] = 14
         plt.rcParams['font.family'] = 'Times New Roman'
 
         # tf_data
@@ -167,24 +169,24 @@ class plotSituation():
         arc_r2_x = self.sns["r2"] * np.cos(arc_rad) + xR
         arc_r2_y = self.sns["r2"] * np.sin(arc_rad) + yR
 
-        # arc_r1 = plt.plot(arc_r1_x, arc_r1_y, 'g', linewidth=2.5)
-        # arc_r2 = plt.plot(arc_r2_x, arc_r2_y, 'g', linewidth=2.5)
+        arc_r1 = plt.plot(arc_r1_x, arc_r1_y, 'g', linewidth=0.5,alpha=0.5)
+        arc_r2 = plt.plot(arc_r2_x, arc_r2_y, 'g', linewidth=0.5,alpha=0.5)
 
         # print(f"{theta}, {pan}")
 
-        arc_r1 = patches.Arc(xy=(xR,yR), width=2*self.sns['r1'], height=2*self.sns['r1'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=3, label="measurable area")
-        arc_r2 = patches.Arc(xy=(xR,yR), width=2*self.sns['r2'], height=2*self.sns['r2'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=3)
-        plt.gca().add_patch(arc_r1)
-        plt.gca().add_patch(arc_r2)
+        # arc_r1 = patches.Arc(xy=(xR,yR), width=2*self.sns['r1'], height=2*self.sns['r1'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=0.5, label="measurable area")
+        # arc_r2 = patches.Arc(xy=(xR,yR), width=2*self.sns['r2'], height=2*self.sns['r2'], theta1=180/np.pi*((pan+theta)-self.sns['phi']), theta2=180/np.pi*((pan+theta)+self.sns['phi']), edgecolor="g", linewidth=0.5)
+        # plt.gca().add_patch(arc_r1)
+        # plt.gca().add_patch(arc_r2)
 
         arc_right = plt.plot([arc_r1_x[0], arc_r2_x[0]], [
-                            arc_r1_y[0], arc_r2_y[0]], 'g', linewidth=3,alpha=1)
+                            arc_r1_y[0], arc_r2_y[0]],zs=[0,0], color='g', linewidth=0.5,alpha=0.5)
         arc_left = plt.plot([arc_r1_x[-1], arc_r2_x[-1]],
-                            [arc_r1_y[-1], arc_r2_y[-1]], 'g', linewidth=3,alpha=1)
-        arc_right_support = plt.plot([xR,arc_r1_x[0]], [
-                            yR,arc_r1_y[0]], 'g--', linewidth=3,alpha=1)
-        arc_left_support = plt.plot([xR,arc_r1_x[-1]],
-                            [yR,arc_r1_y[-1]], 'g--', linewidth=3,alpha=1)
+                            [arc_r1_y[-1], arc_r2_y[-1]],zs=[0,0], color='g', linewidth=0.5,alpha=0.5)
+        # arc_right_support = plt.plot([xR,arc_r1_x[0]], [
+        #                     yR,arc_r1_y[0]],zs=[0,0], color='g--', linewidth=3,alpha=1)
+        # arc_left_support = plt.plot([xR,arc_r1_x[-1]],
+        #                     [yR,arc_r1_y[-1]],zs=[0,0], color='g--', linewidth=3,alpha=1)
         
     def add_plot_others(self,row):
         arc_resolution=100
@@ -194,13 +196,13 @@ class plotSituation():
         pan=row["pan"]
         rbt_position = plt.Circle((xR, yR),
                                      radius=self.rbt["sizer"], edgecolor='b', facecolor='w')#,label="robot")
-        plt.gca().add_patch(rbt_position)
-        rbt_direction = plt.plot([xR, xR + self.rbt["sizer"] * np.cos(theta + pan)],
-                                 [yR, yR + self.rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2)
-        hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()]),
-                                     radius=self.hmn["sizer"], edgecolor='r', facecolor='w')#,label="human")
-        plt.gca().add_patch(hmn_position)
-        print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()])
+        # plt.gca().add_patch(rbt_position)
+        # rbt_direction = plt.plot([xR, xR + self.rbt["sizer"] * np.cos(theta + pan)],
+                                #  [yR, yR + self.rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2)
+        # hmn_position = plt.Circle((self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()]),
+        #                              radius=self.hmn["sizer"], edgecolor='r', facecolor='w')#,label="human")
+        # plt.gca().add_patch(hmn_position)
+        # print(self.tf_data["trunk_x"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()], self.tf_data["trunk_y"][abs(self.tf_data["timestamp"]-row["timestamp"]).idxmin()])
         # raise TimeoutError
         # plt.gca().add_patch(arc_right)
         # plt.gca().add_patch(arc_left)
@@ -344,11 +346,152 @@ class plotSituation():
         plt.legend(loc='lower center', bbox_to_anchor=(.5, 1.1), ncol=3)
         plt.grid(linestyle='dotted')
         plt.savefig(f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/icra/analysis_output/{self.bag_basename}.jpg")
+    
+    def plot_3d_and_sanmen(self):
+        def plot_skeleton(idx):
+            # 頭部
+            # ax.plot([self.tf_data.loc[idx,"nose_x"],self.tf_data.loc[idx,"l_eye_x"],],
+            #          [self.tf_data.loc[idx,"nose_y"],self.tf_data.loc[idx,"l_eye_y"]],
+            #          zs=[self.tf_data.loc[idx,"nose_z"],self.tf_data.loc[idx,"l_eye_z"]],
+            #          )
+            # ax.plot([self.tf_data.loc[idx,"l_eye_x"],self.tf_data.loc[idx,"l_ear_x"],],
+            #          [self.tf_data.loc[idx,"l_eye_y"],self.tf_data.loc[idx,"l_ear_y"]],
+            #          zs=[self.tf_data.loc[idx,"l_eye_z"],self.tf_data.loc[idx,"l_ear_z"]],
+            #          )
+            # ax.plot([self.tf_data.loc[idx,"nose_x"],self.tf_data.loc[idx,"r_eye_x"],],
+            #          [self.tf_data.loc[idx,"nose_y"],self.tf_data.loc[idx,"r_eye_y"]],
+            #          zs=[self.tf_data.loc[idx,"nose_z"],self.tf_data.loc[idx,"r_eye_z"]],
+            #          )
+            # ax.plot([self.tf_data.loc[idx,"r_eye_x"],self.tf_data.loc[idx,"r_ear_x"],],
+            #          [self.tf_data.loc[idx,"r_eye_y"],self.tf_data.loc[idx,"r_ear_y"]],
+            #          zs=[self.tf_data.loc[idx,"r_eye_z"],self.tf_data.loc[idx,"r_ear_z"]],
+            #          )
+            # 体幹
+            ax.plot([(self.tf_data.loc[idx,"l_base_x"]+self.tf_data.loc[idx,"r_base_x"])/2,self.tf_data.loc[idx,"nose_x"]],
+                    [(self.tf_data.loc[idx,"l_base_y"]+self.tf_data.loc[idx,"r_base_y"])/2,self.tf_data.loc[idx,"nose_y"]],
+                    zs=[(self.tf_data.loc[idx,"l_base_z"]+self.tf_data.loc[idx,"r_base_z"])/2,self.tf_data.loc[idx,"nose_z"]],
+                    linewidth=2,
+                    color="r"
+                     )
+
+            ax.plot([self.tf_data.loc[idx,"l_shoulder_x"],self.tf_data.loc[idx,"r_shoulder_x"],],
+                     [self.tf_data.loc[idx,"l_shoulder_y"],self.tf_data.loc[idx,"r_shoulder_y"]],
+                     zs=[self.tf_data.loc[idx,"l_shoulder_z"],self.tf_data.loc[idx,"r_shoulder_z"]],
+                     linewidth=2,
+                     color="r"
+                     )
+            ax.plot([self.tf_data.loc[idx,"l_base_x"],self.tf_data.loc[idx,"r_base_x"],],
+                     [self.tf_data.loc[idx,"l_base_y"],self.tf_data.loc[idx,"r_base_y"]],
+                     zs=[self.tf_data.loc[idx,"l_base_z"],self.tf_data.loc[idx,"r_base_z"]],
+                     linewidth=2,
+                     color="r"
+                     )
+            # 2の腕
+            ax.plot([self.tf_data.loc[idx,"l_shoulder_x"],self.tf_data.loc[idx,"l_elbow_x"],],
+                     [self.tf_data.loc[idx,"l_shoulder_y"],self.tf_data.loc[idx,"l_elbow_y"]],
+                     zs=[self.tf_data.loc[idx,"l_shoulder_z"],self.tf_data.loc[idx,"l_elbow_z"]],
+                     linewidth=2,
+                     color="b"
+                     )
+            ax.plot([self.tf_data.loc[idx,"r_shoulder_x"],self.tf_data.loc[idx,"r_elbow_x"],],
+                     [self.tf_data.loc[idx,"r_shoulder_y"],self.tf_data.loc[idx,"r_elbow_y"]],
+                     zs=[self.tf_data.loc[idx,"r_shoulder_z"],self.tf_data.loc[idx,"r_elbow_z"]],
+                     linewidth=2,
+                     color="b"
+                     )
+            # 手先
+            ax.plot([self.tf_data.loc[idx,"l_elbow_x"],self.tf_data.loc[idx,"l_hand_x"],],
+                     [self.tf_data.loc[idx,"l_elbow_y"],self.tf_data.loc[idx,"l_hand_y"]],
+                     zs=[self.tf_data.loc[idx,"l_elbow_z"],self.tf_data.loc[idx,"l_hand_z"]],
+                     linewidth=2,
+                     color="b"
+                     )
+            ax.plot([self.tf_data.loc[idx,"r_elbow_x"],self.tf_data.loc[idx,"r_hand_x"],],
+                     [self.tf_data.loc[idx,"r_elbow_y"],self.tf_data.loc[idx,"r_hand_y"]],
+                     zs=[self.tf_data.loc[idx,"r_elbow_z"],self.tf_data.loc[idx,"r_hand_z"]],
+                     linewidth=2,
+                     color="b"
+                     )
+            # 膝
+            ax.plot([self.tf_data.loc[idx,"l_base_x"],self.tf_data.loc[idx,"l_knee_x"],],
+                     [self.tf_data.loc[idx,"l_base_y"],self.tf_data.loc[idx,"l_knee_y"]],
+                     zs=[self.tf_data.loc[idx,"l_base_z"],self.tf_data.loc[idx,"l_knee_z"]],
+                     linewidth=2,
+                     color="m"
+                     )
+            ax.plot([self.tf_data.loc[idx,"r_base_x"],self.tf_data.loc[idx,"r_knee_x"],],
+                     [self.tf_data.loc[idx,"r_base_y"],self.tf_data.loc[idx,"r_knee_y"]],
+                     zs=[self.tf_data.loc[idx,"r_base_z"],self.tf_data.loc[idx,"r_knee_z"]],
+                     linewidth=2,
+                     color="m"
+                     )
+            # 足先
+            ax.plot([self.tf_data.loc[idx,"l_knee_x"],self.tf_data.loc[idx,"l_foot_x"],],
+                     [self.tf_data.loc[idx,"l_knee_y"],self.tf_data.loc[idx,"l_foot_y"]],
+                     zs=[self.tf_data.loc[idx,"l_knee_z"],self.tf_data.loc[idx,"l_foot_z"]],
+                     linewidth=2,
+                     color="m"
+                     )
+            ax.plot([self.tf_data.loc[idx,"r_knee_x"],self.tf_data.loc[idx,"r_foot_x"],],
+                     [self.tf_data.loc[idx,"r_knee_y"],self.tf_data.loc[idx,"r_foot_y"]],
+                     zs=[self.tf_data.loc[idx,"r_knee_z"],self.tf_data.loc[idx,"r_foot_z"]],
+                     linewidth=2,
+                     color="m"
+                     )
+        # gs = GridSpec(2, 2, width_ratios=[1,1])
+        
+        # 3d
+        ax=plt.subplot(111,projection='3d')
+        # ax=plt.subplot(gs[1,0],projection='3d')
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111, projection='3d')
+        # 重心軌跡
+        ax.plot(self.tf_data["trunk_x"],self.tf_data["trunk_y"],zs=self.tf_data["trunk_z"])
+        # ax.plot((self.tf_data["l_shoulder_x"]+self.tf_data["r_shoulder_x"])/2,(self.tf_data["l_shoulder_y"]+self.tf_data["r_shoulder_y"])/2,zs=(self.tf_data["l_shoulder_z"]+self.tf_data["r_shoulder_z"])/2)
+
+        # x=-2,0,2,4,6でskeletonを表示する
+        skeleton_x_list=[0,1.5,3,5]
+        # skeleton_x_list=[6,5,4,3,2,1,0,-1,-2]
+        skeleton_idx_list=[]
+        skeleton_idx_list_od=[]
+        # 対象のインデックスを取得
+        print(self.tf_data["trunk_x"]-6)
+        print(self.tf_data["trunk_x"].shape)
+        for skeleton_x in skeleton_x_list:
+            index=abs(self.tf_data["trunk_x"]-skeleton_x).idxmin()
+            index_od=abs(self.odom_data["timestamp"]-self.tf_data.loc[index,"timestamp"]).idxmin()
+            skeleton_idx_list.append(index)
+            skeleton_idx_list_od.append(index_od)
+        print("skeleton_idx_list:",skeleton_idx_list)
+
+        # 順番にプロット
+        for skeleton_idx,skeleton_idx_od in zip(skeleton_idx_list,skeleton_idx_list_od):
+            self.add_plot_ougi(self.odom_data.loc[skeleton_idx_od,:])
+            self.add_plot_others(self.odom_data.loc[skeleton_idx_od,:])
+        for skeleton_idx,skeleton_idx_od in zip(skeleton_idx_list,skeleton_idx_list_od):
+            plot_skeleton(skeleton_idx)
+        
+        # 壁
+        ax.plot([-5,10],[1.2,1.2],zs=[0,0],color="k",label="Wall")
+        ax.plot([-5,10],[-1.2,-1.2],zs=[0,0],color="k",label="Wall")
+        ax.set_ylim([-2,2])
+        ax.set_zlim([0,2])
+        ax.set_yticks(np.arange(-1, 2.1, 1))
+        ax.set_zticks(np.arange(0, 2.1, 1))
+        ax.set_aspect('equal')
+        ax.view_init(elev=20, azim=130)
+        ax.grid(False)
+        ax.legend()
+        # ax.set_xlabel("Hallway direction [m]")
+        # ax.set_ylabel("Width direction [m]")
+        plt.savefig("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/icra/analysis_output"+"/"+self.bag_basename+".png")
+        pass
     def main(self):
         # self.plot_situation()
         # self.plot_colormap()
         # self.draw_anim_from_images()
-        self.plot_simple_traj()
+        # self.plot_simple_traj()
+        self.plot_3d_and_sanmen()
 # exp_memo_01_data=pd.read_csv("C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/discussion/exp_memo_01.csv",header=0)
 
 
@@ -365,8 +508,21 @@ class plotSituation():
 
     # break
 
-plot=plotSituation()
-plot.main()
+# plot=plotSituation()
+# plot.main()
+# plt.close()
+
+
+memo_csv_path="C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/analysis/icra/analysis_output/analysis_output_memo.csv"
+memo_data=pd.read_csv(memo_csv_path,header=0)
+for bag_basename in memo_data["bag"].values:
+    if ("2023-12-19-20-18" in bag_basename) or ("2023-12-19-20-30" in bag_basename):
+        try:
+            plot=plotSituation(bag_basename=bag_basename)
+            plot.main()
+            plt.close()
+        except AttributeError:
+            pass
 
 
 
