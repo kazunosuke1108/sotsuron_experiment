@@ -1,15 +1,18 @@
 import os
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import LinearRegression
+
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 from glob import glob
 import pickle
 from pprint import pprint
 import matplotlib.colors as mcolors
 plt.rcParams["figure.figsize"] = (15/2.54,10/2.54)
 plt.subplot().set_aspect('equal')
-plt.rcParams["figure.autolayout"] = True
-plt.rcParams["font.size"] = 16
+# plt.rcParams["figure.autolayout"] = True
+plt.rcParams["font.size"] = 14
 plt.rcParams['font.family'] = 'Times New Roman'
 plt.rcParams['mathtext.fontset'] = 'stix' # math fontの設定
 plt.rcParams["legend.edgecolor"] = 'black' # edgeの色を変更
@@ -58,8 +61,24 @@ def add_plot_others(xR,yR,theta,pan,rbt,previous):
     rbt_position = plt.Circle((xR, yR),
                                     radius=rbt["sizer"], edgecolor='b', facecolor='w',alpha=alpha)#,label="robot")
     plt.gca().add_patch(rbt_position)
-    rbt_direction = plt.plot([xR, xR + rbt["sizer"] * np.cos(theta + pan)],
-                                [yR, yR + rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2,alpha=alpha)
+    # rbt_direction = plt.plot([xR, xR + rbt["sizer"] * np.cos(theta + pan)],
+    #                             [yR, yR + rbt["sizer"] * np.sin(theta + pan)], 'b', linewidth=2,alpha=alpha)
+
+def draw_human_direction(tf_data,tf_idx):
+    trim_data=tf_data.loc[:tf_idx,:].tail(20)
+    # trim_data["vx"]=trim_data["trunk_x"].diff()
+    # trim_data["vy"]=trim_data["trunk_y"].diff()
+    vx=trim_data["trunk_x"].values[-1]-trim_data["trunk_x"].values[0]
+    vy=trim_data["trunk_y"].values[-1]-trim_data["trunk_y"].values[0]
+    trim_data.fillna(method="ffill",inplace=True)
+    trim_data.fillna(method="bfill",inplace=True)
+    # model = LinearRegression()
+    # model.fit(trim_data[['trunk_x']], trim_data['trunk_y'])
+    # future_x = np.arange(trim_data['trunk_x'].iloc[-1] + 1, trim_data['trunk_x'].iloc[-1] + 21).reshape(-1, 1)
+    # future_y = model.predict(future_x)
+    plt.arrow(trim_data["trunk_x"].values[-1],trim_data["trunk_y"].values[-1],vx,vy,head_width=0.05,head_length=0.2)
+    # plt.arrow(trim_data["trunk_x"].values[-1],trim_data["trunk_y"].values[-1],trim_data["vx"].values[-1]*60,trim_data["vy"].values[-1]*60,head_width=0.4,head_length=1)
+    pass
 
 # データのインポート
 sotsuron_exp_trial_name="_2023-12-19-20-10-31"
@@ -78,11 +97,12 @@ od_data=od_data.dropna(how="all")
 od_data=od_data.rolling(20).mean()
 
 # トリミング
-start_timestamp=od_data.loc[900,"timestamp"]
-end_timestamp=od_data.loc[1600,"timestamp"]
-# tf_data=tf_data[((tf_data["timestamp"]>=start_timestamp) & (tf_data["timestamp"]<=end_timestamp))]
-# od_data=od_data[((od_data["timestamp"]>=start_timestamp) & (od_data["timestamp"]<=end_timestamp))]
-pickeup_idxes=np.arange(1000,1601,100)
+start_timestamp=od_data.loc[1150,"timestamp"]
+end_timestamp=od_data.loc[1701,"timestamp"]
+tf_data=tf_data[((tf_data["timestamp"]>=start_timestamp) & (tf_data["timestamp"]<=end_timestamp))]
+od_data=od_data[((od_data["timestamp"]>=start_timestamp) & (od_data["timestamp"]<=end_timestamp))]
+pickeup_idxes=np.arange(1150,1701,80)
+# pickeup_idxes=np.arange(1000,1601,100)
 # pickeup_idxes=np.arange(900,1601,150)
 pickup_timestamps=od_data.loc[pickeup_idxes,"timestamp"]
 cmap = mcolors.LinearSegmentedColormap.from_list("blue_red", ["white", "blue"], N=len(pickup_timestamps))
@@ -99,96 +119,128 @@ for pickup_timestamp in pickup_timestamps.values:
     idx=abs(np.array(pickle_timestamps)-pickup_timestamp).argmin()
     pickup_picklepaths+=[picklepaths[idx]]
 
-print(pickup_timestamps)
+
+# for i,_ in enumerate(pickup_picklepaths):
+#     print(pickup_timestamps.values[i])
+#     if i==0:
+#         continue
+#     # 壁
+#     plt.plot([-4,8],[-1.2,-1.2],"k",label="Wall")
+#     plt.plot([-4,8],[1.2,1.2],"k")
+#     ## オドメトリ
+#     od_idx=np.argmin(abs(od_data["timestamp"]-pickup_timestamps.values[i]))
+#     plt.plot(od_data.loc[1000:od_idx,"x"],od_data.loc[1000:od_idx,"y"],linewidth=1,label="Robot odometry",c=(0,0,0))
+    
+#     # 直前
+#     pickle_data=load_picklelog(pickup_picklepaths[i-1])
+#     # 人
+#     ## 自己位置
+#     tf_idx=np.argmin(abs(tf_data["timestamp"]-pickup_timestamps.values[i-1]))
+#     plt.scatter(tf_data.loc[tf_idx,"trunk_x"],tf_data.loc[tf_idx,"trunk_y"],s=100,label="Human position 2 sec. ago",c=(0.5,0,0))
+#     ## 矢印
+#     # draw_human_direction(tf_data,tf_idx)
+
+    
+#     # ロボット
+#     ## 計画軌道
+#     data=pd.DataFrame(pickle_data["solution"]["zR"].T,columns=["x","y","theta","vx","vy","omg"])
+#     plt.plot(data["x"],data["y"],label="Planning result 2 sec. ago", color=cmap(2 / (len(pickup_picklepaths) - 1)),linewidth=2)
+#     ## 扇
+#     add_plot_ougi(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,sns=pickle_data["sns"],previous=True)
+#     ## 自己位置
+#     add_plot_others(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,rbt=pickle_data["rbt"],previous=True)
+
+#     # od_idx=np.argmin(abs(od_data["timestamp"]-pickup_timestamps.values[i-1]))
+#     # plt.scatter(od_data.loc[od_idx,"x"],od_data.loc[od_idx,"y"],s=100,label="Previous robot position",c=(0,0,0.5))
+    
+#     # 最新
+#     pickle_data=load_picklelog(pickup_picklepaths[i])
+#     # 人
+#     ## 軌道
+#     tf_idx=np.argmin(abs(tf_data["timestamp"]-pickup_timestamps.values[i]))
+#     ## 自己位置
+#     plt.plot(tf_data.loc[:tf_idx,"trunk_x"],tf_data.loc[:tf_idx,"trunk_y"],"r")
+#     plt.scatter(tf_data.loc[tf_idx,"trunk_x"],tf_data.loc[tf_idx,"trunk_y"],s=100,label="Latest human position",c=(1,0,0))
+#     ## 矢印
+#     draw_human_direction(tf_data,tf_idx)
+
+#     # ロボット
+#     ## 計画軌道
+#     data=pd.DataFrame(pickle_data["solution"]["zR"].T,columns=["x","y","theta","vx","vy","omg"])
+#     plt.plot(data["x"],data["y"],label="Latest planning result", color=(0,0,1),linewidth=2)
+#     ## 扇
+#     add_plot_ougi(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,sns=pickle_data["sns"],previous=False)
+#     ## 自己位置
+#     add_plot_others(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,rbt=pickle_data["rbt"],previous=False)
+
+
+#     plt.xlim([-4,8])
+#     plt.ylim([-2,2])
+#     plt.xlabel("Hallway direction $\it{x}$ [m]",fontname='Times New Roman',fontsize=14)
+#     plt.ylabel("Width direction $\it{y}$ [m]",fontname='Times New Roman',fontsize=14)
+
+#     if i==1:
+
+#         plt.legend(loc='lower center', bbox_to_anchor=(.5, 1.1), ncol=2)
+#     #     plt.rcParams['font.family'] = 'Times New Roman'
+#     #     # plt.rcParams["figure.figsize"] = (15/2.54,13/2.54)
+#     #     plt.subplot().set_aspect('equal')
+#     #     plt.rcParams['font.family'] = 'Times New Roman'
+#     # else:
+#     #     plt.rcParams["figure.figsize"] = (15/2.54,6/2.54)
+#     #     plt.subplot().set_aspect('equal')
+
+#     plt.rcParams['font.family'] = 'Times New Roman'
+#     plt.rcParams['font.family'] = 'Times New Roman'
+#     plt.rcParams["font.size"] = 14
+#     plt.rcParams['font.family'] = 'Times New Roman'
+#     plt.rcParams['mathtext.fontset'] = 'stix' # math fontの設定
+#     plt.rcParams["legend.edgecolor"] = 'black' # edgeの色を変更
+#     plt.rcParams["legend.handlelength"] = 1 # 凡例の線の長さを調節
+
+#     plt.savefig(f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/IEEE_Access/{i}.pdf")
+#     plt.cla()
+
+plt.close()
+
+plt.rcParams["figure.figsize"] = (15/2.54,13/2.54)
+
+tf_data["vx"]=tf_data["trunk_x"].diff()/tf_data["timestamp"].diff()
+tf_data["vy"]=tf_data["trunk_y"].diff()/tf_data["timestamp"].diff()
+od_data["vx"]=od_data["x"].diff()/od_data["timestamp"].diff()
+od_data["vy"]=od_data["y"].diff()/od_data["timestamp"].diff()
+
+tf_data=tf_data.rolling(60).mean()
+# od_data=od_data.rolling(60).mean()
+
+# 描画面の作成
+gs=GridSpec(nrows=2,ncols=1)
+
+
+plot="x"
+# 人の速度波形
+plt.subplot(gs[0])
+plt.plot(tf_data["timestamp"],tf_data[f"v{plot}"])
+plt.xlabel("Time [s]")
+plt.ylabel(f"Human velocity in {plot}-axis [m/s]")
+plt.xlim([1702984270,1702984285])
+# ロボットの速度波形
+plt.subplot(gs[1])
+plt.plot(od_data["timestamp"],od_data[f"v{plot}"],label="odometry")
+
 for i,_ in enumerate(pickup_picklepaths):
-    if i==0:
-        continue
-    # 直前
-    pickle_data=load_picklelog(pickup_picklepaths[i-1])
-    # 人
-    ## 自己位置
-    tf_idx=np.argmin(abs(tf_data["timestamp"]-pickup_timestamps.values[i-1]))
-    plt.scatter(tf_data.loc[tf_idx,"trunk_x"],tf_data.loc[tf_idx,"trunk_y"],s=100,label="Previous human position",c=(0.5,0,0))
-    ## 矢印
-
-    
-    # ロボット
-    ## 計画軌道
-    data=pd.DataFrame(pickle_data["solution"]["zR"].T,columns=["x","y","theta","vx","vy","omg"])
-    plt.plot(data["x"],data["y"],label="Previous planning result", color=cmap(2 / (len(pickup_picklepaths) - 1)),linewidth=2)
-    ## 扇
-    add_plot_ougi(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,sns=pickle_data["sns"],previous=True)
-    ## 自己位置
-    add_plot_others(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,rbt=pickle_data["rbt"],previous=True)
-
-    # od_idx=np.argmin(abs(od_data["timestamp"]-pickup_timestamps.values[i-1]))
-    # plt.scatter(od_data.loc[od_idx,"x"],od_data.loc[od_idx,"y"],s=100,label="Previous robot position",c=(0,0,0.5))
-    
-    # 最新
     pickle_data=load_picklelog(pickup_picklepaths[i])
-    # 人
-    ## 軌道
-    tf_idx=np.argmin(abs(tf_data["timestamp"]-pickup_timestamps.values[i]))
-    ## 自己位置
-    plt.plot(tf_data.loc[:tf_idx,"trunk_x"],tf_data.loc[:tf_idx,"trunk_y"],"r")
-    plt.scatter(tf_data.loc[tf_idx,"trunk_x"],tf_data.loc[tf_idx,"trunk_y"],s=100,label="Latest human position",c=(1,0,0))
-
-    # ロボット
-    ## オドメトリ
-    od_idx=np.argmin(abs(od_data["timestamp"]-pickup_timestamps.values[i]))
-    plt.plot(od_data.loc[1000:od_idx,"x"],od_data.loc[1000:od_idx,"y"],linewidth=1,label="Robot odometry",c=(0,0,0))
-    ## 計画軌道
-    data=pd.DataFrame(pickle_data["solution"]["zR"].T,columns=["x","y","theta","vx","vy","omg"])
-    plt.plot(data["x"],data["y"],label="Latest planning result", color=(0,0,1),linewidth=2)
-    ## 扇
-    add_plot_ougi(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,sns=pickle_data["sns"],previous=False)
-    ## 自己位置
-    add_plot_others(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,rbt=pickle_data["rbt"],previous=False)
-
-
-    plt.xlim([-4,8])
-    plt.ylim([-2,2])
-    plt.xlabel("Hallway direction $\it{x}$ [m]")
-    plt.ylabel("Width direction $\it{y}$ [m]")
-    if i==1:
-        plt.legend(loc='lower center', bbox_to_anchor=(.5, 1.1), ncol=2)
-        plt.rcParams["figure.figsize"] = (15/2.54,13/2.54)
-        plt.subplot().set_aspect('equal')
-        plt.rcParams['font.family'] = 'Times New Roman'
-    else:
-        plt.rcParams["figure.figsize"] = (15/2.54,6/2.54)
-        plt.subplot().set_aspect('equal')
-    plt.savefig(f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/IEEE_Access/{i}.pdf")
-    plt.cla()
-raise NotImplementedError
-
-
-
-
-
-
-# 人の軌跡をプロットしてみる
-plt.plot(tf_data["trunk_x"],tf_data["trunk_y"],label="Pedestrian")
-
-# ロボットの軌跡をプロットしてみる
-plt.plot(od_data["x"],od_data["y"])
-
-# 動作計画結果をプロットしてみる
-
-pprint(pickup_picklepaths)
-# raise NotImplementedError
-
-for i,picklepath in enumerate(pickup_picklepaths):
-    pickle_data=load_picklelog(picklepath=picklepath)
-
-    # raise NotImplementedError
     data=pd.DataFrame(pickle_data["solution"]["zR"].T,columns=["x","y","theta","vx","vy","omg"])
     data["timestamp"]=pickle_data["solution"]["t"]+pickle_data["time_management"]["last_calc_end"]
-    # data=data[((data["timestamp"]>=start_timestamp) & (data["timestamp"]<=end_timestamp))]
-    plt.plot(data["x"],data["y"],label=os.path.basename(picklepath), color=cmap(i / (len(pickup_picklepaths) - 1)))
-    add_plot_ougi(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,sns=pickle_data["sns"])
-    add_plot_others(xR=data["x"].values[0],yR=data["y"].values[0],theta=data["theta"].values[0],pan=0,rbt=pickle_data["rbt"])
-
-# plt.legend()
-    if i%2==0:
-        plt.savefig(f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/IEEE_Access/{i}.png")
+    if i==0:
+        plt.plot(data["timestamp"],data[f"v{plot}"],label=f"No update", color=(1,0,0),linewidth=2)
+    else:
+        plt.plot(data["timestamp"],data[f"v{plot}"], color=cmap(i / (len(pickup_picklepaths) - 1)),linewidth=2)
+    print(i)
+    pass
+plt.xlabel("Time $\it{t}$[s]")
+plt.ylabel(f"Velocity in {plot}-axis [m/s]")
+plt.legend()
+plt.xlim([1702984270,1702984285])
+# plt.legend(loc='lower center', bbox_to_anchor=(.5, 5.1), ncol=2)
+plt.savefig(f"C:/Users/hayashide/kazu_ws/sotsuron_experiment/sotsuron_experiment/scripts/IEEE_Access/timeseries_{plot}.pdf")
